@@ -76,19 +76,37 @@ deh:postag-andSearch(("third person", "singular", "perfect"), doc("C:\Users\*tre
  Winter Break 2022-23 Phase
 This function takes an sequence of fully written-out strings ($search) which are specified in the $postags var in AGLDT Search Test.xq. The second argument is a document which the function can check. $postags is essentially the "deh:postags()" function 
 
-6/25/2023:
+6/25/2023:----------------OBSOLETE---------------------
 Changed the loop at the start from "for $word in $doc//sentence/word" to "in $doc//word", no need to have extra steps. Also added the below description.
 
-This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (deh:word-postag actually tests each word), this function simply loops through each word, discarding or keeping it as the deh:word-postag function tells it.
+This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (the following updated 6/27/2023) (deh:andSearch shell takes a sequence of <word/> elements, handles whether to keep or discard them, deh:word-postag, dependent on it, actually tests each word), this function simply makes sure the input is a sequence of words (NOT a hierarchical structure including sentences), and returns the output from the deh:word-postag function. See the description to deh:andSearch-handler for more details.
+
 
 $search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
 $postags: Just the deh:postags function, every time; in this case, usually passed from a parent function
 :)
-declare %public function deh:postag-andSearch($search as item()*, $doc as element()*, $postags as item()*) as item()*
+declare %public function deh:postag-andSearch($search as item()*, $doc, $postags as item()*) as item()*
+{
+  if ($doc[1]/name() eq "word") then 
+    deh:andSearch-handler($search, $doc, $postags)
+  else (
+    deh:andSearch-handler($search, $doc//word, $postags)
+  )
+};
+
+(:
+6/27/2023:
+This function is a helper function to deh:postag-andSearch. I wanted to be able to pass a series of <word/> elements, which were already pulled by a search (that is, if I find a list of every word dependent on a PRED, )
+
+Depends on:
+deh:word-postags
+
+:)
+declare %private function deh:andSearch-handler($search as item()*, $doc as element()*, $postags as item()*) as item()*
 {
   (:Loop through every word in the document:)
-  for $word in $doc//word
+  for $word in $doc (:This function is private BECAUSE we assume $doc is a series of individual <word/> elements:)
     (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
     let $results := deh:word-postag($search, $word, $postags)
     return if ($results) then
@@ -121,17 +139,17 @@ declare function deh:word-postag($search as item()*, $word as node()*, $postags 
       true()
     )
     else (
-      
+      false()
     )
 };
 
 (:
 5/19/2023:
 Currently overhauling this function: it should take 5 arguments:
-$search is a sequence of strings with the full names of the parts of the postag you wish to search
+$search is a sequence of strings with the full names of the parts of the postag you wish to search. Just put an empty sequence if you don't need to use this parameter.
 $relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string)
-$lemma is the same, it will only check if the word's lemma CONTAINS the search string
-$doc is the SINGLE treebank you wish to search.
+$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify
+$doc is the SINGLE treebank you wish to search, or a set of <word/> elements
 $postags is the output of the deh:postags() function
 
 LIMITATIONS REMAIN: How to search for multiple things at once? (All perfect passives AND perfect actives together, for example?), or how this can easily feed into the dependency determining functions. ALSO, we should re-implement the deh:mark-node function, so we have a better handle on these results when exporting them to CSV
@@ -142,16 +160,18 @@ deh:relations()
 deh:postag-andSearch
 deh:test-rel-lemma
 :)
-declare %public function deh:search($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc as node(), $postags) 
+declare %public function deh:search($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc, $postags) 
 {
   (: This first statement runs if :)
   if (fn:count($postag) gt 0) then ( deh:test-rel-lemma(deh:postag-andSearch($postag, $doc, $postags), $relation, $lemma))
-  else (deh:test-rel-lemma($doc//word, $relation, $lemma)) 
+  else if ($doc[1]/name() eq "word") then
+    (deh:test-rel-lemma($doc, $relation, $lemma)) (:6/27/23: The deh:test-rel-lemma function takes only word nodes, and since I changed this today (6/27/2023) to accept either a full doc or a sequence of elements, I need to make sure the right input goes in :)
+  else ((deh:test-rel-lemma($doc//word, $relation, $lemma)))
 };
 
 (:
 5/19/2023:
-This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes
+This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes; the changes I made 6/27/2023 to the deh:search function should ensure that.
 :)
 declare %private function deh:test-rel-lemma($words as element()*, $relation as xs:string, $lemma as xs:string) as element()*
 {
@@ -252,7 +272,7 @@ declare %public function deh:parent-return-pairs($dependents as element()*, $hea
 
 (: Winter Break 2022-23 Phase :)
 (: Returns a list of the WORD (AGLDT) parents of each word. :)
-declare %private function deh:return-parent($nodes as element()*) as element()*
+declare %public function deh:return-parent($nodes as element()*) as element()*
 {
   for $node in $nodes
   return $node/../word[@id eq $node/@head]
@@ -260,7 +280,7 @@ declare %private function deh:return-parent($nodes as element()*) as element()*
 
 (: Winter Break 2022-23 Phase :)
 (: Returns all the WORD (AGLDT) children:)
-declare %private function deh:return-children($nodes as element()*) as element()*
+declare %public function deh:return-children($nodes as element()*) as element()*
 {
   for $node in $nodes
   return $node/../word[@head eq $node/@id]
@@ -321,6 +341,10 @@ declare %public function deh:feature-search($doc as node()*, $head-terms as item
   :)
 };
 
+(:
+Winter Break 2022-23 Phase:
+This function returns all the nodes of a certain depth; goes no farther than 4, for now; there is likely a better algorithm for this
+:)
 declare function deh:return-depth($nodes as element()*, $depth as xs:integer)
 {
   if ($depth eq 0) then
@@ -338,6 +362,8 @@ declare function deh:return-depth($nodes as element()*, $depth as xs:integer)
 (:
 6/25/2023:
 This function takes postag search parameters in $postag-search (like the ones that go in the first argument of deh:postag-andSearch), any individual LDT treebank document in $doc, and the output of the deh:postags functions in $postags. It finds the highest word in the hierarchy with a certain part of speech, starting at the head, but making its way down one generation at a time. This recursion occurs in the helper function deh:proc-highest, which is listed below.
+
+The impetus was that sometimes PRED is not going to be the base node of a sentence, so I might want a function which encapsulates sentences where the PRED is elliptical or the sentence has no main clause.
 
 $postag-search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"

@@ -50,12 +50,31 @@ declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":
 
 declare variable $treebanks := (doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Caes Gall.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Cic Catil.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Ov Met.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Petr.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Phaedrus.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Sal Cat.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Suet Aug.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Verg A.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"));
 
+let $postags := deh:postags()
+for $treebank in $treebanks
+let $nom-participles := deh:search((), "PRED", "", $treebank, $postags)
+let $dependents := deh:return-children($nom-participles)
+let $auxiliaries := deh:search((), "AuxV", "", $dependents, $postags)
+for $aux in $auxiliaries
+return (deh:mark-node($aux), deh:mark-node(deh:return-parent($aux)))
+
+(:
+EXAMPLE: uSE OF THE DEH:FIND-HIGHEST FUNC
 let $doc := $treebanks[2]
 let $search := deh:find-highest("verb", $doc, deh:postags())
 let $search := deh:mark-node($search)
 for $word in $search
 where fn:contains($word/fn:string(@relation), "PRED") ne true()
 return $word
+FIRST FEW RESULTS:
+<word deh-sen-id="38" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="7" form="crede" lemma="credo1" postag="v2spma---" relation="ExD" head="8"/>
+<word deh-sen-id="127" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="6" form="opprimar" lemma="opprimo1" postag="v1spsp---" relation="ADV_CO" head="5"/>
+<word deh-sen-id="127" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="15" form="desinam" lemma="desino1" postag="v1spsa---" relation="ADV_CO" head="11"/>
+<word deh-sen-id="147" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="5" form="frangat" lemma="frango1" postag="v3spsa---" relation="ADV_CO" head="2"/>
+<word deh-sen-id="147" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="11" form="corrigas" lemma="corrigo1" postag="v2spsa---" relation="ADV_CO" head="8"/>
+:)
+
+
 (: EXAMPLE OF LOOKING FOR COMPARATIVE ADVERBS (6/25/2023, more recent than anything below)
 for $treebank in $treebanks
 return deh:search(("comparative"), "ADV", "", $treebank, deh:postags())
