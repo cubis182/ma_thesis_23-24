@@ -6,6 +6,8 @@ import module namespace functx = "http://www.functx.com" at "http://www.xqueryfu
 import module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A" at "./agldt_search.xqm";
 (:
 
+ADD A REFERENCE TO THE GNU LGPL 3.0 LICENSE HERE, SINCE THE FUNCTX LIBRARY IS COVERED UNDER THAT LICENSE? However, it is available in free and proprietary software, so I would not be worried about coverage
+
 AGLDT Search Tool 0.1
 
 Specs:
@@ -48,9 +50,16 @@ declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":
 
 declare variable $treebanks := (doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Caes Gall.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Cic Catil.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Ov Met.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Petr.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Phaedrus.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Sal Cat.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Suet Aug.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Verg A.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"));
 
+let $doc := $treebanks[2]
+let $search := deh:find-highest("verb", $doc, deh:postags())
+let $search := deh:mark-node($search)
+for $word in $search
+where fn:contains($word/fn:string(@relation), "PRED") ne true()
+return $word
+(: EXAMPLE OF LOOKING FOR COMPARATIVE ADVERBS (6/25/2023, more recent than anything below)
 for $treebank in $treebanks
-return deh:search((), "ADV_CO", "", $treebank, deh:postags())
-
+return deh:search(("comparative"), "ADV", "", $treebank, deh:postags())
+:)
 (:
 HOW TO SEARCH FOR PERFECT PASSIVE FORMS:
 for $treebank in $treebanks

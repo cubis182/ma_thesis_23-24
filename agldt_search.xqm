@@ -59,7 +59,55 @@ declare %public function deh:sentence-lengths($docs as node()*) as item()*
 
 
 :)
-declare function deh:word-postag($search as item()*, $word as node()*, $postags as item()*)
+
+
+(:------------------deh:postag-andSearch AND DEPENDENCIES------------------------------:)
+(: 
+5/19/2023 remarks:
+$search is a sequence of strings which matches the long, elaborated string in the TAGSET for part of speech
+$doc is a treebank document
+$postags is the result of the deh:postags() function
+
+Usage example:
+I want to get every word which is a third-person singular perfect verb:
+deh:postag-andSearch(("third person", "singular", "perfect"), doc("C:\Users\*treebank"), deh:postags())
+
+---------------------kinda OBSOLETE NOTES BELOW----------------------------
+ Winter Break 2022-23 Phase
+This function takes an sequence of fully written-out strings ($search) which are specified in the $postags var in AGLDT Search Test.xq. The second argument is a document which the function can check. $postags is essentially the "deh:postags()" function 
+
+6/25/2023:
+Changed the loop at the start from "for $word in $doc//sentence/word" to "in $doc//word", no need to have extra steps. Also added the below description.
+
+This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (deh:word-postag actually tests each word), this function simply loops through each word, discarding or keeping it as the deh:word-postag function tells it.
+
+$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+$doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
+$postags: Just the deh:postags function, every time; in this case, usually passed from a parent function
+:)
+declare %public function deh:postag-andSearch($search as item()*, $doc as element()*, $postags as item()*) as item()*
+{
+  (:Loop through every word in the document:)
+  for $word in $doc//word
+    (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
+    let $results := deh:word-postag($search, $word, $postags)
+    return if ($results) then
+    $word
+    else ()
+};
+
+(:
+Spring 2023 Phase:
+This function is meant as a helper function to the deh:postag-andSearch (in that it does all the actual searching, the deh:postag-andSearch really only chooses to return or discard what this function spits out). It is also used elsewhere, though. What it does is go through each position in the postag, and wherever it finds a positive result, it returns true() in a sequence. If the sequence holds the same number of "true()s" as there are search terms, we return a true() value, and false() if not.
+
+$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+$word: A single word node from an LDT treebank
+$postags: Just the deh:postags function, every time, usually passed from a previous function
+
+Depends on:
+
+:)
+declare function deh:word-postag($search as item()*, $word as node()*, $postags as item()*) as xs:boolean
 {
   let $postag := $word/fn:string(@postag)
   (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
@@ -77,30 +125,6 @@ declare function deh:word-postag($search as item()*, $word as node()*, $postags 
     )
 };
 
-
-(: 
-5/19/2023 remarks:
-$search is a sequence of strings which matches the long, elaborated string in the TAGSET for part of speech
-$doc is a treebank document
-$postags is the result of the deh:postags() function
-
-Usage example:
-I want to get every word which is a third-person singular perfect verb:
-deh:postag-andSearch(("third person", "singular", "perfect"), doc("C:\Users\*treebank"), deh:postags())
-
----------------------kinda OBSOLETE NOTES BELOW----------------------------
- Winter Break 2022-23 Phase
-This function takes an sequence of fully written-out strings ($search) which are specified in the $postags var in AGLDT Search Test.xq. The second argument is a document which the function can check. $postags is essentially the "deh:postags()" function :)
-declare %public function deh:postag-andSearch($search as item()*, $doc as node(), $postags as item()*) as item()*
-{
-  (:Loop through every word in the document:)
-  for $word in $doc//sentence/word
-    (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
-    let $results := deh:word-postag($search, $word, $postags)
-    return if ($results) then
-    $word
-    else ()
-};
 (:
 5/19/2023:
 Currently overhauling this function: it should take 5 arguments:
@@ -116,6 +140,7 @@ Relies on:
 deh:word-postag(3 args)
 deh:relations()
 deh:postag-andSearch
+deh:test-rel-lemma
 :)
 declare %public function deh:search($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc as node(), $postags) 
 {
@@ -168,11 +193,14 @@ declare %public function deh:postag-andSearch($search as item()*, $doc as node()
 };
 :)
 
+(:---------------------------END deh:postag-andSearch AND DEPENDENCIES--------------------------------:)
+
 (: Winter Break 2022-23 Phase :)
-(: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and this function is private because it does not check for the type of node :)
-declare %private function deh:mark-node($nodes as element(*)*) as element()*
+(: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words":)
+declare function deh:mark-node($nodes as element(*)*) as element()*
 {
   for $node in $nodes
+  where $node/name() eq "word"
   return functx:add-attributes(functx:add-attributes($node, xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
   
 };
@@ -306,6 +334,60 @@ declare function deh:return-depth($nodes as element()*, $depth as xs:integer)
   else if ($depth eq 4) then
   deh:return-children(deh:return-children(deh:return-children($nodes)))
 };
+
+(:
+6/25/2023:
+This function takes postag search parameters in $postag-search (like the ones that go in the first argument of deh:postag-andSearch), any individual LDT treebank document in $doc, and the output of the deh:postags functions in $postags. It finds the highest word in the hierarchy with a certain part of speech, starting at the head, but making its way down one generation at a time. This recursion occurs in the helper function deh:proc-highest, which is listed below.
+
+$postag-search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+$doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
+$postags: Just the deh:postags function, every time
+
+Depends on:
+deh:proc-highest (private, made for this function to handle looping through each level of the sentence)
+deh:postag-andSearch
+:)
+declare function deh:find-highest($postag-search as item()*, $doc as node()*, $postags)
+{
+  for $sent in $doc//sentence
+    let $head := $sent/word[fn:number(@head) eq 0]
+    return deh:proc-highest($postag-search, $head, $postags)
+};
+
+(:
+6/25/2023
+This is a private helper function to deh:find-highest. It starts with the head, which is only one word, but runs a deh:postag-andSearch on it. If it matches, then it gets returned, but if the sequence is empty, it passes the results of the deh:return-children function back into deh:proc-highest, with the other args remaining the same.
+
+$postag-search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+$element: A set of <word/> elements, can be one or several.
+$postags: Just the deh:postags function, every time
+
+:)
+declare %private function deh:proc-highest($postag-search as item()*, $elements as element()*, $postags)
+{
+  let $results := 
+    for $element in $elements
+    return if (deh:word-postag($postag-search, $element, $postags) eq true()) then
+        $element
+    else (
+      
+    )
+  return if (fn:count($elements) eq 0) then
+  (
+  )
+  else if (fn:count($results) gt 0) then
+    $results
+  else (
+    deh:proc-highest($postag-search, deh:return-children($elements), $postags)
+  )
+};
+
+(:
+6/25/2023:
+
+Depends on:
+:)
+
 (:----------------------------------------------------------------------------------------------------------------------
 START OF corpus.csv FUNCTIONS
 :)
