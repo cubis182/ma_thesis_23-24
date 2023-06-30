@@ -48,16 +48,40 @@ YOU NEED TO UPDATE THIS SO IT DRAWS ITS SPECIFICATION FROM THE TAGSET.XML FILE I
 declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":"adjective", "d":"adverb", "c":"conjunction", "r":"preposition","p":"pronoun", "m":"numberal", "i":"interjection", "e":"exclamation", "u":"punctuation"}, map{"1":"first person", "2":"second person", "3":"third person"}, map{"s":"singular", "p":"plural"}, map{"-":"none", "p":"present", "i":"imperfect", "r":"perfect", "l":"pluperfect", "t":"future perfect", "f":"future"}, map{"-":"none", "i":"indicative", "s":"subjunctive", "n":"infinitive", "m":"imperative", "p":"participle", "d":"gerund", "g":"gerundive", "u":"supine"}, map{"a":"active", "p":"passive"}, map{"m":"masculine", "f":"feminine", "n":"neuter"}, map{"n":"nominative", "g":"genitive", "d":"dative", "a":"accusative", "b":"ablative", "v":"vocative", "l":"locative"}, map{"c":"comparative", "s":"superlative"}];
 :)
 
-declare variable $treebanks := (doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Caes Gall.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Cic Catil.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Ov Met.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Petr.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Phaedrus.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Sal Cat.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Suet Aug.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\Verg A.xml"), doc("C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"));
+declare variable $treebanks := fn:collection("./treebank_data/v2.1/Latin/texts");
+
+(:
+declare variable $treebanks := (doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Caes Gall.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Petr.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Phaedrus.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Sal Cat.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Suet Aug.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Verg A.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/vulgate.xml"));
+:)
+(:
+
+file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
+
+"C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
+:)
 
 let $postags := deh:postags()
+let $results :=
 for $treebank in $treebanks
-let $nom-participles := deh:search((), "PRED", "", $treebank, $postags)
-let $dependents := deh:return-children($nom-participles)
-let $auxiliaries := deh:search((), "AuxV", "", $dependents, $postags)
-for $aux in $auxiliaries
-return (deh:mark-node($aux), deh:mark-node(deh:return-parent($aux)))
+let $preds :=
+return deh:search((), "", "", deh:return-children(deh:search(("verb"), "", "", $treebank, $postags)), $postags)
+let $results := deh:mark-node($results)
+for $word in $results
+return $treebanks[fn:document-uri(.) eq $word/fn:string(@deh-docpath)]//sentence[fn:string(@id) eq $word/fn:string(@deh-sen-id)]
 
+
+(:
+Saved 6/30/2023:
+let $auxiliaries :=
+  let $postags := deh:postags()
+  for $treebank in $treebanks
+  let $nom-participles := (deh:search(("verb", "gerundive"), "", "", $treebank, $postags), deh:search(("verb", "gerund"), "", "", $treebank, $postags))
+  let $dependents := deh:return-children($nom-participles)
+  let $search_2 := deh:search((), "AuxV", "", $dependents, $postags)
+  return $search_2
+for $treebank in $treebanks
+return $treebank/fn:document-uri(.)
+:)
 (:
 EXAMPLE: uSE OF THE DEH:FIND-HIGHEST FUNC
 let $doc := $treebanks[2]

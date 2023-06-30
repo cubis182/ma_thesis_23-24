@@ -225,6 +225,23 @@ declare function deh:mark-node($nodes as element(*)*) as element()*
   
 };
 
+(:
+6/28/2023:
+
+Kind of a hacked-together function, but if you want to know the number of times in a set of LDT <word/>'s '(presumably coming from a search) occurs with certain relations, this will give a list of each relation with its frequency below it.
+
+$words: a series of LDT <word> nodes
+
+:)
+declare function deh:relation-freq($words as element()*) as item()*
+{
+  let $val :=
+    for $word in $words
+    return $word/fn:string(@relation)
+  for $item in fn:distinct-values($val)
+  return ($item, fn:count(fn:index-of($val, $item)))
+};
+
 (: Winter Break 2022-23 Phase :)
 (: Change the confusing terms later: this works either way:)
 declare %private function deh:process-pairs($original-dependents as element()*, $processed-dependents as element()*, $original-heads as element()*, $processed-heads as element()*) as element()*
