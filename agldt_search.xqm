@@ -2,7 +2,7 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 
 (:
 5/18/2023: 
@@ -20,6 +20,70 @@ declare %public function deh:postags() as item()*
   return map:merge($maps)
   return $results
 };
+
+(:
+7/3/2023
+This function, by the end of the project, should be able to take any treebank XML document and spit out its URN. The ideal scenario is the whole URN starting from "urn" and ending with the end of the work title, say, "phi001" being an example. This needs to be able to match up with the URN as it is in the Perseus catalogue, from which I will draw this info.
+
+The return value will be a string with the author and work title all in one.
+
+$doc: One or more documents which are XML treebanks, or a node from within the treebank (currently supports words or sentences in LDT)
+:)
+
+(:--------------------------START NAMES/URNS SECTION------------------------------:)
+
+declare function deh:cts-urn($doc as node()*)
+{
+  for $xml in $doc (:get each document one at a time:)
+  return if ($xml/*/name() eq "treebank") then (
+    let $id := $xml//sentence[1]/fn:string(@document_id)
+    let $end := (functx:index-of-string($id, ".perseus") - 1)
+    return fn:substring($id, 1, $end)
+)
+  else if (($xml/name() eq "word") or ($doc/name() eq "sentence")) then (
+    deh:cts-urn(doc(fn:base-uri($xml)))
+  )
+  else (
+    "Error! Not a recognized format."
+  )
+  
+};
+
+(:
+7/3/2023:
+Takes only a single doc as its argument, and returns an array with the title and author in that order. Doesn't always work, it does provide a weird result for the Vulgate, but that is more the fault of the authors for using a more general URN for Revelation in the New Testament and not referring to the Vulgate specifically.
+
+$doc: a SINGLE XML treebank document
+:)
+declare function deh:info-from-html($doc as node()*)
+{
+  
+  let $html := html:parse(fetch:binary(fn:concat("https://catalog.perseus.org/catalog/", deh:cts-urn($doc)))) (:Get the Perseus Catalog entry:)
+  let $node := $html//h4[text() eq "Work Information"]/../dl (:Gets the bundle of work info:)
+  let $work-info := $node/dd (:Get the nodes which contain the work info:)
+  let $title := $work-info[2]
+  let $author := $node//*[text() eq "Author:"]/following-sibling::dd[1]/a/text()
+  return array{fn:concat($title, ", "), $author}
+};
+
+(:
+7/3/2023:
+This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author.
+
+$doc: One or more documents
+:)
+declare function deh:work-info($doc as node()*)
+{
+  for $xml in $doc
+  return if ($xml/*/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
+    array{fn:concat($xml//title/text(), " ", $xml//biblScope/text()), $xml//author/text()}
+  )  
+  else if ($xml/*/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
+    deh:info-from-html($xml)
+  )
+};
+
+(:-------------------------END NAMES/URNS SECTION---------------------------:)
 
 (:
 5/19/2023:
@@ -147,8 +211,8 @@ declare function deh:word-postag($search as item()*, $word as node()*, $postags 
 5/19/2023:
 Currently overhauling this function: it should take 5 arguments:
 $search is a sequence of strings with the full names of the parts of the postag you wish to search. Just put an empty sequence if you don't need to use this parameter.
-$relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string)
-$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify
+$relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string. It also, as of 7/3/2023, is not case-sensitive)
+$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify; also not case-sensitive, as it says for $relation
 $doc is the SINGLE treebank you wish to search, or a set of <word/> elements
 $postags is the output of the deh:postags() function
 
@@ -171,12 +235,12 @@ declare %public function deh:search($postag as item()*, $relation as xs:string, 
 
 (:
 5/19/2023:
-This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes; the changes I made 6/27/2023 to the deh:search function should ensure that.
+This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes; the changes I made 6/27/2023 to the deh:search function should ensure that. As of 7/3/2023, this function is no longer case sensitive.
 :)
 declare %private function deh:test-rel-lemma($words as element()*, $relation as xs:string, $lemma as xs:string) as element()*
 {
-  for $word in $words[fn:contains(fn:string(@relation), $relation) eq true()]
-  return $word[fn:contains(fn:string(@lemma), $lemma) eq true()]
+  for $word in $words[fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()]
+  return $word[fn:contains(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true()]
 };
 
 
@@ -216,12 +280,21 @@ declare %public function deh:postag-andSearch($search as item()*, $doc as node()
 (:---------------------------END deh:postag-andSearch AND DEPENDENCIES--------------------------------:)
 
 (: Winter Break 2022-23 Phase :)
-(: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words":)
+(: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words"
+
+7/3/2023: because of deh:ldt2.1-workinfo, this currently is incompatible with any other format
+
+Depends on:
+deh:ldt2.1-workinfo
+:)
 declare function deh:mark-node($nodes as element(*)*) as element()*
 {
+  
   for $node in $nodes
   where $node/name() eq "word"
-  return functx:add-attributes(functx:add-attributes($node, xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  let $work-info := deh:ldt2.1-workinfo($node) (:Remember that work-info[1] is the author, work-info[2] is the title, and work-info[3] is the subdoc (i.e., book and section number):)
+  
+  return functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("deh-subdoc"), $work-info[3]), xs:QName("deh-title"), $work-info[2]), xs:QName("deh-author"), $work-info[1]), xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
   
 };
 
@@ -431,6 +504,14 @@ declare %private function deh:proc-highest($postag-search as item()*, $elements 
 Depends on:
 :)
 
+(:
+7/3/2023:
+Takes a single element from a document, and finds its author, work name, and place, and returns it in a sequence in that order
+:)
+declare function deh:ldt2.1-workinfo($word as element())
+{
+  ($word/ancestor::treebank//author/text(), $word/ancestor::treebank//title/text(), $word/../fn:string(@subdoc)) 
+};
 (:----------------------------------------------------------------------------------------------------------------------
 START OF corpus.csv FUNCTIONS
 :)

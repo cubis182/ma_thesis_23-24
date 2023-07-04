@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 
 (: This module MUST be stored in the same folder; both should be in my GitHub repository:)
 import module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A" at "./agldt_search.xqm";
@@ -60,14 +60,8 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 "C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
 :)
 
-let $postags := deh:postags()
-let $results :=
-for $treebank in $treebanks
-let $preds :=
-return deh:search((), "", "", deh:return-children(deh:search(("verb"), "", "", $treebank, $postags)), $postags)
-let $results := deh:mark-node($results)
-for $word in $results
-return $treebanks[fn:document-uri(.) eq $word/fn:string(@deh-docpath)]//sentence[fn:string(@id) eq $word/fn:string(@deh-sen-id)]
+let $seq := deh:work-info($treebanks)
+return $seq[1](2)
 
 
 (:
