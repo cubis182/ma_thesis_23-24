@@ -125,7 +125,7 @@ declare %public function deh:sentence-lengths($docs as node()*) as item()*
 :)
 
 
-(:------------------deh:postag-andSearch AND DEPENDENCIES------------------------------:)
+(:------------------START deh:postag-andSearch AND DEPENDENCIES/OTHER SEARCH TOOLS------------------------------:)
 (: 
 5/19/2023 remarks:
 $search is a sequence of strings which matches the long, elaborated string in the TAGSET for part of speech
@@ -146,7 +146,7 @@ Changed the loop at the start from "for $word in $doc//sentence/word" to "in $do
 This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (the following updated 6/27/2023) (deh:andSearch shell takes a sequence of <word/> elements, handles whether to keep or discard them, deh:word-postag, dependent on it, actually tests each word), this function simply makes sure the input is a sequence of words (NOT a hierarchical structure including sentences), and returns the output from the deh:word-postag function. See the description to deh:andSearch-handler for more details.
 
 
-$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"); can also be a single, lone string
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
 $postags: Just the deh:postags function, every time; in this case, usually passed from a parent function
 :)
@@ -210,9 +210,21 @@ declare function deh:word-postag($search as item()*, $word as node()*, $postags 
 (:
 5/19/2023:
 Currently overhauling this function: it should take 5 arguments:
-$search is a sequence of strings with the full names of the parts of the postag you wish to search. Just put an empty sequence if you don't need to use this parameter.
+
+7/5/2023 note: Consider using the following scheme:
+
+$a: A map with the following possibilities (I use double slashes (//) to denote a comment):
+
+map {
+  //option : value
+  "postag": A sequence or single string equivalent to the parameters set out for $search in the deh:search() function description (how to handle the LDT postag, which handles morphology (kinda) and POS, and PROIEL, which separates those into <part-of-speech/> and <morphology/>?)
+  "relation": A single string which is not case-sensitive and it what will appear in the @relation attribute of words/tokens. See the deh:test-rel-lemma() function for more info.
+  "lemma": A single string which is the lemma you are looking for (doesn't have to match the full string, but what you enter must be at least part of the full string) There is no option to only find exact matches.
+}
+
+$search is a sequence of strings (or just a single string if only one search term) with the full names of the parts of the postag you wish to search. Just put an empty sequence if you don't need to use this parameter.
 $relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string. It also, as of 7/3/2023, is not case-sensitive)
-$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify; also not case-sensitive, as it says for $relation
+$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify; also not case-sensitive, as it says for $relation. There is no option to only find exact matches. There is no option to only find exact matches.
 $doc is the SINGLE treebank you wish to search, or a set of <word/> elements
 $postags is the output of the deh:postags() function
 
@@ -277,7 +289,113 @@ declare %public function deh:postag-andSearch($search as item()*, $doc as node()
 };
 :)
 
-(:---------------------------END deh:postag-andSearch AND DEPENDENCIES--------------------------------:)
+(:-------------------------START deh:query AND DEPENDENCIES------------------------------------------:)
+
+(:
+deh:query()
+7/4/2023:
+This function should be the main entry point for searching the treebanks and getting data back in a reasonable format. Much of the description of the way it works is below in the function itself.
+
+$a: A series of nodes, hopefully the results of deh:search()
+$b: Same as $a above
+
+$a-to-b-rel: This is a map with the keys "relation", "depth" and "width". See below:
+
+  "relation": the options for this argument are listed below:
+    "child": results of $a must be children of results of $b
+    "parent": results of $a must be parents of results of $b
+    "sibling": results of $a must be siblings of results of $b
+    "ancestor": results of $a must be parents or parents of parents of results of $b
+    "descendant": results of $a must be descended from or descendants of words descended from results of $b
+  "depth": A number, to be used in only a few circumstances. If "relation" is "ancestor" or "descendant", (you can leave this empty if you want, default is "0" which signals deh:return-ancestors or deh:return-descendants to use their default behavior) "ancestor " at depth of "1" will return a parent, "2" the grandparent, etc. Same for descendant.
+    
+   "width": Another number, only used if "relation" is "parent" or "ancestor". At "0", uses the default behavior of each function, and this is what the parser uses by default (if you provide no "width" option). At "1", this applies the deh:return-siblings function to the results, making it the whole previous generation.
+
+$treebanks: A treebank xml document; separate, because you should not be allowed to do this kind of query on multiple documents, it will return nothing.
+
+$options:
+
+map{
+  //option : value
+  "export": Takes a single string; if "xml", it will output results in an xml-friendly format (EXPAND ON THIS LATER); if "csv", will export the same results to a .csv format (actually comma-separated); if "node", it will return the nodes alone just like a search. The default is "xml"
+}
+Notes:
+Don't need a function yet for 
+
+Depends on:
+deh:results-to-csv
+deh:check-rel-options() (private)
+:)
+declare %public function deh:query($a as element()*, $b as element()*, $treebank as node(), $a-to-b-rel as map(*), $options as map(*))
+{
+  (:Have the default return options ready if no options are submitted:)
+  let $def-options := map{
+    "export":"xml"
+  }
+  
+  (:1 Removed this step, but this is where I would have generated the results for $b :)
+  
+  (:2: Use on of the relations set by $a-to-b-rel to determine the appropriate function
+  Below are the available function, with the appropriate $a-to-b-rel string to its right:
+    deh:return-children()   //child
+    deh:return-parent()     //parent
+    deh:return-siblings()   //sibling
+    deh:return-ancestors()  //ancestor (only direct, one parent to another)
+    deh:return-descendants()//descendant (all children, and their children, and their children, etc.; that whole section of the tree)
+    
+    Each of these functions should get results in the order they appear in the sentence, from beginning to end, at least in principle; that has not been tested. However, the point is, there is no need to go and create new 'next-sibling' or 'preceding sibling' stuff, since the order is maintained within each individual sentence anyway and the XPath axes should be good enough for finer distinctions.
+  :)
+  
+  (:3: Get the results of the function returned just above when the results of 1 are passed into it:)
+  
+  (:4: Removed this step, this is where I would have gotten $a:)
+  
+  (:5: Convert these to an XML format, or return them if "export":"node" is set :)
+  
+  (:6: Return those results, or export to .csv and then return:)
+  
+  
+  return true() (:Placeholder:)
+};
+
+(:
+7/4/2023:
+
+:)
+declare function deh:results-to-csv($results as node()*)
+{
+  (:About to create this: if a certain option is set:)
+};
+
+(:
+deh:check-rel-options
+7/4/2023:
+
+$map: Is the $a-to-b-rel argument from the deh:query function, this function tests whether it is valid and modifies it if it is slightly off
+:)
+declare %private function deh:check-rel-options($map as map(*)) as map(*)
+{
+  (:Takes the $a-to-b-rel arg from deh:query and pretties is up.
+  It must do the following:
+  If "relation" is "ancestor" or "dependent", and a "depth" option is not set, set it to "0".
+  If "relation" is set to "ancestor" and or "parent" and depth is not set, set it to "0"
+  :)
+};
+
+(:
+deh:check-search-options
+7/4/2023:
+Used in deh:query to normalize the search options; if any option is left out, it puts a default one in.
+
+:)
+declare %private function deh:check-search-options($map as map(*)) as map(*)
+{
+  
+};
+
+(:-------------------------END deh:query AND DEPENDENCIES------------------------------------------:)
+
+(:---------------------------END deh:postag-andSearch AND DEPENDENCIES/OTHER SEARCH TOOLS------------------------------:)
 
 (: Winter Break 2022-23 Phase :)
 (: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words"
@@ -344,7 +462,7 @@ declare %public function deh:return-pairs($results as element()*, $targets as el
 declare %public function deh:parent-return-pairs($dependents as element()*, $heads as element()*) as element()*
 {
   
-  let $parents := deh:return-parent($dependents)
+  let $parents := deh:return-parent($dependents, 0)
   for $node in $heads
   where functx:index-of-node($parents, $node) gt 0
   let $childReturn := 
@@ -361,11 +479,18 @@ declare %public function deh:parent-return-pairs($dependents as element()*, $hea
 };
 
 (: Winter Break 2022-23 Phase :)
-(: Returns a list of the WORD (AGLDT) parents of each word. :)
-declare %public function deh:return-parent($nodes as element()*) as element()*
+(: Returns a list of the WORD (AGLDT) parents of each word.
+7/5/2023:
+Now has a second argument $width. This allows you to return all the siblings of 
+ :)
+declare %public function deh:return-parent($nodes as element()*, $width as xs:integer) as element()*
 {
   for $node in $nodes
-  return $node/../word[@id eq $node/@head]
+  return if ($width eq 0) then
+  $node/../word[@id eq $node/@head]
+  else (
+    deh:return-siblings($node/../word[@id eq $node/@head], true())
+  )
 };
 
 (: Winter Break 2022-23 Phase :)
@@ -377,33 +502,100 @@ declare %public function deh:return-children($nodes as element()*) as element()*
 };
 
 (: Winter Break 2022-23 Phase :)
-(: Returns all the WORD (AGLDT) ancestors from bottom-up, in order:)
-declare %private function deh:return-ancestors($nodes as element()*) as element()*
+(: Returns all the WORD (AGLDT) ancestors from bottom-up, in order
+7/4/2023: Added these args:
+$depth: A number; if 0, just gets each parent by each parent one at a time; if not, it is the number of times we travel back up the tree
+$width: whether or not we apply the deh:return-siblings function to the results
+
+Depends on:
+deh:return-parent
+deh:return-siblings
+:)
+declare function deh:return-ancestors($nodes as element()*, $depth as xs:string, $width as xs:integer) as element()*
 {
+  if ($depth eq "0") then ( (:If depth is 0, just do the default thing:) 
   for $node in $nodes
-    let $parent := deh:return-parent($node)
-    return ($parent, deh:return-ancestors($parent))
-    
+    let $parent := deh:return-parent($node, 0)
+    return if ($width eq "0") then ($parent, deh:return-ancestors($parent, $depth, $width)) (:Still must account for width: if 0, don't give siblings:)
+    else if ($width eq "1") then (deh:return-siblings(($parent, deh:return-ancestors($parent, $depth, $width)), true())) (: If 1, return the siblings of each result:)
+    else("Error!") 
+  )
+  else (
+    if ($width eq "0") then 
+    (deh:return-ancestors($nodes, "0", "0")[$depth])  (:No need to rewrite code; just use the default function, but this time pick out the right level, since we should only enter this code at a certain depth:)    
+    else (deh:return-siblings(deh:return-ancestors($nodes, "0", "0")[$depth], true()))
+  )    
 };
 
 (: Winter Break 2022-23 Phase :)
-(: Returns all the WORD (AGLDT) descendants, going branch-by-branch, it will fill out each left-to-right:)
-declare %public function deh:return-descendants($nodes as element()*) as element()*
+(: Returns all the WORD (AGLDT) descendants, going branch-by-branch, it will fill out each left-to-right
+7/5/2023:
+Previous statement is true if you set $depth to 0, in which case the function does simply perform the deh:return-function iteratively, returning that entire sub-branch of the tree. $depth allows you to specify whether you want a specific generation within those results. If you start from the highest word in the tree, you could specify any level you wanted, in other words
+
+$nodes: One or many nodes, each of which is processed individually. Currently must be an LDT node
+$depth: The depth within the 'descendants' results which you want to return; if 0, this returns all descendants, but, for example, a depth of 2 would return all the grandchildren of each $node passed into the function
+
+Depends on:
+deh:return-children()
+deh:return-depth()
+
+:)
+declare %public function deh:return-descendants($nodes as element()*, $depth as xs:integer) as element()*
 {
-  for $node in $nodes
-    let $children := deh:return-children($node)
-    for $child in $children
-      return ($child, deh:return-descendants($child))
+  if ($depth eq 0) then
+  (
+    for $node in $nodes
+      let $children := deh:return-children($node)
+      for $child in $children
+        return ($child, deh:return-descendants($child, 0)) (:Instead of passing depth directly, just passing "0" just in case:)
+    )
+    else (
+      for $node in $nodes
+        let $node-depth := deh:return-depth($node, 1) (:Get the absolute depth from the root of the $node:)
+        let $final-depth := $node-depth + $depth (:Add the specified depth to the node depth to get the absolute depth of the final values:)
+        for $word in deh:return-descendants($node, 0)
+          return $word[deh:return-depth(., 1) eq $final-depth] (:Only return descendants which match the right depth:)
+    )
 };
 
-(: Winter Break 2022-23 Phase :)
-declare %private function deh:return-siblings($nodes as element()*) as element()*
+(:
+deh:return-depth()
+7/5/2023:
+Gets the depth of the node, which is the number of steps back to the root (the root, not just the first word-node)
+$iter: should always be 1
+
+Currently private, as deh:return-descendants relies on it alone for its depth value
+
+Depends on:
+deh:return-parent
+:)
+declare %private function deh:return-depth($node, $iter as xs:integer)
+{
+  if (fn:count(deh:return-parent($node, 0)) eq 0) then
+    ($iter)
+  else (
+    deh:return-depth(deh:return-parent($node, 0), ($iter + 1))
+  )
+};
+
+
+(: Winter Break 2022-23 Phase
+7/4/2023: Added this:
+$include if $true, includes the node passed to the function (primarily if this is being used to implement the $width argument of deh:return-ancestors or deh:return-parent)
+ :)
+declare function deh:return-siblings($nodes as element()*, $include as xs:boolean) as element()*
 {
   for $node in $nodes
-    return $node/../word[@head eq $node/@head][@id ne $node/@id] (: This second condition to make sure the word itself is not repeated:)
+    let $final := $node/../word[@head eq $node/@head]
+    return if ($include) then
+    $final
+    else (
+      $final[fn:string(@id) ne $node/fn:string(@id)]
+    )
 };
 
 (: 
+DEPRECATED
 5/18/2023:
 $head-terms is a sequence of strings which has search terms, $children-terms another set of string search terms (both in accordance with the deh:word-postag and deh:postag-andSearch functions), the $depth is what level of children (1 is a child, 2 is a grandchild, 3 a great-grandchilde, MAX IS 4); A VALUE OF 0 DEALS WITH ALL DESCENDANTS)
 
@@ -411,6 +603,7 @@ hängt ab von:
 deh:word-postag
 deh:postags()
 :)
+(:
 declare %public function deh:feature-search($doc as node()*, $head-terms as item()*, $children-terms as item()*, $depth as xs:integer) as node()*
 {
   let $postags := deh:postags()
@@ -430,11 +623,14 @@ declare %public function deh:feature-search($doc as node()*, $head-terms as item
     -
   :)
 };
+:)
 
 (:
+DEPRECATED
 Winter Break 2022-23 Phase:
 This function returns all the nodes of a certain depth; goes no farther than 4, for now; there is likely a better algorithm for this
 :)
+(:
 declare function deh:return-depth($nodes as element()*, $depth as xs:integer)
 {
   if ($depth eq 0) then
@@ -448,6 +644,7 @@ declare function deh:return-depth($nodes as element()*, $depth as xs:integer)
   else if ($depth eq 4) then
   deh:return-children(deh:return-children(deh:return-children($nodes)))
 };
+:)
 
 (:
 6/25/2023:
