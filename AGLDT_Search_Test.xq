@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
 :)
@@ -53,6 +53,8 @@ declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":
 
 declare variable $ldt2.1-treebanks := fn:collection("./treebank_data/v2.1/Latin/texts");
 
+declare variable $all-ldt := ($ldt2.1-treebanks, fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb"));
+
 (:
 DEPRECATED, better to use the local collection and to reference the whole folder
 declare variable $treebanks := (doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Caes Gall.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Petr.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Phaedrus.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Sal Cat.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Suet Aug.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Verg A.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/vulgate.xml"));
@@ -63,9 +65,26 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 
 "C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
 :)
-
-let $tree := $ldt2.1-treebanks[7]
-return deh:return-descendants($tree//sentence[1]/word[fn:string(@id) eq "1"], 0)
+let $return :=
+for $tree in $all-ldt
+let $postags := deh:postags()
+let $search := map{
+  "postag":("verb", "subjunctive"),
+  "relation":"",
+  "lemma":""
+}
+let $a-to-b-rel := map{
+  "relation":"child",
+  "width":"",
+  "depth":""
+}
+let $options := map{
+  "export":"xml"
+}
+return deh:query($search, 
+deh:query(map{"postag":"noun", "relation":"OBJ", "lemma":""}, deh:search((), "", "habeo1", $tree, $postags), map{"relation":"child"}, map{"export":"node"}),
+ $a-to-b-rel, $options)
+return $return
 
 (:
 Saved 6/30/2023:

@@ -2,7 +2,8 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+(:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm :)
 
 (:
 5/18/2023: 
@@ -143,7 +144,7 @@ This function takes an sequence of fully written-out strings ($search) which are
 6/25/2023:----------------OBSOLETE---------------------
 Changed the loop at the start from "for $word in $doc//sentence/word" to "in $doc//word", no need to have extra steps. Also added the below description.
 
-This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (the following updated 6/27/2023) (deh:andSearch shell takes a sequence of <word/> elements, handles whether to keep or discard them, deh:word-postag, dependent on it, actually tests each word), this function simply makes sure the input is a sequence of words (NOT a hierarchical structure including sentences), and returns the output from the deh:word-postag function. See the description to deh:andSearch-handler for more details.
+This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (the following updated 6/27/2023) (deh:andSearch shell takes a sequence of <word/> elements, handles whether to keep or discard them, deh:word-postag, descendant on it, actually tests each word), this function simply makes sure the input is a sequence of words (NOT a hierarchical structure including sentences), and returns the output from the deh:word-postag function. See the description to deh:andSearch-handler for more details.
 
 
 $search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"); can also be a single, lone string
@@ -161,7 +162,7 @@ declare %public function deh:postag-andSearch($search as item()*, $doc, $postags
 
 (:
 6/27/2023:
-This function is a helper function to deh:postag-andSearch. I wanted to be able to pass a series of <word/> elements, which were already pulled by a search (that is, if I find a list of every word dependent on a PRED, )
+This function is a helper function to deh:postag-andSearch. I wanted to be able to pass a series of <word/> elements, which were already pulled by a search (that is, if I find a list of every word descendant on a PRED, )
 
 Depends on:
 deh:word-postags
@@ -296,7 +297,14 @@ deh:query()
 7/4/2023:
 This function should be the main entry point for searching the treebanks and getting data back in a reasonable format. Much of the description of the way it works is below in the function itself.
 
-$a: A series of nodes, hopefully the results of deh:search()
+$a: A map with the following possibilities (I use double slashes (//) to denote a comment):
+
+map {
+  //option : value
+  "postag": (7/5, MUST BE AN EMPTY SEQUENCE IF UNUSED) A sequence or single string equivalent to the parameters set out for $search in the deh:search() function description (how to handle the LDT postag, which handles morphology (kinda) and POS, and PROIEL, which separates those into <part-of-speech/> and <morphology/>?)
+  "relation": A single string which is not case-sensitive and it what will appear in the @relation attribute of words/tokens. See the deh:test-rel-lemma() function for more info.
+  "lemma": A single string which is the lemma you are looking for (doesn't have to match the full string, but what you enter must be at least part of the full string) There is no option to only find exact matches.
+}
 $b: Same as $a above
 
 $a-to-b-rel: This is a map with the keys "relation", "depth" and "width". See below:
@@ -307,11 +315,9 @@ $a-to-b-rel: This is a map with the keys "relation", "depth" and "width". See be
     "sibling": results of $a must be siblings of results of $b
     "ancestor": results of $a must be parents or parents of parents of results of $b
     "descendant": results of $a must be descended from or descendants of words descended from results of $b
-  "depth": A number, to be used in only a few circumstances. If "relation" is "ancestor" or "descendant", (you can leave this empty if you want, default is "0" which signals deh:return-ancestors or deh:return-descendants to use their default behavior) "ancestor " at depth of "1" will return a parent, "2" the grandparent, etc. Same for descendant.
+  "depth": An integer, to be used in only a few circumstances. If "relation" is "ancestor" or "descendant", (you can leave this empty if you want, default is 0 which signals deh:return-ancestors or deh:return-descendants to use their default behavior) "ancestor " at depth of 1 will return a parent, 2 the grandparent, etc. Same for descendant.
     
-   "width": Another number, only used if "relation" is "parent" or "ancestor". At "0", uses the default behavior of each function, and this is what the parser uses by default (if you provide no "width" option). At "1", this applies the deh:return-siblings function to the results, making it the whole previous generation.
-
-$treebanks: A treebank xml document; separate, because you should not be allowed to do this kind of query on multiple documents, it will return nothing.
+   "width": Another integer, only used if "relation" is "parent" or "ancestor". At 0, uses the default behavior of each function, and this is what the parser uses by default (if you provide no "width" option). At 1, this applies the deh:return-siblings function to the results, making it the whole previous generation.
 
 $options:
 
@@ -326,12 +332,14 @@ Depends on:
 deh:results-to-csv
 deh:check-rel-options() (private)
 :)
-declare %public function deh:query($a as element()*, $b as element()*, $treebank as node(), $a-to-b-rel as map(*), $options as map(*))
+declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel as map(*), $options as map(*))
 {
   (:Have the default return options ready if no options are submitted:)
   let $def-options := map{
     "export":"xml"
   }
+  
+  let $postags := deh:postags()
   
   (:1 Removed this step, but this is where I would have generated the results for $b :)
   
@@ -346,16 +354,53 @@ declare %public function deh:query($a as element()*, $b as element()*, $treebank
     Each of these functions should get results in the order they appear in the sentence, from beginning to end, at least in principle; that has not been tested. However, the point is, there is no need to go and create new 'next-sibling' or 'preceding sibling' stuff, since the order is maintained within each individual sentence anyway and the XPath axes should be good enough for finer distinctions.
   :)
   
-  (:3: Get the results of the function returned just above when the results of 1 are passed into it:)
+   let $options-final := 
+  if (map:size($options) eq 0) then (
+    $def-options
+  )
+  else ($options)
+    
+  let $final-results := 
+  for $node in $b
+  let $b-rels := deh:use-rel-func($a-to-b-rel, $node)
+  let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels, $postags)
+  return if (fn:count($search) gt 0) then (
+    if ($options-final("export") eq "xml") then (
+      <tree-search>
+        <head>
+          {deh:mark-node($node)}
+        </head>
+        <results>
+          {deh:mark-node($search)}
+        </results>
+        <search>
+          <postag>{for $n in $a("postag") return fn:tokenize($n)}</postag>
+          <relation>{$a("relation")}</relation>
+          <lemma>{$a("lemma")}</lemma>
+          <relation-to-head>
+            <relationship>{$a-to-b-rel("relation")}</relationship>
+            <all-siblings>{$a-to-b-rel("width")}</all-siblings>
+            <depth>{$a-to-b-rel("depth")}</depth>
+          </relation-to-head>
+        </search>
+      </tree-search>
+    )
+    else if ($options("export") eq "node") then (
+      $search
+    )
+    else ("Error! Incorrect options set for export")
+  )
   
   (:4: Removed this step, this is where I would have gotten $a:)
   
+ 
+  
+  return $final-results
   (:5: Convert these to an XML format, or return them if "export":"node" is set :)
   
   (:6: Return those results, or export to .csv and then return:)
   
   
-  return true() (:Placeholder:)
 };
 
 (:
@@ -368,29 +413,125 @@ declare function deh:results-to-csv($results as node()*)
 };
 
 (:
-deh:check-rel-options
+deh:xml-export()
+7/5/2023:
+This function needs to mark each node up with the proper info (7/5 note, you should update deh:mark-node to do all this) and the bulk of this function is organizing it in an xml which can easily be converted to csv. That way, we can just export it as the xml if we want, but it is already in a good format if we want to look at it in another program.
+
+CSV Notes:
+The structure is <csv><record></record></csv>, where each record is a row, and the column is indicated by the tag on the elements in the <record/>
+:)
+declare %private function deh:xml-export($results as element()*)
+{
+  
+};
+
+(:
+deh:get-rel-func()
 7/4/2023:
+This is a helper function to deh:query, which returns the appropriate relation to $b. For example, if I want to count perfect passives, and $a is the set of auxiliaries and $b is the set of participles, then I would pass $b with a map that has "relation":"child" and nothing else.
 
 $map: Is the $a-to-b-rel argument from the deh:query function, this function tests whether it is valid and modifies it if it is slightly off
+$nodes: Nodes to search, which should be arg $b
+
+Depends on:
+deh:check-rel-options
+deh:return-children
+deh:return-parent
+deh:return-descendants
+deh:return-ancestors
+deh:return-siblings
+:)
+
+declare %private function deh:use-rel-func($map as map(*), $nodes as element()*)
+{
+  (:
+  Relevant function declarations:
+  declare %public function deh:return-parent($nodes as element()*, $width as xs:integer) as element()*
+  declare %public function deh:return-children($nodes as element()*) as element()*
+  declare function deh:return-ancestors($nodes as element()*, $depth as xs:string, $width as xs:integer) as element()*
+  declare %public function deh:return-descendants($nodes as element()*, $depth as xs:integer) as element()*
+  declare function deh:return-siblings($nodes as element()*, $include as xs:boolean) as element()*
+  :)
+  let $map := deh:check-rel-options($map)
+  let $width := $map("width")
+  let $depth := $map("depth")
+  return if (fn:count($map("relation")) eq 0) then
+  ("Error! No relation")
+  else if ($map("relation") eq "child") then
+  (deh:return-children($nodes))
+  else if ($map("relation") eq "parent") then
+  (deh:return-parent($nodes, $width))
+  else if ($map("relation") eq "descendant") then
+  (deh:return-descendants($nodes, $depth))
+  else if ($map("relation") eq "ancestor") then
+  (deh:return-ancestors($nodes, $depth, $width))
+  else if ($map("relation") eq "sibling") then
+  (deh:return-siblings($nodes, false()))
+  else ()
+};
+
+(:
+deh:check-rel-options
+7/4/2023:
+Used in deh:query to normalize the search options; if any option is left out, it puts a default one in.
+
 :)
 declare %private function deh:check-rel-options($map as map(*)) as map(*)
 {
   (:Takes the $a-to-b-rel arg from deh:query and pretties is up.
   It must do the following:
-  If "relation" is "ancestor" or "dependent", and a "depth" option is not set, set it to "0".
-  If "relation" is set to "ancestor" and or "parent" and depth is not set, set it to "0"
+  If "relation" is "ancestor" or "descendant", and a "depth" option is not set, set it to "0".
+  If "relation" is set to "ancestor" and or "parent" and "width" is not set, set it to "0"
   :)
-};
-
-(:
-deh:check-search-options
-7/4/2023:
-Used in deh:query to normalize the search options; if any option is left out, it puts a default one in.
-
-:)
-declare %private function deh:check-search-options($map as map(*)) as map(*)
-{
   
+  let $rel := $map("relation") (:Pull out the relation now, same with depth and width:)
+  let $depth := $map("depth")
+  let $width := $map("width")
+  return if ($rel eq "ancestor") then (
+    if (fn:string-length($depth) eq 0) then (
+      if (fn:string-length($width) eq 0) then (
+        map {
+          "relation":$rel,
+          "depth":0,
+          "width":0
+        }
+      )
+      else (
+        map {
+          "relation":$rel,
+          "depth":0,
+          "width":$width
+        }
+      )
+    )
+    else if (fn:string-length($width) eq 0) then (
+      map {
+        "relation":$rel,
+        "width":0,
+        "depth":$depth
+      }
+    )
+    else ($map)
+  )
+  else if ($rel eq "parent") then (
+    if (fn:string-length($width) eq 0) then (
+      map{
+        "relation":$rel,
+        "depth":0
+      }
+    )
+    else ($map)
+  )
+  else if ($rel eq "descendant") then (
+    if (fn:string-length($depth) eq 0) then (
+      map{
+        "relation":$rel,
+        "depth":0
+      }
+    )
+    else ($map)
+  )
+  else ($map)
 };
 
 (:-------------------------END deh:query AND DEPENDENCIES------------------------------------------:)
@@ -409,10 +550,10 @@ declare function deh:mark-node($nodes as element(*)*) as element()*
 {
   
   for $node in $nodes
-  where $node/name() eq "word"
+  where $node/name() eq "word" (:Change this later to be an if statement, where I can switch it to "token" to account for PROIEL:)
   let $work-info := deh:ldt2.1-workinfo($node) (:Remember that work-info[1] is the author, work-info[2] is the title, and work-info[3] is the subdoc (i.e., book and section number):)
   
-  return functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("deh-subdoc"), $work-info[3]), xs:QName("deh-title"), $work-info[2]), xs:QName("deh-author"), $work-info[1]), xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  return functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("deh-urn"), deh:cts-urn(doc(fn:base-uri($node)))), xs:QName("deh-subdoc"), $work-info[3]), xs:QName("deh-title"), $work-info[2]), xs:QName("deh-author"), $work-info[1]), xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
   
 };
 
@@ -435,13 +576,13 @@ declare function deh:relation-freq($words as element()*) as item()*
 
 (: Winter Break 2022-23 Phase :)
 (: Change the confusing terms later: this works either way:)
-declare %private function deh:process-pairs($original-dependents as element()*, $processed-dependents as element()*, $original-heads as element()*, $processed-heads as element()*) as element()*
+declare %private function deh:process-pairs($original-descendants as element()*, $processed-descendants as element()*, $original-heads as element()*, $processed-heads as element()*) as element()*
 {
   for $first-node at $n in $original-heads
   where functx:index-of-node($processed-heads, $first-node) gt 0
   let $return := 
-    for $second-node in $processed-dependents
-    where functx:index-of-node($original-dependents, $second-node) gt 0
+    for $second-node in $processed-descendants
+    where functx:index-of-node($original-descendants, $second-node) gt 0
     return $second-node
   return ($first-node, $return[$n])
   
@@ -459,16 +600,16 @@ declare %public function deh:return-pairs($results as element()*, $targets as el
 
 (: Winter Break 2022-23 Phase :)
 (: Should be private and used in the deh:return-pairs function later!!! :)
-declare %public function deh:parent-return-pairs($dependents as element()*, $heads as element()*) as element()*
+declare %public function deh:parent-return-pairs($descendants as element()*, $heads as element()*) as element()*
 {
   
-  let $parents := deh:return-parent($dependents, 0)
+  let $parents := deh:return-parent($descendants, 0)
   for $node in $heads
   where functx:index-of-node($parents, $node) gt 0
   let $childReturn := 
     let $children := deh:return-children($node)
     for $child in $children
-    where functx:index-of-node($dependents, $child) gt 0
+    where functx:index-of-node($descendants, $child) gt 0
     return $child
   return 
   <parent-return-pair>
