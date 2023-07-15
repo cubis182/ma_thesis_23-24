@@ -2,7 +2,7 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm :)
 
 (:
@@ -28,7 +28,7 @@ This function, by the end of the project, should be able to take any treebank XM
 
 The return value will be a string with the author and work title all in one.
 
-$doc: One or more documents which are XML treebanks, or a node from within the treebank (currently supports words or sentences in LDT)
+$doc: A single LDT (normal or Harrington) word
 :)
 
 (:--------------------------START NAMES/URNS SECTION------------------------------:)
@@ -150,14 +150,14 @@ This function is primarily used in the deh:search function, as part of a fuller 
 $search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"); can also be a single, lone string
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
 $postags: Just the deh:postags function, every time; in this case, usually passed from a parent function
+
+Depends on:
+deh:andSearch-handler()
 :)
 declare %public function deh:postag-andSearch($search as item()*, $doc, $postags as item()*) as item()*
 {
-  if ($doc[1]/name() eq "word") then 
-    deh:andSearch-handler($search, $doc, $postags)
-  else (
-    deh:andSearch-handler($search, $doc//word, $postags)
-  )
+  let $tokens := deh:tokens-from-unk($doc) (:function added 7/12/2023 to handle extracting just the sequence of tokens:)
+  return deh:andSearch-handler($search, $tokens, $postags)
 };
 
 (:
@@ -165,7 +165,7 @@ declare %public function deh:postag-andSearch($search as item()*, $doc, $postags
 This function is a helper function to deh:postag-andSearch. I wanted to be able to pass a series of <word/> elements, which were already pulled by a search (that is, if I find a list of every word descendant on a PRED, )
 
 Depends on:
-deh:word-postags
+deh:word-postag()
 
 :)
 declare %private function deh:andSearch-handler($search as item()*, $doc as element()*, $postags as item()*) as item()*
@@ -181,6 +181,7 @@ declare %private function deh:andSearch-handler($search as item()*, $doc as elem
 
 (:
 Spring 2023 Phase:
+THIS IS WHERE THE CHEESE IS MADE, the search functionality really hinges on this.
 This function is meant as a helper function to the deh:postag-andSearch (in that it does all the actual searching, the deh:postag-andSearch really only chooses to return or discard what this function spits out). It is also used elsewhere, though. What it does is go through each position in the postag, and wherever it finds a positive result, it returns true() in a sequence. If the sequence holds the same number of "true()s" as there are search terms, we return a true() value, and false() if not.
 
 $search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
@@ -190,7 +191,7 @@ $postags: Just the deh:postags function, every time, usually passed from a previ
 Depends on:
 
 :)
-declare function deh:word-postag($search as item()*, $word as node()*, $postags as item()*) as xs:boolean
+declare function deh:word-postag($search as item()*, $word as element(), $postags as item()*) as xs:boolean
 {
   let $postag := $word/fn:string(@postag)
   (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
@@ -241,9 +242,7 @@ declare %public function deh:search($postag as item()*, $relation as xs:string, 
 {
   (: This first statement runs if :)
   if (fn:count($postag) gt 0) then ( deh:test-rel-lemma(deh:postag-andSearch($postag, $doc, $postags), $relation, $lemma))
-  else if ($doc[1]/name() eq "word") then
-    (deh:test-rel-lemma($doc, $relation, $lemma)) (:6/27/23: The deh:test-rel-lemma function takes only word nodes, and since I changed this today (6/27/2023) to accept either a full doc or a sequence of elements, I need to make sure the right input goes in :)
-  else ((deh:test-rel-lemma($doc//word, $relation, $lemma)))
+  else (deh:test-rel-lemma($doc, $relation, $lemma)) (:7/12/23: changed again, because the deh:tokens-from-unk now exists, which will return a sequence of tokens no matter whether a document is passed, or set of nodes, and does not depend on whether it is LDT or PROIEL:)
 };
 
 (:
@@ -252,8 +251,26 @@ This function is a helper function to deh:search; it takes $relation and $lemma 
 :)
 declare %private function deh:test-rel-lemma($words as element()*, $relation as xs:string, $lemma as xs:string) as element()*
 {
-  for $word in $words[fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()]
-  return $word[fn:contains(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true()]
+  let $words := deh:tokens-from-unk($words)
+  return $words[(fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()) and (fn:contains(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true())]
+};
+
+(:
+deh:tokens-from-unk()
+7/12/2023:
+
+Deals with the issue of functions where I can pass either a document or the individual word-nodes; this function, whether it receives an LDT or PROIEL Treebank, returns just the token nodes no matter what. I would make this a %private function, but it is pretty harmless.
+
+$tokens: either a document or series of nodes
+
+Depends on:
+:)
+declare function deh:tokens-from-unk($tokens as node()*) as element()*
+{
+  if (($tokens[1]/name() eq "word") or ($tokens[1] eq "token")) then ($tokens)
+  else if (fn:count($tokens//word) ne 0) then ($tokens//word)
+  else if (fn:count($tokens//token) ne 0) then ($tokens//token)
+  else ()
 };
 
 
@@ -323,7 +340,7 @@ $options:
 
 map{
   //option : value
-  "export": Takes a single string; if "xml", it will output results in an xml-friendly format (EXPAND ON THIS LATER); if "csv", will export the same results to a .csv format (actually comma-separated); if "node", it will return the nodes alone just like a search. The default is "xml"
+  "export": Takes a single string; if "xml", it will output results in an xml-friendly format (EXPAND ON THIS LATER); if "csv", will export the same results to a .csv format (actually comma-separated); if "bare", it will return the nodes alone just like a search; if  The default is "xml"
 }
 Notes:
 Don't need a function yet for 
@@ -338,6 +355,10 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $def-options := map{
     "export":"xml"
   }
+  let $xml-str := "xml" (:So we can change the strings in one place, here are the export modes:)
+  let $csv-str := "csv"
+  let $node-str := "node"
+  let $bare-str := "bare"
   
   let $postags := deh:postags()
   
@@ -361,11 +382,11 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   else ($options)
     
   let $final-results := 
-  for $node in $b
-  let $b-rels := deh:use-rel-func($a-to-b-rel, $node)
+  for $node in $b (:Go through each of the already retrieved results:)
+  let $b-rels := deh:use-rel-func($a-to-b-rel, $node) (:This and next line get targeted relatives of the node from $b, and do the search specified in this function's arguments:)
   let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels, $postags)
   return if (fn:count($search) gt 0) then (
-    if ($options-final("export") eq "xml") then (
+    if ($options-final("export") eq $xml-str or $options-final("export") eq $node-str) then ( (:export each result as an XML node, if that option was chosen:)
       <tree-search>
         <head>
           {deh:mark-node($node)}
@@ -385,7 +406,7 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
         </search>
       </tree-search>
     )
-    else if ($options("export") eq "node") then (
+    else if ($options("export") eq $bare-str) then ( (:If "bare" was chosen, just return the unmarked results:)
       $search
     )
     else ("Error! Incorrect options set for export")
@@ -395,7 +416,8 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   
  
   
-  return $final-results
+  return if ($options("export") eq $xml-str) then (<root>{$final-results}</root>)
+  else ($final-results)
   (:5: Convert these to an XML format, or return them if "export":"node" is set :)
   
   (:6: Return those results, or export to .csv and then return:)
@@ -488,8 +510,8 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
   let $depth := $map("depth")
   let $width := $map("width")
   return if ($rel eq "ancestor") then (
-    if (fn:string-length($depth) eq 0) then (
-      if (fn:string-length($width) eq 0) then (
+    if (fn:count($depth) eq 0) then (
+      if (fn:count($width) eq 0) then (
         map {
           "relation":$rel,
           "depth":0,
@@ -504,7 +526,7 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
         }
       )
     )
-    else if (fn:string-length($width) eq 0) then (
+    else if (fn:count($width) eq 0) then (
       map {
         "relation":$rel,
         "width":0,
@@ -514,7 +536,7 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
     else ($map)
   )
   else if ($rel eq "parent") then (
-    if (fn:string-length($width) eq 0) then (
+    if (fn:count($width) eq 0) then (
       map{
         "relation":$rel,
         "depth":0
@@ -523,7 +545,7 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
     else ($map)
   )
   else if ($rel eq "descendant") then (
-    if (fn:string-length($depth) eq 0) then (
+    if (fn:count($depth) eq 0) then (
       map{
         "relation":$rel,
         "depth":0
@@ -554,6 +576,7 @@ declare function deh:mark-node($nodes as element(*)*) as element()*
   let $work-info := deh:ldt2.1-workinfo($node) (:Remember that work-info[1] is the author, work-info[2] is the title, and work-info[3] is the subdoc (i.e., book and section number):)
   
   return functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("deh-urn"), deh:cts-urn(doc(fn:base-uri($node)))), xs:QName("deh-subdoc"), $work-info[3]), xs:QName("deh-title"), $work-info[2]), xs:QName("deh-author"), $work-info[1]), xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  
   
 };
 

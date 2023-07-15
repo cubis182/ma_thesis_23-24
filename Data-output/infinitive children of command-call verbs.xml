@@ -1,0 +1,3684 @@
+<tree-search>
+	<head>
+		<word deh-sen-id="161"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="25"
+		      form="imperauit"
+		      lemma="impero"
+		      postag="v3sria---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="161"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="24"
+		      form="confodi"
+		      lemma="confodio"
+		      postag="v--pnp---"
+		      relation="OBJ"
+		      head="25"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="35"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7535/lattb.7535.1.tb.xml"
+		      deh-author="8.9"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="2"
+		      form="imperat"
+		      lemma="impero"
+		      postag="v3spia---"
+		      relation="PRED_CO"
+		      head="7"/>
+	</head>
+	<results>
+		<word deh-sen-id="35"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7535/lattb.7535.1.tb.xml"
+		      deh-author="8.9"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="6"
+		      form="muniri"
+		      lemma="munio"
+		      postag="v--pnp---"
+		      relation="A-INTOBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="65"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.39"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="35"
+		      form="praedicabant"
+		      lemma="praedico1"
+		      postag="v3piia---"
+		      relation="ADJ-RC_CO"
+		      head="69"/>
+	</head>
+	<results>
+		<word deh-sen-id="65"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.39"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="34"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="35"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="65"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.39"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="35"
+		      form="praedicabant"
+		      lemma="praedico1"
+		      postag="v3piia---"
+		      relation="ADJ-RC_CO"
+		      head="69"/>
+	</head>
+	<results>
+		<word deh-sen-id="65"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.39"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="34"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="35"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="94"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="37"
+		      form="ait"
+		      lemma="aio"
+		      postag="v3sria---"
+		      relation="PRED_CO"
+		      head="26"/>
+	</head>
+	<results>
+		<word deh-sen-id="94"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="36"
+		      form="uoluisse"
+		      lemma="volo1"
+		      postag="v--rna---"
+		      relation="OBJ"
+		      head="37"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="146"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="9"
+		      form="aiebat"
+		      lemma="aio"
+		      postag="v3siia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="146"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="10"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="9"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="17"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6498/lattb.6498.1.tb.xml"
+		      deh-author="19"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="1"
+		      form="aiebant"
+		      lemma="aio"
+		      postag="v3piia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="17"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6498/lattb.6498.1.tb.xml"
+		      deh-author="19"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="3"
+		      form="fore"
+		      lemma="sum"
+		      postag="v__fna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="27"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="interfectum"
+		      lemma="interficio"
+		      postag="v-srppma-"
+		      relation="SBJ"
+		      head="29"/>
+	</head>
+	<results>
+		<word deh-sen-id="27"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="25"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="24"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="32"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="30"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="OBJ"
+		      head="32"/>
+	</head>
+	<results>
+		<word deh-sen-id="32"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="31"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="30"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="7"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppnn-"
+		      relation="SBJ"
+		      head="9"/>
+	</head>
+	<results>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="8"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="7"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="34"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="23"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="OBJ"
+		      head="25"/>
+	</head>
+	<results>
+		<word deh-sen-id="34"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="23"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="63"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.4"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="23"
+		      form="interfecturos"
+		      lemma="interficio"
+		      postag="v-pfpama-"
+		      relation="OBJ"
+		      head="25"/>
+	</head>
+	<results>
+		<word deh-sen-id="63"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.4"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="23"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="101"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.6"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="17"
+		      form="scias"
+		      lemma="scio1"
+		      postag="v2spsa---"
+		      relation="ADV"
+		      head="16"/>
+	</head>
+	<results>
+		<word deh-sen-id="101"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.6"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="18"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="17"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="165"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.10"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="19"
+		      form="confectum"
+		      lemma="conficio"
+		      postag="v-srppma-"
+		      relation="OBJ"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="165"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.10"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="20"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="19"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="187"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.12"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="19"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="OBJ"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="187"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.12"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="20"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="19"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="188"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.12"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="factam"
+		      lemma="facio"
+		      postag="v-srppfa-"
+		      relation="OBJ"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="188"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="1.12"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="23"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="24"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="209"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.1"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="12"
+		      form="abiectum"
+		      lemma="abicio"
+		      postag="v-srppma-"
+		      relation="OBJ_CO"
+		      head="11"/>
+	</head>
+	<results>
+		<word deh-sen-id="209"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.1"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="13"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="12"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="212"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="1"
+		      form="interfectum"
+		      lemma="interficio"
+		      postag="v-srppma-"
+		      relation="SBJ_CO"
+		      head="6"/>
+	</head>
+	<results>
+		<word deh-sen-id="212"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.2"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="2"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="231"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.4"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="10"
+		      form="factam"
+		      lemma="facio"
+		      postag="v-srppfa-"
+		      relation="OBJ"
+		      head="17"/>
+	</head>
+	<results>
+		<word deh-sen-id="231"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.4"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="11"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="10"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="270"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.6"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="11"
+		      form="eiectum"
+		      lemma="eicio"
+		      postag="v-srppma-"
+		      relation="OBJ"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="270"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.6"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="12"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="11"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="284"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="71"
+		      form="eiectus"
+		      lemma="eicio"
+		      postag="v-srppmn-"
+		      relation="PNOM_CO"
+		      head="66"/>
+	</head>
+	<results>
+		<word deh-sen-id="284"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="77"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="71"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="287"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="3"
+		      form="eiectus"
+		      lemma="eicio"
+		      postag="v-srppmn-"
+		      relation="PNOM"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="287"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="4"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="3"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="291"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="12"
+		      form="eiectum"
+		      lemma="eicio"
+		      postag="v-srppma-"
+		      relation="OBJ"
+		      head="14"/>
+	</head>
+	<results>
+		<word deh-sen-id="291"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0474.phi013.perseus-lat1.tb.xml"
+		      deh-author="Marcus Tullius Cicero"
+		      deh-title="M. Tulli Ciceronis Orationes: Recognovit brevique adnotatione critica instruxit Albertus Curtis Clark Collegii Reginae Socius"
+		      deh-subdoc="2.7"
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="13"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="12"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="23"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="24"
+		      form="sciat"
+		      lemma="scio1"
+		      postag="v3spsa---"
+		      relation="OBJ_CO"
+		      head="23"/>
+	</head>
+	<results>
+		<word deh-sen-id="23"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.2"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="26"
+		      form="currere"
+		      lemma="curro1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="24"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="85"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.5"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="1"
+		      form="nescit"
+		      lemma="nescio1"
+		      postag="v3spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="85"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.5"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="4"
+		      form="cedere"
+		      lemma="cedo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="126"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.8"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="3"
+		      form="deficiet"
+		      lemma="deficio1"
+		      postag="v3sfia---"
+		      relation="PRED_CO"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="126"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.8"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="5"
+		      form="rogitare"
+		      lemma="rogito1"
+		      postag="v--pna---"
+		      relation="SBJ"
+		      head="3"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="237"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.14"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="1"
+		      form="nescit"
+		      lemma="nescio1"
+		      postag="v3spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="237"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.14"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="4"
+		      form="cedere"
+		      lemma="cedo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="362"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.21"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="11"
+		      form="sciat"
+		      lemma="scio1"
+		      postag="v3spsa---"
+		      relation="PRED_CO"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="362"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0620.phi001.perseus-lat1.tb.xml"
+		      deh-author="Propertius"
+		      deh-title="Elegies"
+		      deh-subdoc="1.21"
+		      deh-urn="urn:cts:latinLit:phi0620.phi001"
+		      id="12"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="11"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="136"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="14"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="1"
+		      form="scio"
+		      lemma="scio1"
+		      postag="v1spia---"
+		      relation="PRED_CO"
+		      head="14"/>
+	</head>
+	<results>
+		<word deh-sen-id="136"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="14"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="2"
+		      form="fuisse"
+		      lemma="sum1"
+		      postag="v--rna---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="596"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="53"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="1"
+		      form="sciebam"
+		      lemma="scio1"
+		      postag="v1siia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="596"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="53"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="9"
+		      form="contendisse"
+		      lemma="contendo1"
+		      postag="v--rna---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="375"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="46"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="1"
+		      form="Scimus"
+		      lemma="scio1"
+		      postag="v1ppia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="375"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="46"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="415"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="47"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="2"
+		      form="scio"
+		      lemma="scio1"
+		      postag="v1spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="415"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="47"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="4"
+		      form="periisse"
+		      lemma="pereo1"
+		      postag="v--rna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="417"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="47"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="4"
+		      form="sciebamus"
+		      lemma="scio1"
+		      postag="v1piia---"
+		      relation="PRED_CO"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="417"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="47"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="14"
+		      form="laborare"
+		      lemma="laboro1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="487"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="51"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="10"
+		      form="fecit"
+		      lemma="facio1"
+		      postag="v3sria---"
+		      relation="PRED_CO"
+		      head="13"/>
+	</head>
+	<results>
+		<word deh-sen-id="487"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="51"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="11"
+		      form="reporrigere"
+		      lemma="reporrigo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="10"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="667"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="58"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="2"
+		      form="scies"
+		      lemma="scio1"
+		      postag="v2sfia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="667"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="58"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="perdidisse"
+		      lemma="perdo1"
+		      postag="v--rna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="677"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="58"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="2"
+		      form="scies"
+		      lemma="scio1"
+		      postag="v2sfia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="677"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="58"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="habere"
+		      lemma="habeo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="765"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="63"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="25"
+		      form="scio"
+		      lemma="scio1"
+		      postag="v1spia---"
+		      relation="ADV"
+		      head="24"/>
+	</head>
+	<results>
+		<word deh-sen-id="765"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="63"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="29"
+		      form="narrare"
+		      lemma="narro1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="25"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="1018"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="74"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="1"
+		      form="Scis"
+		      lemma="scio1"
+		      postag="v2spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="1018"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="74"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="5"
+		      form="mentiri"
+		      lemma="mentior1"
+		      postag="v--pnp---"
+		      relation="OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="1024"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="74"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="4"
+		      form="sciat"
+		      lemma="scio1"
+		      postag="v3spsa---"
+		      relation="ADV"
+		      head="3"/>
+	</head>
+	<results>
+		<word deh-sen-id="1024"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0972.phi001.perseus-lat1.xml"
+		      deh-author="Petronius Arbiter"
+		      deh-title="Petronius"
+		      deh-subdoc="74"
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="posse"
+		      lemma="possum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="179"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0975.phi001.perseus-lat1.tb.xml"
+		      deh-author="Phaedrus, Augusti libertus"
+		      deh-title="Fabulae Aesopiae"
+		      deh-subdoc="1:25"
+		      deh-urn="urn:cts:latinLit:phi0975.phi001"
+		      id="6"
+		      form="scirem"
+		      lemma="scio"
+		      postag="v1sisa---"
+		      relation="ADV"
+		      ref="1:25"
+		      head="4"/>
+	</head>
+	<results>
+		<word deh-sen-id="179"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0975.phi001.perseus-lat1.tb.xml"
+		      deh-author="Phaedrus, Augusti libertus"
+		      deh-title="Fabulae Aesopiae"
+		      deh-subdoc="1:25"
+		      deh-urn="urn:cts:latinLit:phi0975.phi001"
+		      id="5"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      ref="1:25"
+		      head="6"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="245"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0975.phi001.perseus-lat1.tb.xml"
+		      deh-author="Phaedrus, Augusti libertus"
+		      deh-title="Fabulae Aesopiae"
+		      deh-subdoc="2:3"
+		      deh-urn="urn:cts:latinLit:phi0975.phi001"
+		      id="14"
+		      form="scierint"
+		      lemma="scio"
+		      postag="v3prsa---"
+		      relation="ADV"
+		      ref="2:3"
+		      head="13"/>
+	</head>
+	<results>
+		<word deh-sen-id="245"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0975.phi001.perseus-lat1.tb.xml"
+		      deh-author="Phaedrus, Augusti libertus"
+		      deh-title="Fabulae Aesopiae"
+		      deh-subdoc="2:3"
+		      deh-urn="urn:cts:latinLit:phi0975.phi001"
+		      id="15"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      ref="2:3"
+		      head="14"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="320"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="2"
+		      form="sciat"
+		      lemma="scio"
+		      postag="v3spsa---"
+		      relation="OBJ"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="320"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="7"
+		      form="habere"
+		      lemma="habeo"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="325"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="4"
+		      form="sciret"
+		      lemma="scio"
+		      postag="v3sisa---"
+		      relation="ADV"
+		      head="3"/>
+	</head>
+	<results>
+		<word deh-sen-id="325"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi1348.abo012.perseus-lat1.tb.xml"
+		      deh-author="C. Suetonius Tranquillus"
+		      deh-title="Divus Augustus"
+		      deh-subdoc="1.1-154.4"
+		      deh-urn="urn:cts:latinLit:phi1348.abo012"
+		      id="8"
+		      form="solere"
+		      lemma="soleo"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="252"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="10"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="2"
+		      form="faciet"
+		      lemma="facio1"
+		      postag="v3sfia---"
+		      relation="OBJ_CO"
+		      head="6"/>
+	</head>
+	<results>
+		<word deh-sen-id="252"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="10"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="3"
+		      form="amaricare"
+		      lemma="amarico1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="306"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="12"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="14"
+		      form="faceret"
+		      lemma="facio1"
+		      postag="v3sisa---"
+		      relation="ADV"
+		      head="12"/>
+	</head>
+	<results>
+		<word deh-sen-id="306"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="12"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="15"
+		      form="trahi"
+		      lemma="traho1"
+		      postag="v--pnp---"
+		      relation="OBJ"
+		      head="14"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="323"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="11"
+		      form="facit"
+		      lemma="facio1"
+		      postag="v3spia---"
+		      relation="PRED_CO"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="323"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="17"
+		      form="adorare"
+		      lemma="adoro1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="11"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="324"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="8"
+		      form="faceret"
+		      lemma="facio1"
+		      postag="v3sisa---"
+		      relation="ADV"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="324"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="11"
+		      form="descendere"
+		      lemma="descendo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="328"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="2"
+		      form="faciet"
+		      lemma="facio1"
+		      postag="v3sfia---"
+		      relation="PRED_CO"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="328"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/tlg0031.tlg027.perseus-lat1.tb.xml"
+		      deh-author="Jerome"
+		      deh-title="Vulgate Bible"
+		      deh-subdoc="13"
+		      deh-urn="urn:cts:greekLit:tlg0031.tlg027"
+		      id="15"
+		      form="habere"
+		      lemma="habeo1"
+		      postag="v--pna---"
+		      relation="OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="25"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1005/lattb.1005.1.tb.xml"
+		      deh-author="34"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="9"
+		      form="sciebas"
+		      lemma="scio"
+		      postag="v2siia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="25"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1005/lattb.1005.1.tb.xml"
+		      deh-author="34"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="8"
+		      form="tenuisse"
+		      lemma="teneo"
+		      postag="v--rna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="9"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1021/lattb.1021.1.tb.xml"
+		      deh-author="45"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="2"
+		      form="scitote"
+		      lemma="scio"
+		      postag="v2pfma---"
+		      relation="PRED"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1021/lattb.1021.1.tb.xml"
+		      deh-author="45"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="23"
+		      form="posse"
+		      lemma="possum"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1022/lattb.1022.1.tb.xml"
+		      deh-author="50"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="12"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1022/lattb.1022.1.tb.xml"
+		      deh-author="50"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="11"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="12"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1026/lattb.1026.1.tb.xml"
+		      deh-author="58"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="17"
+		      form="sciebat"
+		      lemma="scio"
+		      postag="v3siia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="20"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/1026/lattb.1026.1.tb.xml"
+		      deh-author="58"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="16"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="17"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="10"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/3113/lattb.3113.1.tb.xml"
+		      deh-author="13"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="19"
+		      form="scis"
+		      lemma="scio"
+		      postag="v2spia---"
+		      relation="NOM-DIRSTAT_OBJ"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="10"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/3113/lattb.3113.1.tb.xml"
+		      deh-author="13"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="25"
+		      form="rediisse"
+		      lemma="redeo"
+		      postag="v--rna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="19"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="86"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4350/lattb.4350.1.tb.xml"
+		      deh-author="5.38"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="30"
+		      form="interfectos"
+		      lemma="interficio"
+		      postag="v-prppma-"
+		      relation="NOM-INDSTAT_OBJ-CO"
+		      head="35"/>
+	</head>
+	<results>
+		<word deh-sen-id="86"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4350/lattb.4350.1.tb.xml"
+		      deh-author="5.38"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="31"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="30"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="158"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4350/lattb.4350.1.tb.xml"
+		      deh-author="5.47"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="39"
+		      form="sciret"
+		      lemma="scio"
+		      postag="v3sisa---"
+		      relation="ADV-CAUSAL"
+		      head="34"/>
+	</head>
+	<results>
+		<word deh-sen-id="158"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4350/lattb.4350.1.tb.xml"
+		      deh-author="5.47"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="38"
+		      form="efferri"
+		      lemma="effero1"
+		      postag="v--pnp---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="39"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4586/lattb.4586.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="2"
+		      form="nescio"
+		      lemma="nescio"
+		      postag="v1spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4586/lattb.4586.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="1"
+		      form="mentiri"
+		      lemma="mentior"
+		      postag="v--pnp---"
+		      relation="INF-COMP"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="5"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4636/lattb.4636.1.tb.xml"
+		      deh-author="poem 5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0472.phi001"
+		      id="23"
+		      form="sciat"
+		      lemma="scio"
+		      postag="v3spsa---"
+		      relation="ADV-CAUSAL"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="5"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4636/lattb.4636.1.tb.xml"
+		      deh-author="poem 5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0472.phi001"
+		      id="24"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="23"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="6"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4639/lattb.4639.1.tb.xml"
+		      deh-author="poem 4"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0472.phi001"
+		      id="9"
+		      form="facta"
+		      lemma="facio"
+		      postag="v-prppnn-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="2"/>
+	</head>
+	<results>
+		<word deh-sen-id="6"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4639/lattb.4639.1.tb.xml"
+		      deh-author="poem 4"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0472.phi001"
+		      id="8"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="9"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="45"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4836/lattb.4836.1.tb.xml"
+		      deh-author="63"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="30"
+		      form="scio"
+		      lemma="scio"
+		      postag="v1spia---"
+		      relation="ADV-CAUSAL"
+		      head="29"/>
+	</head>
+	<results>
+		<word deh-sen-id="45"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4836/lattb.4836.1.tb.xml"
+		      deh-author="63"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="34"
+		      form="narrare"
+		      lemma="narro"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="30"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="155"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4862/lattb.4862.1.tb.xml"
+		      deh-author="46"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="1"
+		      form="Scimus"
+		      lemma="scio"
+		      postag="v1ppia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="155"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4862/lattb.4862.1.tb.xml"
+		      deh-author="46"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="5"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4882/lattb.4882.1.tb.xml"
+		      deh-author="141"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="4"
+		      form="scimus"
+		      lemma="scio"
+		      postag="v1ppia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="5"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4882/lattb.4882.1.tb.xml"
+		      deh-author="141"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="7"
+		      form="servari"
+		      lemma="servo"
+		      postag="v--pnp---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4937/lattb.4937.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="2"
+		      form="nescio"
+		      lemma="nescio"
+		      postag="v1spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4937/lattb.4937.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="1"
+		      form="mentiri"
+		      lemma="mentior"
+		      postag="v--pnp---"
+		      relation="INF-COMP"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="10"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4979/lattb.4979.1.tb.xml"
+		      deh-author="13"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="19"
+		      form="scis"
+		      lemma="scio"
+		      postag="v2spia---"
+		      relation="NOM-DIRSTAT_OBJ"
+		      head="21"/>
+	</head>
+	<results>
+		<word deh-sen-id="10"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4979/lattb.4979.1.tb.xml"
+		      deh-author="13"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="25"
+		      form="rediisse"
+		      lemma="redeo"
+		      postag="v--rna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="19"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="179"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4990/lattb.4990.1.tb.xml"
+		      deh-author="10.357-362"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="23"
+		      form="nesciat"
+		      lemma="nescio"
+		      postag="v3spsa---"
+		      relation="ADJ-RCCHAR_CO"
+		      head="28"/>
+	</head>
+	<results>
+		<word deh-sen-id="179"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/4990/lattb.4990.1.tb.xml"
+		      deh-author="10.357-362"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="24"
+		      form="irasci"
+		      lemma="irascor"
+		      postag="v--pnp---"
+		      relation="INF-COMP"
+		      head="23"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/5984/lattb.5984.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="8"
+		      form="suspectum"
+		      lemma="suspicio1"
+		      postag="v-srppnn-"
+		      relation="PRED_CO"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/5984/lattb.5984.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="7"
+		      form="dare"
+		      lemma="do"
+		      postag="v--pna---"
+		      relation="N-SUBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6047/lattb.6047.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="2"
+		      form="nescio"
+		      lemma="nescio"
+		      postag="v1spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="13"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6047/lattb.6047.1.tb.xml"
+		      deh-author="3.41"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi1276.phi001"
+		      id="1"
+		      form="mentiri"
+		      lemma="mentior"
+		      postag="v--pnp---"
+		      relation="INF-COMP"
+		      head="2"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6248/lattb.6248.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="8"
+		      form="suspectum"
+		      lemma="suspicio1"
+		      postag="v-srppnn-"
+		      relation="PRED_CO"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6248/lattb.6248.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="7"
+		      form="dare"
+		      lemma="do"
+		      postag="v--pna---"
+		      relation="N-SUBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="27"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="4"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="23"
+		      form="interfectum"
+		      lemma="interfacio"
+		      postag="v-srppma-"
+		      relation="NOM-INDSTAT_SBJ"
+		      head="28"/>
+	</head>
+	<results>
+		<word deh-sen-id="27"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="4"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="23"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="32"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="30"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="32"/>
+	</head>
+	<results>
+		<word deh-sen-id="32"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="31"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="30"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="8"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="NOM-INDSTAT_SBJ"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="9"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="34"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppna-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="26"/>
+	</head>
+	<results>
+		<word deh-sen-id="34"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="5"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="25"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="24"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="63"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="9"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="24"
+		      form="interfecturos"
+		      lemma="interficio"
+		      postag="v-pfpama-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="26"/>
+	</head>
+	<results>
+		<word deh-sen-id="63"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6361/lattb.6361.1.tb.xml"
+		      deh-author="9"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0474.phi013"
+		      id="25"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="24"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6392/lattb.6392.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="8"
+		      form="suspectum"
+		      lemma="suspicio1"
+		      postag="v-srppnn-"
+		      relation="PRED_CO"
+		      head="5"/>
+	</head>
+	<results>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6392/lattb.6392.1.tb.xml"
+		      deh-author="1.617-618"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn=""
+		      id="7"
+		      form="dare"
+		      lemma="do"
+		      postag="v--pna---"
+		      relation="N-SUBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="25"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6407/lattb.6407.1.tb.xml"
+		      deh-author="74"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="1"
+		      form="Scis"
+		      lemma="scio"
+		      postag="v2spia---"
+		      relation="NOM-DIRSTAT_OBJ"
+		      head="7"/>
+	</head>
+	<results>
+		<word deh-sen-id="25"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6407/lattb.6407.1.tb.xml"
+		      deh-author="74"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="5"
+		      form="mentiri"
+		      lemma="mentior"
+		      postag="v--pnp---"
+		      relation="INF-COMP_OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="30"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6407/lattb.6407.1.tb.xml"
+		      deh-author="74"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="4"
+		      form="sciat"
+		      lemma="scio"
+		      postag="v3spsa---"
+		      relation="ADV-PURP"
+		      head="3"/>
+	</head>
+	<results>
+		<word deh-sen-id="30"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6407/lattb.6407.1.tb.xml"
+		      deh-author="74"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0972.phi001"
+		      id="6"
+		      form="posse"
+		      lemma="possum"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6495/lattb.6495.1.tb.xml"
+		      deh-author="10"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="4"
+		      form="scitis"
+		      lemma="scio"
+		      postag="v2ppia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="21"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6495/lattb.6495.1.tb.xml"
+		      deh-author="10"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024"
+		      id="8"
+		      form="petisse"
+		      lemma="peto"
+		      postag="v--rna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="4"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="37"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6652/lattb.6652.1.tb.xml"
+		      deh-author="13.67-13.69"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="6"
+		      form="scit"
+		      lemma="scio"
+		      postag="v3spia---"
+		      relation="PRED"
+		      head="0"/>
+	</head>
+	<results>
+		<word deh-sen-id="37"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6652/lattb.6652.1.tb.xml"
+		      deh-author="13.67-13.69"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="5"
+		      form="fingi"
+		      lemma="fingo"
+		      postag="v--pnp---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="6"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="118"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6771/lattb.6771.1.tb.xml"
+		      deh-author="13.1-13.968"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="5"
+		      form="sciret"
+		      lemma="scio"
+		      postag="v3sisa---"
+		      relation="ADV-PROTAS_CO"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="118"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6771/lattb.6771.1.tb.xml"
+		      deh-author="13.1-13.968"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="8"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="5"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="129"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6771/lattb.6771.1.tb.xml"
+		      deh-author="13.1-13.968"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="8"
+		      form="faciendo"
+		      lemma="facio"
+		      postag="v_spda-b-"
+		      relation="AB-MEANS"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="129"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6771/lattb.6771.1.tb.xml"
+		      deh-author="13.1-13.968"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="6"
+		      form="posse"
+		      lemma="possum"
+		      postag="v--pna---"
+		      relation="A-INTOBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="118"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7201/lattb.7201.1.tb.xml"
+		      deh-author="13.354-13.359"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="5"
+		      form="sciret"
+		      lemma="scio"
+		      postag="v3sisa---"
+		      relation="ADV-PROTAS_CO"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="118"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7201/lattb.7201.1.tb.xml"
+		      deh-author="13.354-13.359"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="8"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="5"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="129"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7201/lattb.7201.1.tb.xml"
+		      deh-author="13.373-13.374"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="8"
+		      form="faciendo"
+		      lemma="facio"
+		      postag="v_spda-b-"
+		      relation="AB-MEANS"
+		      head="10"/>
+	</head>
+	<results>
+		<word deh-sen-id="129"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7201/lattb.7201.1.tb.xml"
+		      deh-author="13.373-13.374"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0959.phi006"
+		      id="6"
+		      form="posse"
+		      lemma="possum"
+		      postag="v--pna---"
+		      relation="A-INTOBJ"
+		      head="8"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7223/lattb.7223.1.tb.xml"
+		      deh-author="1.14"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="45"
+		      form="facturum"
+		      lemma="facio"
+		      postag="v-sfpama-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="48"/>
+	</head>
+	<results>
+		<word deh-sen-id="33"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7223/lattb.7223.1.tb.xml"
+		      deh-author="1.14"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="44"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="45"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="79"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7223/lattb.7223.1.tb.xml"
+		      deh-author="1.20"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="1"
+		      form="scire"
+		      lemma="scio"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ-CO"
+		      head="8"/>
+	</head>
+	<results>
+		<word deh-sen-id="79"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7223/lattb.7223.1.tb.xml"
+		      deh-author="1.20"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="4"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="1"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="7"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="12"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppnn-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="23"/>
+	</head>
+	<results>
+		<word deh-sen-id="7"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="13"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="12"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="22"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="16"
+		      form="faciendum"
+		      lemma="facio"
+		      postag="v-s-g-na-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="44"/>
+	</head>
+	<results>
+		<word deh-sen-id="22"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="15"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="16"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="49"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.36"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="17"
+		      form="factos"
+		      lemma="facio"
+		      postag="v-prppma-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="19"/>
+	</head>
+	<results>
+		<word deh-sen-id="49"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7234/lattb.7234.1.tb.xml"
+		      deh-author="1.36"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="16"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="17"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="52"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7235/lattb.7235.1.tb.xml"
+		      deh-author="1.44"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="15"
+		      form="facturum"
+		      lemma="facio"
+		      postag="v-sfpama-"
+		      relation="NOM-INDSTAT_OBJ-CO"
+		      head="16"/>
+	</head>
+	<results>
+		<word deh-sen-id="52"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7235/lattb.7235.1.tb.xml"
+		      deh-author="1.44"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="14"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="15"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="7"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="12"
+		      form="factum"
+		      lemma="facio"
+		      postag="v-srppnn-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="23"/>
+	</head>
+	<results>
+		<word deh-sen-id="7"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="13"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="12"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="22"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="16"
+		      form="faciendum"
+		      lemma="facio"
+		      postag="v-s-g-na-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="44"/>
+	</head>
+	<results>
+		<word deh-sen-id="22"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.31"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="15"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="16"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="49"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.36"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="17"
+		      form="factos"
+		      lemma="facio"
+		      postag="v-prppma-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="19"/>
+	</head>
+	<results>
+		<word deh-sen-id="49"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7270/lattb.7270.1.tb.xml"
+		      deh-author="1.36"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="16"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="17"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="4"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7501/lattb.7501.1.tb.xml"
+		      deh-author="8.pr"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="11"
+		      form="perfectum"
+		      lemma="perficio"
+		      postag="v-srppna-"
+		      relation="NOM-INDSTAT_OBJ"
+		      head="1"/>
+	</head>
+	<results>
+		<word deh-sen-id="4"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/7501/lattb.7501.1.tb.xml"
+		      deh-author="8.pr"
+		      deh-title=""
+		      deh-subdoc=""
+		      deh-urn="urn:cts:latinLit:phi0448.phi001"
+		      id="10"
+		      form="esse"
+		      lemma="sum1"
+		      postag="v--pna---"
+		      relation="AuxV"
+		      head="11"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
+<tree-search>
+	<head>
+		<word deh-sen-id="219"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="21"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="11"
+		      form="nominans"
+		      lemma="nomino1"
+		      postag="v-sppamn-"
+		      relation="ADV"
+		      head="4"/>
+	</head>
+	<results>
+		<word deh-sen-id="219"
+		      deh-docpath="file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/v2.1/Latin/texts/phi0631.phi001.perseus-lat1.tb.xml"
+		      deh-author="C. Sallusti Crispi"
+		      deh-title="Catilina, Iugurtha, Orationes Et Epistulae Excerptae De Historiis"
+		      deh-subdoc="21"
+		      deh-urn="urn:cts:latinLit:phi0631.phi001"
+		      id="12"
+		      form="laudare"
+		      lemma="laudo1"
+		      postag="v--pna---"
+		      relation="ADV"
+		      head="11"/>
+	</results>
+	<search>
+		<postag>verb infinitive</postag>
+		<relation/>
+		<lemma/>
+		<relation-to-head>
+			<relationship>child</relationship>
+			<all-siblings/>
+			<depth/>
+		</relation-to-head>
+	</search>
+</tree-search>
