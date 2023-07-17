@@ -70,11 +70,12 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 "C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
 :)
 
-let $postags := deh:postags()
-let $largest-tree := $all-ldt[7] (:Petronius:)
-let $tree-words := $largest-tree//word
-let $words := $tree-words[fn:position() = 1 to 100]
-return hof:top-k-by($words, deh:return-depth($words, 0), 50)
+(:IF TESTING LDT, RUN TESTS ON $all-ldt[7], SINCE THAT IS PETRONIUS AND THE LONGEST TEXT:)
+let $tree := $proiel[3]
+let $postags := deh:postags($tree//div[1])
+let $words := $tree//token
+
+return deh:search(("!indicative", "!participle"), "", "^sum$", $tree, $postags)
 
 
 

@@ -8,18 +8,24 @@ import module namespace functx = "http://www.functx.com" at "C:/Program Files (x
 (:
 5/18/2023: 
 This function takes the TAGSET.xml from the dependency treebank and returns a sequence, which has the possible postags in order.
+
+$example-node: Pass an element (could be sentence or whatever) from your search into this; JUST A SINGLE ELEMENT. For LDT, easiest to just get .//sentence[1], and for PROIEL .//div[1], since that should (repeat, SHOULD) always return an atomic value, not a sequence.
 --------OBSOLETE NOTES BELOW-----------
 Function to test whether a postag matches search terms (5/18/2023: I have repurposed this temporarily, old arg list was ($search as item()*, $postag as xs:string) as xs:boolean). The tagset.xml from the GitHub treebank master must be in the same directory as this file; IN THE FUTURE, this should pull straight from the internet:)
-declare %public function deh:postags() as item()*
+declare %public function deh:postags($example-node as element()) as item()*
 {
   let $tagset := doc("TAGSET.xml")
-  let $results :=
-  for $values in $tagset//attributes//values
-  let $maps := 
-  for $tag in $values/*
-  return map{$tag/postag/text() : $tag/long/text() }
-  return map:merge($maps)
-  return $results
+  return if (fn:count($example-node[1]/ancestor::treebank) > 0) then 
+  (
+    for $postag in $tagset//attributes/*
+    return map:merge(for $tag in $postag/values/* return map{$tag/postag/text():$tag/long/text()}) (:for each postag position, return a map with all the values for each possibility (so, under <pos/>, you have noun, adj, adv, conj, prep, pron, excl, verb, nrl, punct, irreg, which each has a 'long' and 'postag' value:)
+    
+) (:Get each part of the tag in order (pos, person, number, tense, mood, voice, gender, case, degree):)
+  else if (fn:count($example-node[1]/ancestor::proiel) > 0) then 
+  (
+    for $postag in $example-node[1]/ancestor::proiel/annotation/morphology/field
+    return map:merge(for $tag in $postag/value return map{$tag/fn:string(@tag):$tag/fn:string(@summary)})
+  )
 };
 
 (:
@@ -147,7 +153,7 @@ Changed the loop at the start from "for $word in $doc//sentence/word" to "in $do
 This function is primarily used in the deh:search function, as part of a fuller search by pos, relation, lemma, etc. However, it is used in a variety of circumstances. It takes a sequence of characteristics of part of speech in the $search (as a string, "third person", "gerund" etc.), and handles the search for words which match all of these in the provided $doc. It does none of the searching itself (the following updated 6/27/2023) (deh:andSearch shell takes a sequence of <word/> elements, handles whether to keep or discard them, deh:word-postag, descendant on it, actually tests each word), this function simply makes sure the input is a sequence of words (NOT a hierarchical structure including sentences), and returns the output from the deh:word-postag function. See the description to deh:andSearch-handler for more details.
 
 
-$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"); can also be a single, lone string
+$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"); can also be a single, lone string. If a negative search term, add '!' (without quotes, of course) to the very front, AND ONLY TO THE VERY FRONT, since deh:word-postag will remove the first character without looking.
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
 $postags: Just the deh:postags function, every time; in this case, usually passed from a parent function
 
@@ -164,14 +170,18 @@ declare %public function deh:postag-andSearch($search as item()*, $doc, $postags
 6/27/2023:
 This function is a helper function to deh:postag-andSearch. I wanted to be able to pass a series of <word/> elements, which were already pulled by a search (that is, if I find a list of every word descendant on a PRED, )
 
+$search: Same as described in deh:search()
+$words: a sequence of words/tokens ONLY
+$postags: the output of the deh:postags() function
+
 Depends on:
 deh:word-postag()
 
 :)
-declare %private function deh:andSearch-handler($search as item()*, $doc as element()*, $postags as item()*) as item()*
+declare %private function deh:andSearch-handler($search as item()*, $words as element()*, $postags as item()*) as item()*
 {
   (:Loop through every word in the document:)
-  for $word in $doc (:This function is private BECAUSE we assume $doc is a series of individual <word/> elements:)
+  for $word in $words (:This function is private BECAUSE we assume $doc is a series of individual <word/> elements:)
     (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
     let $results := deh:word-postag($search, $word, $postags)
     return if ($results) then
@@ -179,35 +189,67 @@ declare %private function deh:andSearch-handler($search as item()*, $doc as elem
     else ()
 };
 
+(:-----------------------------------START deh:word-postag() AND DEPENDENCIES-----------------------------------------:)
+
 (:
 Spring 2023 Phase:
-THIS IS WHERE THE CHEESE IS MADE, the search functionality really hinges on this.
-This function is meant as a helper function to the deh:postag-andSearch (in that it does all the actual searching, the deh:postag-andSearch really only chooses to return or discard what this function spits out). It is also used elsewhere, though. What it does is go through each position in the postag, and wherever it finds a positive result, it returns true() in a sequence. If the sequence holds the same number of "true()s" as there are search terms, we return a true() value, and false() if not.
+THIS IS WHERE THE CHEESE IS MADE (7/17/23: well, not anymore, really it is deh:test-postag() now), the search functionality really hinges on this.
+This function is meant as a helper function to the deh:postag-andSearch (in that it does all the actual searching, the deh:postag-andSearch really only chooses to return or discard what this function approves or disapproves of, respectively). It is also used elsewhere, though. What it does is go through each position in the postag, and wherever it finds a positive result, it returns true() in a sequence. If the sequence holds the same number of "true()s" as there are search terms, we return a true() value, and false() if not.
 
-$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
+Updated 7/17/2023: 
+This now needs to work with LDT and PROIEL; this will search either LDT's word/@postag attribute or PROIEL's token/@morphology attribute, since they work in similar ways. Both sets of attributes are retrieved from the deh:postags() function, which should already be passed through the $postags arg.
+
+$search: A set of POS tag search parameters, like ("comparative", "nominative", "plural"). If a negative search term, add '!' (without quotes, of course) to the very front, AND ONLY TO THE VERY FRONT, since deh:word-postag will remove the first character without looking.
 $word: A single word node from an LDT treebank
-$postags: Just the deh:postags function, every time, usually passed from a previous function
+$postags: Just the deh:postags function, every time, usually passed from a previous function; remember that this now can retrieve either PROIEL or LDT postags
 
 Depends on:
-
+deh:remove-excl()
 :)
 declare function deh:word-postag($search as item()*, $word as element(), $postags as item()*) as xs:boolean
 {
-  let $postag := $word/fn:string(@postag)
-  (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
-    let $check :=
-    for $teststr in $search
-      for $char at $n in functx:chars(fn:string($postag))
-      where $postags[$n](xs:string($char)) eq $teststr
-      return true()
-    (:Now, if the number of "trues" is equal to the number of search terms, we know it is a match:)
-    return if (fn:count($check) eq fn:count($search)) then (
-      true()
-    )
-    else (
-      false()
-    )
+  (:Separate the negative search terms (the ones we don't want, fronted with '!' (without quotes) from the positive ones, without the '!'. This also removes the '!' from the search term, since they are now differentiated:)
+  let $neg-terms := deh:remove-excl(for $str in $search where fn:contains($str, "!") return $str)
+  let $pos-terms := for $str in $search where fn:contains($str, "!") != true() return $str
+  let $postag := 
+    if ($word/name() = "word") then ($word/fn:string(@postag))
+    else if ($word/name() = "token") then ($word/fn:string(@morphology))
+    else ()
+  (:Deal with search results here; we see how many of the search terms match the neg parameters, and how many match the positive parameters, passing the word/token element's postag, and :)
+  let $neg-trues := deh:test-postag($neg-terms, $postag, $postags)
+  let $pos-trues := deh:test-postag($pos-terms, $postag, $postags)
+  
+  return if ((fn:count($neg-trues) = 0) and (fn:count($pos-trues) = fn:count($pos-terms))) then (true())
+  else (false())
 };
+
+(:
+deh:test-postag
+7/17/2023:
+
+:)
+declare %public function deh:test-postag($search as item()*, $tag as xs:string, $postags as item()*) as xs:boolean*
+{
+  (:I made the below FLWOR statement a variable so it does not return the same word more than once:)
+      for $char at $n in functx:chars(fn:string($tag))
+      where $postags[$n](xs:string($char)) = $search
+      return true()
+};
+
+(:
+deh:remove-excl()
+7/17/2023:
+This function is used in the deh:word-postag() function, and helps it out by removing the '!' from postag search terms
+
+$terms: A sequence of strings (or could be a null sequence, even, or a single string) which we need to remove '!' from.
+:)
+declare %private function deh:remove-excl($terms as item()*) as item()*
+{
+  for $str in $terms
+  return fn:substring($str, 2)
+};
+
+(:-----------------------------------END deh:word-postag() AND DEPENDENCIES-------------------------------------------:)
 
 (:
 5/19/2023:
@@ -224,9 +266,9 @@ map {
   "lemma": A single string which is the lemma you are looking for (doesn't have to match the full string, but what you enter must be at least part of the full string) There is no option to only find exact matches.
 }
 
-$search is a sequence of strings (or just a single string if only one search term) with the full names of the parts of the postag you wish to search. Just put an empty sequence if you don't need to use this parameter.
+$search is a sequence of strings (or just a single string if only one search term) with the full names of the parts of the postag you wish to search. If a negative search term, add '!' (without quotes, of course) to the very front, AND ONLY TO THE VERY FRONT, since deh:word-postag will remove the first character without looking. Just put an empty sequence if you don't need to use this parameter.
 $relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string. It also, as of 7/3/2023, is not case-sensitive)
-$lemma is the same, it will only check if the word's lemma CONTAINS the search string; therefore, leave it as an empty string if you don't want to specify; also not case-sensitive, as it says for $relation. There is no option to only find exact matches. There is no option to only find exact matches.
+$lemma: Now uses, unlike $relation (may change later), fn:matches for the search, which means it accepts regular expression notation and you can be more precise in exact matches. Still accepts an empty string if lemmas is not a desirable part of the search. Is not case sensitive.
 $doc is the SINGLE treebank you wish to search, or a set of <word/> elements
 $postags is the output of the deh:postags() function
 
@@ -248,11 +290,13 @@ declare %public function deh:search($postag as item()*, $relation as xs:string, 
 (:
 5/19/2023:
 This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes; the changes I made 6/27/2023 to the deh:search function should ensure that. As of 7/3/2023, this function is no longer case sensitive.
+
+THIS IS WHERE THE CODE FOR TESTING THE LEMMA IS! ALSO NOTE, THIS IS ALREADY TOTALLY COMPATIBLE WITH PROIEL
 :)
-declare %private function deh:test-rel-lemma($words as element()*, $relation as xs:string, $lemma as xs:string) as element()*
+declare %private function deh:test-rel-lemma($words, $relation as xs:string, $lemma as xs:string) as element()*
 {
   let $words := deh:tokens-from-unk($words)
-  return $words[(fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()) and (fn:contains(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true())]
+  return $words[(fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()) and (fn:matches(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true())]
 };
 
 (:
@@ -265,12 +309,11 @@ $tokens: either a document or series of nodes
 
 Depends on:
 :)
-declare function deh:tokens-from-unk($tokens as node()*) as element()*
+declare function deh:tokens-from-unk($tokens) as element()*
 {
-  if (($tokens[1]/name() eq "word") or ($tokens[1] eq "token")) then ($tokens)
-  else if (fn:count($tokens//word) ne 0) then ($tokens//word)
+  if (fn:count($tokens//word) ne 0) then ($tokens//word)
   else if (fn:count($tokens//token) ne 0) then ($tokens//token)
-  else ()
+  else if (fn:distinct-values($tokens/name()) = ("word", "token")) then ($tokens) (:Modified this to just return the sequence if it isn't a document:)
 };
 
 
@@ -360,7 +403,7 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $node-str := "node"
   let $bare-str := "bare"
   
-  let $postags := deh:postags()
+  let $postags := deh:postags($b[1])
   
   (:1 Removed this step, but this is where I would have generated the results for $b :)
   
