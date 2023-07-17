@@ -733,7 +733,7 @@ Currently private, as deh:return-descendants relies on it alone for its depth va
 Depends on:
 deh:return-parent
 :)
-declare %private function deh:return-depth($node, $iter as xs:integer)
+declare function deh:return-depth($node, $iter as xs:integer)
 {
   if (fn:count(deh:return-parent($node, 0)) eq 0) then
     ($iter)

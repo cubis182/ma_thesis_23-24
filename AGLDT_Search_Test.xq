@@ -71,7 +71,10 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 :)
 
 let $postags := deh:postags()
-return deh:return-descendants(deh:search((), "", "sum", $all-ldt[1]//word, $postags), 0)
+let $largest-tree := $all-ldt[7] (:Petronius:)
+let $tree-words := $largest-tree//word
+let $words := $tree-words[fn:position() = 1 to 100]
+return hof:top-k-by($words, deh:return-depth($words, 0), 50)
 
 
 
