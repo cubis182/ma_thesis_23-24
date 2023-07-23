@@ -61,6 +61,8 @@ declare variable $all-ldt := ($ldt2.1-treebanks, fn:collection("./harrington_tre
 
 declare variable $proiel := (fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));
 
+declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
+
 (:
 DEPRECATED, better to use the local collection and to reference the whole folder
 declare variable $treebanks := (doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Caes Gall.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Petr.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Phaedrus.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Sal Cat.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Suet Aug.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Verg A.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/vulgate.xml"));
@@ -76,11 +78,8 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 let $word := "^sic(1|)$"
 let $ldt := $all-ldt//word
 let $pr := $proiel//token
-return deh:search(("gerund", "ablative"), "", "", ($pr), deh:postags($pr[1]))
 
-(:return deh:query(map{"postag":("preposition"), "relation":"", "lemma":""}, deh:search("infinitive", "", "", $pr, deh:postags($pr[1])), map{"relation":"child"}, map{"export":"bare"}):)
-
-
+return $pr[fn:string(@part-of-speech) = "Pc"]/..
 
 (:
 Saved 6/30/2023:

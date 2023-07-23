@@ -12,7 +12,7 @@ This function takes the TAGSET.xml from the dependency treebank and returns a se
 $example-node: Pass an element (could be sentence or whatever) from your search into this; JUST A SINGLE ELEMENT. For LDT, easiest to just get .//sentence[1], and for PROIEL .//div[1], since that should (repeat, SHOULD) always return an atomic value, not a sequence.
 --------OBSOLETE NOTES BELOW-----------
 Function to test whether a postag matches search terms (5/18/2023: I have repurposed this temporarily, old arg list was ($search as item()*, $postag as xs:string) as xs:boolean). The tagset.xml from the GitHub treebank master must be in the same directory as this file; IN THE FUTURE, this should pull straight from the internet:)
-declare %public function deh:postags($example-node as element()) as item()*
+declare %public function deh:postags($example-node) as item()* (:7/22/2023: removed the type declaration for $example-node, I want it to be possible to pass an empty sequence :)
 {
   let $tagset := doc("TAGSET.xml")
   return if (fn:count($example-node[1]/ancestor::treebank) > 0) then 
@@ -26,6 +26,7 @@ declare %public function deh:postags($example-node as element()) as item()*
     for $postag in $example-node[1]/ancestor::proiel/annotation/morphology/field
     return map:merge(for $tag in $postag/value return map{$tag/fn:string(@tag):$tag/fn:string(@summary)})
   )
+  else ()
 };
 
 (:
@@ -160,11 +161,13 @@ $postags: Just the deh:postags function, every time; in this case, usually passe
 Depends on:
 deh:andSearch-handler()
 :)
-declare %public function deh:postag-andSearch($search as item()*, $doc, $postags as item()*) as item()*
+(:
+declare %private function deh:postag-andSearch($search as item()*, $doc, $postags as item()*) as item()*
 {
   let $tokens := deh:tokens-from-unk($doc) (:function added 7/12/2023 to handle extracting just the sequence of tokens:)
   return deh:andSearch-handler($search, $tokens, $postags)
 };
+:)
 
 (:
 6/27/2023:
@@ -205,22 +208,38 @@ $postags: Just the deh:postags function, every time, usually passed from a previ
 
 Depends on:
 deh:remove-excl()
+deh:normalize-terms
+deh:test-postag
 :)
 declare function deh:word-postag($search as item()*, $word as element(), $postags as item()*) as xs:boolean
 {
   (:Separate the negative search terms (the ones we don't want, fronted with '!' (without quotes) from the positive ones, without the '!'. This also removes the '!' from the search term, since they are now differentiated:)
   let $neg-terms := deh:remove-excl(for $str in $search where fn:contains($str, "!") return $str)
-  let $pos-terms := for $str in $search where fn:contains($str, "!") != true() return $str
+  let $pos-terms := for $str in $search where (fn:contains($str, "!") != true()) return $str
+  
+  let $negs := deh:normalize-terms($neg-terms, $postags) (:Added this to make sure we are not checking against an incompatible term (i.e., we put "noun" in the search terms, but the current word is a PROIEL one):)
+  let $poss := deh:normalize-terms($pos-terms, $postags)
+  
   let $postag := 
     if ($word/name() = "word") then ($word/fn:string(@postag))
     else if ($word/name() = "token") then ($word/fn:string(@morphology))
     else ()
   (:Deal with search results here; we see how many of the search terms match the neg parameters, and how many match the positive parameters, passing the word/token element's postag, and :)
-  let $neg-trues := deh:test-postag($neg-terms, $postag, $postags)
-  let $pos-trues := deh:test-postag($pos-terms, $postag, $postags)
+  let $neg-trues := deh:test-postag($negs, $postag, $postags)
+  let $pos-trues := deh:test-postag($poss, $postag, $postags)
   
-  return if ((fn:count($neg-trues) = 0) and (fn:count($pos-trues) = fn:count($pos-terms))) then (true())
+  return if ((fn:count($neg-trues) = 0) and (fn:count($pos-trues) = fn:count($poss))) then (true())
   else (false())
+};
+
+(:
+Because I am updating deh:search so it can take both treebanks at once, if I have given a search term only compatible with the other treebank, the one not being currently searched, I want it removed
+:)
+declare %private function deh:normalize-terms($terms as item()*, $postags)
+{
+  for $term in $terms
+  where fn:index-of((for $map in $postags return $map?*), $term) > 0 (:These parentheses SHOULD return all the supplied postags:)
+    return $term
 };
 
 (:
@@ -252,6 +271,7 @@ declare %private function deh:remove-excl($terms as item()*) as item()*
 (:-----------------------------------END deh:word-postag() AND DEPENDENCIES-------------------------------------------:)
 
 (:
+7/22/2023: NOTE, THIS ONLY SUPPORTS PROIEL OR LDT
 5/19/2023:
 Currently overhauling this function: it should take 5 arguments:
 
@@ -267,8 +287,8 @@ map {
 }
 
 $search is a sequence of strings (or just a single string if only one search term) with the full names of the parts of the postag you wish to search. If a negative search term, add '!' (without quotes, of course) to the very front, AND ONLY TO THE VERY FRONT, since deh:word-postag will remove the first character without looking. Just put an empty sequence if you don't need to use this parameter.
-$relation is a single string, should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string. It also, as of 7/3/2023, is not case-sensitive)
-$lemma: Now uses, unlike $relation (may change later), fn:matches for the search, which means it accepts regular expression notation and you can be more precise in exact matches. Still accepts an empty string if lemmas is not a desirable part of the search. Is not case sensitive.
+$relation is an empty string, empty sequence, single string, or sequence of strings, which should at least partially match the relation you are looking for, does NOT use the expanded version of the relation names. THIS SHOULD ALLOW FOR AN EMPTY STRING, which should indicate a match in any scenario (for the fn:contains function will give a positive result with an empty string. It also, as of 7/3/2023, is not case-sensitive). Can be made a negative search (i.e., searches for every example WITHOUT the specified relation), but make sure to append the '!' (without quotes) to the start of the search term. 
+$lemma:  is an empty string, empty sequence, single string, or sequence of strings, which you want to use to search for the lemma. Now uses, unlike $relation (may change later), fn:matches for the search, which means it accepts regular expression notation and you can be more precise in exact matches. Still accepts an empty string if lemmas is not a desirable part of the search. Is not case sensitive. Can make it a negative search (i.e., search for every example which does NOT have the lemma), but MAKE SURE THE '!' (WITHOUT QUOTES) IS APPENDED TO THE VERY START OF THE REGEX
 $doc is the SINGLE treebank you wish to search, or a set of <word/> elements
 $postags is the output of the deh:postags() function
 
@@ -280,11 +300,34 @@ deh:relations()
 deh:postag-andSearch
 deh:test-rel-lemma
 :)
-declare %public function deh:search($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc, $postags) 
+declare %public function deh:search($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc) 
 {
+  let $tokens := deh:tokens-from-unk($doc)
+  let $pr := $tokens[name() = "token"]
+  let $ldt := $tokens[name() = "word"]
+  
+  return (deh:search-execute($postag, $relation, $lemma, $ldt, deh:postags($ldt[1])), deh:search-execute($postag, $relation, $lemma, $pr (:this is a good spot to put a function to search the PROIEL part-of-speech field:), deh:postags($pr[1])))
+};
+
+(:
+deh:search-execute()
+7/22/2023
+
+This function does what the deh:search function used to do, except the deh:search function now separates the LDT and PROIEL tokens and passes each to this.
+
+Depends on:
+deh:word-postag(3 args)
+deh:relations()
+deh:postag-andSearch
+deh:test-rel-lemma
+:)
+declare %private function deh:search-execute($postag as item()*, $relation as xs:string, $lemma as xs:string, $doc, $postags)
+{
+  let $tokens := deh:tokens-from-unk($doc) (:7/22/23: no need to do this in subordinate functions, just do it once, here:)
+  let $postags := deh:postags($tokens[1])
   (: This first statement runs if :)
-  if (fn:count($postag) gt 0) then ( deh:test-rel-lemma(deh:postag-andSearch($postag, $doc, $postags), $relation, $lemma))
-  else (deh:test-rel-lemma($doc, $relation, $lemma)) (:7/12/23: changed again, because the deh:tokens-from-unk now exists, which will return a sequence of tokens no matter whether a document is passed, or set of nodes, and does not depend on whether it is LDT or PROIEL:)
+  return if (fn:count($postag) gt 0) then ( deh:test-rel-lemma(deh:andSearch-handler($postag, $tokens, $postags), $relation, $lemma))
+  else (deh:test-rel-lemma($tokens, $relation, $lemma)) (:7/12/23: changed again, because the deh:tokens-from-unk now exists, which will return a sequence of tokens no matter whether a document is passed, or set of nodes, and does not depend on whether it is LDT or PROIEL:)
 };
 
 (:
@@ -296,14 +339,50 @@ THIS IS WHERE THE CODE FOR TESTING THE LEMMA IS! ALSO NOTE, THIS IS ALREADY TOTA
 declare %private function deh:test-rel-lemma($words, $relation as xs:string, $lemma as xs:string) as element()*
 {
   let $words := deh:tokens-from-unk($words)
-  return $words[(fn:contains(fn:lower-case(fn:string(@relation)), fn:lower-case($relation)) eq true()) and (fn:matches(fn:lower-case(fn:string(@lemma)), fn:lower-case($lemma)) eq true())]
+  let $neg-rel := fn:string-join(deh:remove-excl(for $term in $relation where fn:contains($term, "!") return $term) ! fn:lower-case(.), " ") (:May be hard to parse, but this takes the negative terms, extracts them, makes that sequence lower case with a map, removes the exclamation point, and joins them into one string delimited by spaces:)
+  let $pos-rel := fn:string-join((for $term in $relation where fn:contains($term, "!") = false() return $term) ! fn:lower-case(.), " ")
+  
+  (:YES, I'M REPEATING CODE; FIX THIS LATER!!!!! PUT THIS INTO A FUNCTION OR SOMETHING:)
+  let $pos-lemma := (for $term in $lemma where fn:contains($term, '!') = false() return $term) ! fn:lower-case(.)
+  let $neg-lemma := deh:remove-excl(for $term in $lemma where fn:contains($term, '!') return $term) ! fn:lower-case(.)
+  
+  return $words[
+    (fn:contains($pos-rel, fn:lower-case(fn:string(@relation))) eq true())  (:Check if the relation is correct:)
+    and
+    (fn:contains($neg-rel, fn:lower-case(fn:string(@relation))) = false()) (:Make sure it matches no negative terms:)
+    and 
+    (deh:lemma-match(fn:string(@lemma), $pos-lemma))
+    and
+    (deh:lemma-match(fn:string(@lemma), $neg-lemma))
+  ]
+};
+
+(:
+deh:lemma-match
+7/23/2023:
+
+This function tests whether a lemma matches one of a whole sequence of regular expressions; can be an empty sequence though! If the lemma matches any of the regular expressions, this function returns true.
+
+$lemma: a string, which is supposed to be the <word/> or <token/>'s @lemma attribute, made lower-case, and passed from the deh:test-rel-lemma function
+$terms: A set of regular expressions, also passed from deh:test-rel-lemma, which the lemma needs to match at least one of
+
+
+:)
+declare %private function deh:lemma-match($lemma as xs:string, $terms as item()*) as xs:boolean
+{
+  let $bools :=
+    for $term in $terms
+    where fn:matches($lemma, $term)
+    return true()
+  return if ($bools[1]) then (true())
+  else (false())
 };
 
 (:
 deh:tokens-from-unk()
 7/12/2023:
 
-Deals with the issue of functions where I can pass either a document or the individual word-nodes; this function, whether it receives an LDT or PROIEL Treebank, returns just the token nodes no matter what. I would make this a %private function, but it is pretty harmless.
+Deals with the issue of functions where I can pass either a document or the individual word-nodes; this function returns the full set of nodes, whether PROIEL or LDT, but cannot deal with any other format.
 
 $tokens: either a document or series of nodes
 
@@ -311,9 +390,8 @@ Depends on:
 :)
 declare function deh:tokens-from-unk($tokens) as element()*
 {
-  if (fn:count($tokens//word) ne 0) then ($tokens//word)
-  else if (fn:count($tokens//token) ne 0) then ($tokens//token)
-  else if (fn:distinct-values($tokens/name()) = ("word", "token")) then ($tokens) (:Modified this to just return the sequence if it isn't a document:)
+  if ($tokens[1]/name() = "token" or $tokens[1]/name() = "word") then ($tokens)
+  else ($tokens//word, $tokens//token)
 };
 
 
@@ -403,7 +481,6 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $node-str := "node"
   let $bare-str := "bare"
   
-  let $postags := deh:postags($b[1])
   
   (:1 Removed this step, but this is where I would have generated the results for $b :)
   
@@ -427,7 +504,7 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $final-results := 
   for $node in $b (:Go through each of the already retrieved results:)
   let $b-rels := deh:use-rel-func($a-to-b-rel, $node) (:This and next line get targeted relatives of the node from $b, and do the search specified in this function's arguments:)
-  let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels, $postags)
+  let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels)
   return if (fn:count($search) gt 0) then (
     if ($options-final("export") eq $xml-str or $options-final("export") eq $node-str) then ( (:export each result as an XML node, if that option was chosen:)
       <tree-search>
