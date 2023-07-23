@@ -55,6 +55,8 @@ declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":
 
 declare variable $ldt2.1-treebanks := fn:collection("./treebank_data/v2.1/Latin/texts");
 
+declare variable $ldt2.1-with-caes-jerome := fn:collection("./treebank_data/v2.1/Latin");
+
 declare variable $all-ldt := ($ldt2.1-treebanks, fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb"));
 
 declare variable $proiel := (fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));
@@ -71,11 +73,12 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 :)
 
 (:IF TESTING LDT, RUN TESTS ON $all-ldt[7], SINCE THAT IS PETRONIUS AND THE LONGEST TEXT:)
-let $tree := $proiel[3]
-let $postags := deh:postags($tree//div[1])
-let $words := $tree//token
+let $word := "^sic(1|)$"
+let $ldt := $all-ldt//word
+let $pr := $proiel//token
+return deh:search(("gerund", "ablative"), "", "", ($pr), deh:postags($pr[1]))
 
-return deh:search(("!indicative", "!participle"), "", "^sum$", $tree, $postags)
+(:return deh:query(map{"postag":("preposition"), "relation":"", "lemma":""}, deh:search("infinitive", "", "", $pr, deh:postags($pr[1])), map{"relation":"child"}, map{"export":"bare"}):)
 
 
 

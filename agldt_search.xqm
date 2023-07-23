@@ -582,7 +582,7 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
     if (fn:count($width) eq 0) then (
       map{
         "relation":$rel,
-        "depth":0
+        "width":0
       }
     )
     else ($map)
@@ -595,6 +595,15 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
       }
     )
     else ($map)
+  )
+  else if ($rel = 'child') then (
+    if (fn:count($width) = 0) then (
+      map{
+        "relation":$rel,
+        "width":0
+      }
+  )
+  else ($map)
   )
   else ($map)
 };
@@ -688,24 +697,45 @@ declare %public function deh:parent-return-pairs($descendants as element()*, $he
 (: Winter Break 2022-23 Phase :)
 (: Returns a list of the WORD (AGLDT) parents of each word.
 7/5/2023:
-Now has a second argument $width. This allows you to return all the siblings of 
+Now has a second argument $width. This allows you to return all the siblings of the parent.
+7/21/2023: Added PROIEL compatibility
+
+Depends on:
+deh:check-head
  :)
 declare %public function deh:return-parent($nodes as element()*, $width as xs:integer) as element()*
 {
   for $node in $nodes
   return if ($width eq 0) then
-  $node/../word[@id eq $node/@head]
+  $node/../*[@id eq deh:check-head($node)]
   else (
-    deh:return-siblings($node/../word[@id eq $node/@head], true())
+    deh:return-siblings($node/../word[@id eq deh:check-head($node)], true())
   )
 };
 
+(:
+deh:check-head
+7/21/2023:
+Returns the head id, whether it is an LDT or PROIEL tree
+:)
+declare %private function deh:check-head($word as element())
+{
+  if ($word/name() = 'word') then ($word/@head)
+  else if ($word/name() = 'token') then ($word/@head-id)
+  else ()
+};
+
 (: Winter Break 2022-23 Phase :)
-(: Returns all the WORD (AGLDT) children:)
+(: Returns all the WORD (AGLDT) children
+7/21/2023: Updated to be compatible with PROIEL
+
+Depends on:
+deh:check-head
+:)
 declare %public function deh:return-children($nodes as element()*) as element()*
 {
   for $node in $nodes
-  return $node/../word[@head eq $node/@id]
+  return $node/../*[deh:check-head($node) eq $node/@id]
 };
 
 (: Winter Break 2022-23 Phase :)
@@ -713,6 +743,8 @@ declare %public function deh:return-children($nodes as element()*) as element()*
 7/4/2023: Added these args:
 $depth: A number; if 0, just gets each parent by each parent one at a time; if not, it is the number of times we travel back up the tree
 $width: whether or not we apply the deh:return-siblings function to the results
+
+7/21/2023: Added PROIEL compatibility to its dependent functions
 
 Depends on:
 deh:return-parent
@@ -789,11 +821,16 @@ declare function deh:return-depth($node, $iter as xs:integer)
 (: Winter Break 2022-23 Phase
 7/4/2023: Added this:
 $include if $true, includes the node passed to the function (primarily if this is being used to implement the $width argument of deh:return-ancestors or deh:return-parent)
+
+7/21/2023: Added PROIEL compatibility
+
+Depends on:
+deh:check-head
  :)
 declare function deh:return-siblings($nodes as element()*, $include as xs:boolean) as element()*
 {
   for $node in $nodes
-    let $final := $node/../word[@head eq $node/@head]
+    let $final := $node/../*[deh:check-head($node) eq $node/@head]
     return if ($include) then
     $final
     else (
@@ -863,14 +900,17 @@ $postag-search: A set of POS tag search parameters, like ("comparative", "nomina
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
 $postags: Just the deh:postags function, every time
 
+7/21/2023: Added PROIEL compatibility with deh:check-head
+
 Depends on:
 deh:proc-highest (private, made for this function to handle looping through each level of the sentence)
 deh:postag-andSearch
+deh:check-head
 :)
 declare function deh:find-highest($postag-search as item()*, $doc as node()*, $postags)
 {
   for $sent in $doc//sentence
-    let $head := $sent/word[fn:number(@head) eq 0]
+    let $head := $sent/*[fn:number(deh:check-head(.)) eq 0]
     return deh:proc-highest($postag-search, $head, $postags)
 };
 
