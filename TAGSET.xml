@@ -82,7 +82,7 @@
             <color>red</color>
           </style>
         </verb>
-        <nrl type="object">
+        <nrl type="object"> <!--=PROIEL cardinal numeral, ordinal numeral, and some adverbs-->
           <long>numeral</long>
           <short>nrl</short>
           <postag>m</postag>

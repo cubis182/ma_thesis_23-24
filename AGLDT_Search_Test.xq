@@ -79,7 +79,18 @@ let $word := "^sic(1|)$"
 let $ldt := $all-ldt//word
 let $pr := $proiel//token
 
-return $pr[fn:string(@part-of-speech) = "Pc"]/..
+
+(:Which come with a partitive genitive:)
+let $quantifiers := ("omnis", "totus", "multus", "unus", "nullus", "ullus", "quisque", "solus", "neuter", "alius", "uter", "quis")
+
+(:Also check with superlatives, and ("numeral","adjective"):)
+let $quant-nouns := ("nemo", "pars", "nihil")
+
+return deh:word-postag("plural", $pr[2], deh:postags("proiel"))
+
+(:3,639 sum, 5 illecebra1, 
+
+:)
 
 (:
 Saved 6/30/2023:

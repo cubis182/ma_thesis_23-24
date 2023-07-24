@@ -4,10 +4,15 @@ import module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemP
 
 declare variable $treebanks := fn:collection("./treebank_data/v2.1/Latin/texts");
 
+let $html := html:parse("http://clt.brepolis.net/llta/pages/Toc.aspx?title=QEUTO")
+return $html
+
+(:
 for $treebank in $treebanks
 let $html := html:parse(fetch:binary(fn:concat("https://catalog.perseus.org/catalog/", deh:cts-urn($treebank))))
-let $node := $html//h4[text() eq "Work Information"]/../dl (:Gets the bundle of work info:)
+let $node := $html//h4[text() eq "Work Information"]/../dl
 let $work-info := $node/dd
 let $title := $work-info[2]
 let $author := $node//*[text() eq "Author:"]/following-sibling::dd[1]/a/text()
 return $author
+:)
