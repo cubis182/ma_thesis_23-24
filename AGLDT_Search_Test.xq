@@ -79,14 +79,29 @@ let $word := "^sic(1|)$"
 let $ldt := $all-ldt//word
 let $pr := $proiel//token
 
+let $preps := ("^ex(1|)$", "^de(1|)$")
 
 (:Which come with a partitive genitive:)
 let $quantifiers := ("omnis", "totus", "multus", "unus", "nullus", "ullus", "quisque", "solus", "neuter", "alius", "uter", "quis")
 
 (:Also check with superlatives, and ("numeral","adjective"):)
 let $quant-nouns := ("nemo", "pars", "nihil")
+(:
+let $noun := deh:query(map{"lemma":$preps}, deh:search("", "", $quantifiers, $all-trees), map{"relation":"parent"}, map{"export":"bare"})
+let $final := deh:query(map{"lemma":("^de(1|)$", "^ex(1|)$")}, $noun, map{"relation":"child"}, map{"export":"bare"}):)
+return deh:search(("accusative"), (), (), deh:return-children(deh:search((), (), ("^cum(1|)$"), $all-ldt)))
+(:
+Comparatives:
+1 magis plus, 
+Phases:
+Nouns with quantifiers with ex
+Nouns with quantifiers with de
 
-return deh:word-postag("plural", $pr[2], deh:postags("proiel"))
+Bare quantifiers with ex
+Bare quantifiers with de
+
+
+:)
 
 (:3,639 sum, 5 illecebra1, 
 

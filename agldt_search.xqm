@@ -232,7 +232,17 @@ declare function deh:word-postag($search as item()*, $word as element(), $postag
   let $neg-trues := deh:test-postag($negs, $postag, $postags)
   let $pos-trues := deh:test-postag($poss, $postag, $postags)
   
-  return if ((fn:count($neg-trues[. > 0]) = 0) and (fn:count($pos-trues[. > 0]) = fn:count($poss)) and (fn:count($pos-trues[. > 0]) > 0)) then (true()) (:7/24/2023: Added a third condition, so that we only return a positive result if there is more than one search match, not just if the number of positive terms matches the expected number (which of course would be 0 and 0:)
+  return if ((fn:count($neg-trues[. > 0]) = 0) and (fn:count($pos-trues[. > 0]) = fn:count($poss)) and (fn:count($pos-trues[. > 0]) > 0 or (deh:contains-proiel-pos($search)))) then (true()) (:7/24/2023: Added a third condition, so that we only return a positive result if there is more than one search match, not just if the number of positive terms matches the expected number (which of course would be 0 and 0:)
+  else (false())
+};
+
+declare %public function deh:contains-proiel-pos($postag as item()*) as xs:boolean
+{
+  let $tags :=
+    for $item in $postag
+    where functx:contains-any-of($item, deh:get-proiel-pos())
+    return $item
+  return if (fn:count($tags) > 0) then (true())
   else (false())
 };
 
@@ -341,9 +351,44 @@ deh:test-rel-lemma
 declare %private function deh:search-execute($postag as item()*, $relation as item()*, $lemma as item()*, $doc, $postags)
 {
   let $tokens := deh:tokens-from-unk($doc) (:7/22/23: no need to do this in subordinate functions, just do it once, here:)
+  let $final-tokens := 
+    if ($tokens[1]/name() = "word") then ($tokens)
+    else if ($tokens[1]/name() = "token") then (deh:proiel-pos($postag, $tokens)) (:Added 7/24/2023:)
   (: This first statement runs if :)
-  return if (fn:count($postag) gt 0) then ( deh:test-rel-lemma(deh:andSearch-handler($postag, $tokens, $postags), $relation, $lemma))
-  else (deh:test-rel-lemma($tokens, $relation, $lemma)) (:7/12/23: changed again, because the deh:tokens-from-unk now exists, which will return a sequence of tokens no matter whether a document is passed, or set of nodes, and does not depend on whether it is LDT or PROIEL:)
+  return if (fn:count($postag) gt 0 or $postag != "") then ( deh:test-rel-lemma(deh:andSearch-handler($postag, $final-tokens, $postags), $relation, $lemma))
+  else (deh:test-rel-lemma($final-tokens, $relation, $lemma)) (:7/12/23: changed again, because the deh:tokens-from-unk now exists, which will return a sequence of tokens no matter whether a document is passed, or set of nodes, and does not depend on whether it is LDT or PROIEL:)
+};
+
+(:
+deh:proiel-pos() (private)
+7/24/2023:
+
+Helper function to deh:search-execute, which returns only the PROIEL tokens which match POS search parameters set in the postag sequence.
+
+$postags: confusingly, the $postag arg from deh:search-execute
+$tokens: $tokens from deh:search-execute
+
+:)
+declare %public function deh:proiel-pos($postags as item()*, $tokens as element()*) as element()*
+{
+  let $pos-master := deh:get-proiel-pos()
+  let $pos-terms := 
+    for $term in $postags
+    where functx:contains-any-of($term, $pos-master)
+    return $term
+  return if (fn:count($pos-terms) > 0) then ($tokens[functx:contains-any-of(fn:string(@part-of-speech), $pos-terms)])
+  else ($tokens)
+};
+
+(:
+deh:get-proiel-pos() (private)
+7/24/2023
+
+
+:)
+declare %public function deh:get-proiel-pos() as item()*
+{
+  doc("PROIEL-TAGSET.xml")//parts-of-speech/value/fn:string(@tag)
 };
 
 (:
@@ -389,7 +434,7 @@ $terms: A set of regular expressions, also passed from deh:test-rel-lemma, which
 :)
 declare %public function deh:lemma-match($lemma as xs:string, $terms as item()*) as xs:integer
 {
-  if (fn:count($terms) = 0) then (0)
+  if (fn:count($terms) = 0 or $terms = "") then (0)
   else (
   let $bools := (:This returns true for every match; if it matches even one, we want to return true below, hence the way it works 4 lines down:)
     for $term in $terms
@@ -412,7 +457,7 @@ $terms: A sequence of strings, each of which is a search term which needs to par
 :)
 declare %public function deh:relation-match($relation as xs:string, $terms as item()*) as xs:integer
 {
-  if (fn:count($terms) = 0) then (0)
+  if (fn:count($terms) = 0 or $terms = "") then (0)
   else if (functx:contains-any-of(fn:lower-case($relation), $terms)) then (
     1
   )
@@ -589,7 +634,7 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $a := deh:check-a-map($a)
   let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels)
   return if (fn:count($search) gt 0) then (
-    if ($options-final("export") eq $xml-str or $options-final("export") eq $node-str) then ( (:export each result as an XML node, if that option was chosen:)
+    if ($options-final("export") eq $xml-str or $options-final("export") eq $node-str) then ( 
       <tree-search>
         <head>
           {deh:mark-node($node)}
@@ -609,11 +654,11 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
         </search>
       </tree-search>
     )
-    else if ($options("export") eq $bare-str) then ( (:If "bare" was chosen, just return the unmarked results:)
+    else if ($options("export") eq $bare-str) then ( 
       $search
     )
     else ("Error! Incorrect options set for export")
-  )
+ )
   
   (:4: Removed this step, this is where I would have gotten $a:)
   
@@ -638,7 +683,7 @@ $map: The parameters of $a from deh:query. Needs to have keys titled "postag", "
 
 Depends on:
 :)
-declare %private function deh:check-a-map($map as map(*)) as map(*)
+declare %public function deh:check-a-map($map as map(*)) as map(*)
 {
   let $def := map{
     "postag":(),
@@ -864,7 +909,7 @@ deh:check-head
 declare %public function deh:return-children($nodes as element()*) as element()*
 {
   for $node in $nodes
-  return $node/../*[deh:check-head($node) eq $node/@id]
+  return $node/../*[deh:check-head(.) eq $node/@id]
 };
 
 (: Winter Break 2022-23 Phase :)
@@ -879,13 +924,13 @@ Depends on:
 deh:return-parent
 deh:return-siblings
 :)
-declare function deh:return-ancestors($nodes as element()*, $depth as xs:string, $width as xs:integer) as element()*
+declare function deh:return-ancestors($nodes as element()*, $depth as xs:integer, $width as xs:integer) as element()*
 {
-  if ($depth eq "0") then ( (:If depth is 0, just do the default thing:) 
+  if ($depth eq 0) then ( (:If depth is 0, just do the default thing:) 
   for $node in $nodes
     let $parent := deh:return-parent($node, 0)
-    return if ($width eq "0") then ($parent, deh:return-ancestors($parent, $depth, $width)) (:Still must account for width: if 0, don't give siblings:)
-    else if ($width eq "1") then (deh:return-siblings(($parent, deh:return-ancestors($parent, $depth, $width)), true())) (: If 1, return the siblings of each result:)
+    return if ($width eq 0) then ($parent, deh:return-ancestors($parent, $depth, $width)) (:Still must account for width: if 0, don't give siblings:)
+    else if ($width eq 1) then (deh:return-siblings(($parent, deh:return-ancestors($parent, $depth, $width)), true())) (: If 1, return the siblings of each result:)
     else("Error!") 
   )
   else (
@@ -959,7 +1004,7 @@ deh:check-head
 declare function deh:return-siblings($nodes as element()*, $include as xs:boolean) as element()*
 {
   for $node in $nodes
-    let $final := $node/../*[deh:check-head($node) eq $node/@head]
+    let $final := $node/../*[deh:check-head(.) eq deh:check-head($node)]
     return if ($include) then
     $final
     else (
