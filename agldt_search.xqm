@@ -32,30 +32,54 @@ declare %public function deh:postags($treebank) as item()* (:7/22/2023: removed 
 };
 
 (:
+deh:get-postags
+7/30/2023
+
+Returns the postags in text format, from LDT or PROIEL (although you must supply the postag set), for a given word
+:)
+declare function deh:get-postags($tokens as element()*, $postags as item()*)
+{
+   for $token in $tokens
+   return if ($token/name() = 'token') then (
+     for $char at $n in functx:chars($token/fn:string(@morphology))
+     return $postags[$n]($char)
+   )
+   else if ($token/name() = 'word') then (
+     for $char at $n in functx:chars($token/fn:string(@postag))
+     return $postags[$n]($char)
+   )
+};
+
+(:
 7/3/2023
 This function, by the end of the project, should be able to take any treebank XML document and spit out its URN. The ideal scenario is the whole URN starting from "urn" and ending with the end of the work title, say, "phi001" being an example. This needs to be able to match up with the URN as it is in the Perseus catalogue, from which I will draw this info.
 
 The return value will be a string with the author and work title all in one.
 
-$doc: A single LDT (normal or Harrington) word
+$doc: A single LDT (normal or Harrington) tree!
 :)
 
 (:--------------------------START NAMES/URNS SECTION------------------------------:)
 
 declare function deh:cts-urn($doc as node()*)
 {
-  for $xml in $doc (:get each document one at a time:)
-  return if ($xml/*/name() eq "treebank") then (
-    let $id := $xml//sentence[1]/fn:string(@document_id)
-    let $end := (functx:index-of-string($id, ".perseus") - 1)
-    return fn:substring($id, 1, $end)
-)
-  else if (($xml/name() eq "word") or ($doc/name() eq "sentence")) then (
-    deh:cts-urn(doc(fn:base-uri($xml)))
+  let $xml := doc(fn:base-uri($doc)) (:This should make sure we start with the full document, no matter what:)
+  return if ($xml/*/name() eq "treebank") then ( (:Only if it is LDT for this:)
+      let $id := $xml//sentence[1]/fn:string(@document_id) (:The urn is usually in the sentences, although it can be found elsewhere too:)
+      return if (fn:contains($id, "urn")) then (
+        let $end := (functx:index-of-string($id, ".pers")[1]) (:We have two jobs: cut off the end with all the ".perseus-lat1" stuff, and make sure the front is cut off:)
+        let $urn-index := functx:index-of-string($id, "urn")
+        let $final := fn:substring($id, $urn-index[fn:count(.)], ($end - $urn-index[fn:count(.)]))
+        return if (fn:contains($final, "urn")) then ($final)
+        else ()
+    )
+    else ("")
   )
+  else if ($xml/*/name() = "proiel") then ("") (:PROIEL does not store the URN or a link to where I can get it....:)
   else (
     "Error! Not a recognized format."
   )
+
   
 };
 
@@ -67,30 +91,34 @@ $doc: a SINGLE XML treebank document
 :)
 declare function deh:info-from-html($doc as node()*)
 {
-  
-  let $html := html:parse(fetch:binary(fn:concat("https://catalog.perseus.org/catalog/", deh:cts-urn($doc)))) (:Get the Perseus Catalog entry:)
+  let $urn := deh:cts-urn($doc) 
+  return if (fn:string-length($urn) > 0) then (
+  let $html := html:parse(fetch:binary(fn:concat("https://catalog.perseus.org/catalog/", $urn))) (:Get the Perseus Catalog entry:)
   let $node := $html//h4[text() eq "Work Information"]/../dl (:Gets the bundle of work info:)
   let $work-info := $node/dd (:Get the nodes which contain the work info:)
   let $title := $work-info[2]
   let $author := $node//*[text() eq "Author:"]/following-sibling::dd[1]/a/text()
   return array{fn:concat($title, ", "), $author}
+)
+else ()
 };
 
 (:
 7/3/2023:
 This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author.
 
-$doc: One or more documents
+$doc: One or more treebank documents (not nodes)
 :)
 declare function deh:work-info($doc as node()*)
 {
-  for $xml in $doc
+  let $xml := doc(fn:base-uri($doc))
   return if ($xml/*/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
     array{fn:concat($xml//title/text(), " ", $xml//biblScope/text()), $xml//author/text()}
   )  
   else if ($xml/*/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
     deh:info-from-html($xml)
   )
+  else if ($xml/*/name() = "proiel" and $xml/*/fn:string(@schema-version) = "2.1") then (array{$xml//source/title/text(), $xml//source/author/text()})
 };
 
 (:-------------------------END NAMES/URNS SECTION---------------------------:)
@@ -391,6 +419,14 @@ declare %public function deh:get-proiel-pos() as item()*
   doc("PROIEL-TAGSET.xml")//parts-of-speech/value/fn:string(@tag)
 };
 
+declare function deh:get-proiel-pos-map() as item()*
+{
+  let $maps :=
+  for $item in doc("PROIEL-TAGSET.xml")//parts-of-speech/value
+  return map{$item/fn:string(@tag):$item/fn:string(@summary)}
+  return map:merge($maps)
+};
+
 (:
 5/19/2023:
 This function is a helper function to deh:search; it takes $relation and $lemma from that functions arguments directly, and ONLY in that circumstance; the $words var is just a set of <word></word> nodes; it could be from the results of a different search, or could be a whole document, but it MUST only be those nodes; the changes I made 6/27/2023 to the deh:search function should ensure that. As of 7/3/2023, this function is no longer case sensitive.
@@ -589,6 +625,8 @@ map{
   //option : value
   "export": Takes a single string; if "xml", it will output results in an xml-friendly format (EXPAND ON THIS LATER); if "csv", will export the same results to a .csv format (actually comma-separated); if "bare", it will return the nodes alone just like a search; if  The default is "xml"
 }
+
+$comment: Just a string with any commentary you want to add; it will go at the top of the results so, if you save it, you can leave a note for yourself later.
 Notes:
 Don't need a function yet for 
 
@@ -597,7 +635,7 @@ deh:results-to-csv
 deh:check-rel-options() (private)
 deh:check-a-map()
 :)
-declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel as map(*), $options as map(*))
+declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel as map(*), $options as map(*), $comment as xs:string)
 {
   (:Have the default return options ready if no options are submitted:)
   let $def-options := map{
@@ -635,7 +673,7 @@ declare %public function deh:query($a as map(*), $b as element()*, $a-to-b-rel a
   let $search :=  deh:search($a("postag"), $a("relation"), $a("lemma"), $b-rels)
   return if (fn:count($search) gt 0) then (
     if ($options-final("export") eq $xml-str or $options-final("export") eq $node-str) then ( 
-      <tree-search>
+      <tree-search comment="{$comment}">
         <head>
           {deh:mark-node($node)}
         </head>
@@ -787,7 +825,7 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
 (:---------------------------END deh:postag-andSearch AND DEPENDENCIES/OTHER SEARCH TOOLS------------------------------:)
 
 (: Winter Break 2022-23 Phase :)
-(: Adds attributes to the node with the path of the document and the node's sentence id. Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words"
+(: Adds attributes to the node with the path of the document, s Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words"
 
 7/3/2023: because of deh:ldt2.1-workinfo, this currently is incompatible with any other format
 
@@ -795,15 +833,12 @@ Depends on:
 deh:ldt2.1-workinfo
 :)
 declare function deh:mark-node($nodes as element(*)*) as element()*
-{
-  
+{  
   for $node in $nodes
-  where $node/name() eq "word" (:Change this later to be an if statement, where I can switch it to "token" to account for PROIEL:)
-  let $work-info := deh:ldt2.1-workinfo($node) (:Remember that work-info[1] is the author, work-info[2] is the title, and work-info[3] is the subdoc (i.e., book and section number):)
-  
-  return functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("deh-urn"), deh:cts-urn(doc(fn:base-uri($node)))), xs:QName("deh-subdoc"), $work-info[3]), xs:QName("deh-title"), $work-info[2]), xs:QName("deh-author"), $work-info[1]), xs:QName("deh-docpath"), fn:replace(xs:string(fn:base-uri($node)), "%20", " ")), xs:QName("deh-sen-id"), $node/../@id/fn:string())
-  
-  
+  let $work-info := deh:work-info($node) (:Returns a sequence, first itme is the title, second the author:)
+  let $subdoc := if ($node/name() = 'word') then ($node/../fn:string(@subdoc)) else if ($node/name() = 'token') then ($node/fn:string(@citation-part))
+  let $node := functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("base-uri"), fn:base-uri($node)), xs:QName("deh-urn"), deh:cts-urn(doc(fn:base-uri($node)))), xs:QName("deh-title"), $work-info(1)), xs:QName("deh-author"), $work-info(2)), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  return functx:add-or-update-attributes($node, xs:QName("citation-part"), $subdoc)
 };
 
 (:

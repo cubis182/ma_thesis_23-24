@@ -59,6 +59,8 @@ declare variable $ldt2.1-with-caes-jerome := fn:collection("./treebank_data/v2.1
 
 declare variable $all-ldt := ($ldt2.1-treebanks, fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb"));
 
+declare variable $harrington := fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb");
+
 declare variable $proiel := (fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
@@ -73,23 +75,75 @@ file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank 
 
 "C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml
 :)
-
-(:IF TESTING LDT, RUN TESTS ON $all-ldt[7], SINCE THAT IS PETRONIUS AND THE LONGEST TEXT:)
-let $word := "^sic(1|)$"
-let $ldt := $all-ldt//word
-let $pr := $proiel//token
-
-let $preps := ("^ex(1|)$", "^de(1|)$")
-
-(:Which come with a partitive genitive:)
-let $quantifiers := ("omnis", "totus", "multus", "unus", "nullus", "ullus", "quisque", "solus", "neuter", "alius", "uter", "quis")
-
-(:Also check with superlatives, and ("numeral","adjective"):)
-let $quant-nouns := ("nemo", "pars", "nihil")
 (:
-let $noun := deh:query(map{"lemma":$preps}, deh:search("", "", $quantifiers, $all-trees), map{"relation":"parent"}, map{"export":"bare"})
-let $final := deh:query(map{"lemma":("^de(1|)$", "^ex(1|)$")}, $noun, map{"relation":"child"}, map{"export":"bare"}):)
-return deh:search(("accusative"), (), (), deh:return-children(deh:search((), (), ("^cum(1|)$"), $all-ldt)))
+
+let $trees :=
+for $tree in $harrington
+let $sentence := $tree//sentence[1]
+let $words := $sentence/word/fn:string(@form)
+return fn:string-join($words, " ")
+
+let $docs :=
+for $tree at $n in $trees
+where functx:contains-any-of($tree, $trees[fn:position() != $n])
+return array{fn:base-uri($harrington[$n]), fn:base-uri($harrington[(fn:index-of($trees, $tree)[. != $n])[1]])}
+
+:)
+
+
+for $treebank in $all-trees
+where fn:count(deh:work-info($treebank)) = 0
+return $treebank
+
+
+
+(:
+let $ldt-sents := 
+for $sentence in $ldt2.1-treebanks//sentence
+return fn:string-join($sentence//word/fn:string(@form), " ")
+
+let $harrington-sents :=
+for $sentence in $harrington//sentence
+return fn:string-join($sentence//word/fn:string(@form), " ")
+
+let $doubles :=
+let $sents-full := $harrington//sentence
+for $sent in $ldt-sents
+where functx:contains-any-of($sent, $harrington-sents)
+let $indexes := fn:index-of($harrington-sents, $sent)
+for $index in $indexes
+return array{$sent, $sents-full[$index]}
+
+return $doubles
+:)
+
+(:
+let $sixthreesevenoh := fn:base-uri($harrington/treebank[fn:contains(fn:base-uri(.), "6370")])
+let $sixfivesixone := fn:base-uri($harrington/treebank[fn:contains(fn:base-uri(.), "6561")])
+
+let $tree-one := doc($sixthreesevenoh)//word
+let $tree-two := doc($sixfivesixone)//word
+
+let $matches :=
+for $word at $n in $tree-one
+where (($word/@id = $tree-two[$n]/@id) and ($word/@form = $tree-two[$n]/@form) and ($word/@lemma = $tree-two[$n]/@lemma) and ($word/@relation = $tree-two[$n]/@relation) and ($word/@postag = $tree-two[$n]/@postag) and ($word/@head = $tree-two[$n]/@head)) ne true()
+return array{$word, $tree-two[$n]}
+return $matches
+:)
+
+
+
+(:
+let $preds := deh:search((), "pred", (), $all-trees)
+let $children := deh:return-children($preds)
+let $proi-child := $children[name() = 'token']
+let $ldt-child := $children[name() = 'word']
+let $parts-of-speech := (for $item in $proi-child/fn:string(@part-of-speech) return deh:get-proiel-pos-map()($item), deh:get-postags($ldt-child, deh:postags("ldt")))
+return $parts-of-speech
+:)
+
+
+
 (:
 Comparatives:
 1 magis plus, 
@@ -102,6 +156,8 @@ Bare quantifiers with de
 
 
 :)
+
+
 
 (:3,639 sum, 5 illecebra1, 
 

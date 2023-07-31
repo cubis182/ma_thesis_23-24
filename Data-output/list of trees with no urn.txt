@@ -1,0 +1,11 @@
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/5758/lattb.5758.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/5764/lattb.5764.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/5984/lattb.5984.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6202/lattb.6202.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6248/lattb.6248.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6249/lattb.6249.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6282/lattb.6282.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6392/lattb.6392.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6393/lattb.6393.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6561/lattb.6561.1.tb.xml
+file:///C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/harrington_trees/CITE_TREEBANK_XML/perseus/lattb/6946/lattb.6946.1.tb.xml
