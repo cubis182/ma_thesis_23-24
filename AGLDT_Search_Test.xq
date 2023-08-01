@@ -90,12 +90,7 @@ return array{fn:base-uri($harrington[$n]), fn:base-uri($harrington[(fn:index-of(
 
 :)
 
-
-for $treebank in $all-trees
-where fn:count(deh:work-info($treebank)) = 0
-return $treebank
-
-
+fn:distinct-values($proiel//token/fn:string(@citation-part))
 
 (:
 let $ldt-sents := 

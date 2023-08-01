@@ -98,14 +98,14 @@ declare function deh:info-from-html($doc as node()*)
   let $work-info := $node/dd (:Get the nodes which contain the work info:)
   let $title := $work-info[2]
   let $author := $node//*[text() eq "Author:"]/following-sibling::dd[1]/a/text()
-  return array{fn:concat($title, ", "), $author}
+  return deh:return-info(fn:concat($title, ", "), $author) (:Updated 8/1/2023, now uses a function to ensure each array has two fields; whichever was empty is replaced with "UNK":)
 )
 else ()
 };
 
 (:
 7/3/2023:
-This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author.
+This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author. If either cannot be found, it will return "unknown"
 
 $doc: One or more treebank documents (not nodes)
 :)
@@ -113,12 +113,72 @@ declare function deh:work-info($doc as node()*)
 {
   let $xml := doc(fn:base-uri($doc))
   return if ($xml/*/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
-    array{fn:concat($xml//title/text(), " ", $xml//biblScope/text()), $xml//author/text()}
+    let $words := $xml//sentence[1]//word (:Get some example words: perhaps an intermediate step, but I want to be call this with a whole document in the args:)
+    return deh:ldt2.1-work-info($words[1]) 
   )  
   else if ($xml/*/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
     deh:info-from-html($xml)
   )
-  else if ($xml/*/name() = "proiel" and $xml/*/fn:string(@schema-version) = "2.1") then (array{$xml//source/title/text(), $xml//source/author/text()})
+  else if ($xml/*/name() = "proiel" and $xml/*/fn:string(@schema-version) = "2.1") then (
+    let $tokens := $xml//div[1]/sentence[1]//token
+    return deh:proiel-work-info($tokens[1])
+  )
+};
+
+(:
+deh:token-info()
+8/1/2023:
+
+See deh:work-info desc for more details; this just works on individual words
+:)
+declare function deh:token-info($token as element()) as array(*)
+{
+  if ($token/ancestor::treebank/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
+    deh:ldt2.1-work-info($token) 
+  )  
+  else if ($token/ancestor::treebank/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
+    deh:info-from-html(doc(fn:base-uri($token))) (:Must pass the whole document without changing the function; but, since it is rare that this needs to happen, it is fine by me.:)
+  )
+  else if ($token/name() = "token" and $token/ancestor::proiel/fn:string(@schema-version) = "2.1") then (
+    deh:proiel-work-info($token)
+  )
+};
+
+(:
+deh:proiel-work-info()
+8/1/2023
+
+Intended to compartmentalize the PROIEL work info retrieval in deh:work-info
+
+:)
+declare function deh:proiel-work-info($token as element())
+{
+    let $title := fn:string($token/ancestor::proiel//source/title/text())
+    let $author := fn:string($token//ancestor::proiel/source/author/text())
+    return deh:return-info($title, $author)
+};
+
+(:
+deh:ldt2.1-work-info()
+8/1/2023
+
+:)
+declare function deh:ldt2.1-work-info($word as element()) as array(*)
+{
+  let $title := fn:concat($word/ancestor::treebank//title/text(), " ", $word/ancestor::treebank//biblScope/text())
+  let $author := $word/ancestor::treebank//author/text()
+  return deh:return-info($title, $author)
+};
+
+(:
+deh:return-info()
+8/1/2023
+
+Helper function to the set of work-info functions, only completes one small part of the process: it takes the given values, and will replace one with "UNK" if it is empty
+:)
+declare %public function deh:return-info($title as xs:string, $author as xs:string) as array(*)
+{
+  array{if (fn:string-length($title) > 0) then ($title) else ("UNK"), if (fn:string-length($author) > 0) then ($author) else ("UNK")}
 };
 
 (:-------------------------END NAMES/URNS SECTION---------------------------:)
@@ -835,10 +895,31 @@ deh:ldt2.1-workinfo
 declare function deh:mark-node($nodes as element(*)*) as element()*
 {  
   for $node in $nodes
-  let $work-info := deh:work-info($node) (:Returns a sequence, first itme is the title, second the author:)
+  let $work-info := deh:token-info($node) (:Returns a sequence, first itme is the title, second the author:)
   let $subdoc := if ($node/name() = 'word') then ($node/../fn:string(@subdoc)) else if ($node/name() = 'token') then ($node/fn:string(@citation-part))
-  let $node := functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("base-uri"), fn:base-uri($node)), xs:QName("deh-urn"), deh:cts-urn(doc(fn:base-uri($node)))), xs:QName("deh-title"), $work-info(1)), xs:QName("deh-author"), $work-info(2)), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  let $node := functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("base-uri"), fn:base-uri($node)), xs:QName("deh-urn"), deh:cts-urn($node)), xs:QName("deh-title"), $work-info(1)), xs:QName("deh-author"), $work-info(2)), xs:QName("deh-sen-id"), $node/../@id/fn:string())
   return functx:add-or-update-attributes($node, xs:QName("citation-part"), $subdoc)
+};
+
+(:
+deh:cite-range()
+8/1/2023:
+
+A function I am workshopping to return a whole range of citations from a citation with a dash. LDT luckily puts the full citation on each side of the dash (i.e. 13.463-13.465), so there is not guesswork involved, although I did not check every single example; since PROIEL gives a citation on every word, there are no dashes, so this function is not necessary there.
+:)
+declare function deh:cite-range($range as xs:string) as item()*
+{
+  let $dash-index := functx:index-of-string($range, '-') (:Place in the string of the dash:)
+  let $str1 := fn:substring($range, 1, $dash-index - 1) (:Get the citation to the left of the dash:)
+  let $str2 := fn:substring($range, $dash-index + 1) (:And get the citation to the right:)
+  let $str1-dot := functx:index-of-string($str1, '.')(:Get the location of the '.' in the left citation:)
+  let $str2-dot := functx:index-of-string($str2, '.')(:Get the location of the '.' in the right citation:)
+  let $str1-val := fn:substring($str1, $str1-dot[fn:count($str1-dot)] + 1) (:Get the info in the left citation from after the last dot:)
+  let $str1-prefix := fn:substring($str1, 1, $str1-dot[fn:count($str1-dot)] - 1) (:Get the info in the right citation from after the last dot:)
+  let $str2-val := fn:substring($str2, $str2-dot[fn:count($str2-dot)] + 1) (:See just above:)
+  let $str2-prefix := fn:substring($str2, 1, $str2-dot[fn:count($str2-dot)] - 1)
+  for $val in xs:integer($str1-val) to xs:integer($str2-val)
+  return fn:concat($str1-prefix, $val)
 };
 
 (:
