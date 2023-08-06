@@ -111,7 +111,7 @@ $doc: One or more treebank documents (not nodes)
 :)
 declare function deh:work-info($doc as node()*)
 {
-  let $xml := doc(fn:base-uri($doc))
+  let $xml := $doc (:May remove this redundant step later; originally, this accepted nodes as well as documents:)
   return if ($xml/*/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
     let $words := $xml//sentence[1]//word (:Get some example words: perhaps an intermediate step, but I want to be call this with a whole document in the args:)
     return deh:ldt2.1-work-info($words[1]) 
@@ -176,7 +176,7 @@ deh:return-info()
 
 Helper function to the set of work-info functions, only completes one small part of the process: it takes the given values, and will replace one with "UNK" if it is empty
 :)
-declare %public function deh:return-info($title as xs:string, $author as xs:string) as array(*)
+declare %public function deh:return-info($title, $author) as array(*)
 {
   array{if (fn:string-length($title) > 0) then ($title) else ("UNK"), if (fn:string-length($author) > 0) then ($author) else ("UNK")}
 };
@@ -894,32 +894,49 @@ deh:ldt2.1-workinfo
 :)
 declare function deh:mark-node($nodes as element(*)*) as element()*
 {  
+  let $source-docs := fn:distinct-values(for $node in $nodes return fn:base-uri($node))
+  let $work-info := map:merge(for $uri in $source-docs return map{$uri : deh:work-info(doc($uri))})
   for $node in $nodes
-  let $work-info := deh:token-info($node) (:Returns a sequence, first itme is the title, second the author:)
-  let $subdoc := if ($node/name() = 'word') then ($node/../fn:string(@subdoc)) else if ($node/name() = 'token') then ($node/fn:string(@citation-part))
-  let $node := functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("base-uri"), fn:base-uri($node)), xs:QName("deh-urn"), deh:cts-urn($node)), xs:QName("deh-title"), $work-info(1)), xs:QName("deh-author"), $work-info(2)), xs:QName("deh-sen-id"), $node/../@id/fn:string())
+  let $subdoc := deh:subdoc($node)
+  let $node := functx:add-attributes(functx:add-attributes(functx:add-attributes(functx:add-attributes($node, xs:QName("base-uri"), fn:base-uri($node)), xs:QName("deh-title"), $work-info(fn:base-uri($node))(1)), xs:QName("deh-author"), $work-info(fn:base-uri($node))(2)), xs:QName("deh-sen-id"), $node/../@id/fn:string())
   return functx:add-or-update-attributes($node, xs:QName("citation-part"), $subdoc)
+};
+
+(:
+deh:subdoc()
+8/2/2023:
+
+This function takes an element (token) from either LDT or PROIEL and get the @subdoc (usually kept on the <sentence/> element in LDT) or @citation-part (kept on each <token/> in PROIEL)
+
+$token: A single node
+:)
+declare function deh:subdoc($token as element()) as xs:string
+{
+   if ($token/name() = 'word') then ($token/../fn:string(@subdoc)) else if ($token/name() = 'token') then ($token/fn:string(@citation-part))
 };
 
 (:
 deh:cite-range()
 8/1/2023:
 
-A function I am workshopping to return a whole range of citations from a citation with a dash. LDT luckily puts the full citation on each side of the dash (i.e. 13.463-13.465), so there is not guesswork involved, although I did not check every single example; since PROIEL gives a citation on every word, there are no dashes, so this function is not necessary there.
+A function I am workshopping to return a whole range of citations from a citation with a dash. LDT luckily puts the full citation on each side of the dash (i.e. 13.463-13.465), so there is not guesswork involved, although I did not check every single example; since PROIEL gives a citation on every word, there are no dashes, so this function is not necessary there. THIS FUNCTION WILL ALSO SPIT OUT STRINGS WITH NO HYPHENS, so this can be used on any string.
 :)
 declare function deh:cite-range($range as xs:string) as item()*
 {
   let $dash-index := functx:index-of-string($range, '-') (:Place in the string of the dash:)
-  let $str1 := fn:substring($range, 1, $dash-index - 1) (:Get the citation to the left of the dash:)
-  let $str2 := fn:substring($range, $dash-index + 1) (:And get the citation to the right:)
-  let $str1-dot := functx:index-of-string($str1, '.')(:Get the location of the '.' in the left citation:)
-  let $str2-dot := functx:index-of-string($str2, '.')(:Get the location of the '.' in the right citation:)
-  let $str1-val := fn:substring($str1, $str1-dot[fn:count($str1-dot)] + 1) (:Get the info in the left citation from after the last dot:)
-  let $str1-prefix := fn:substring($str1, 1, $str1-dot[fn:count($str1-dot)] - 1) (:Get the info in the right citation from after the last dot:)
-  let $str2-val := fn:substring($str2, $str2-dot[fn:count($str2-dot)] + 1) (:See just above:)
-  let $str2-prefix := fn:substring($str2, 1, $str2-dot[fn:count($str2-dot)] - 1)
-  for $val in xs:integer($str1-val) to xs:integer($str2-val)
-  return fn:concat($str1-prefix, $val)
+    return if (fn:count($dash-index) != 0) then (
+    let $str1 := fn:substring($range, 1, $dash-index - 1) (:Get the citation to the left of the dash:)
+    let $str2 := fn:substring($range, $dash-index + 1) (:And get the citation to the right:)
+    let $str1-dot := functx:index-of-string($str1, '.')(:Get the location of the '.' in the left citation:)
+    let $str2-dot := functx:index-of-string($str2, '.')(:Get the location of the '.' in the right citation:)
+    let $str1-val := fn:substring($str1, $str1-dot[fn:count($str1-dot)] + 1) (:Get the info in the left citation from after the last dot:)
+    let $str1-prefix := fn:substring($str1, 1, $str1-dot[fn:count($str1-dot)] - 1) (:Get the info in the right citation from after the last dot:)
+    let $str2-val := fn:substring($str2, $str2-dot[fn:count($str2-dot)] + 1) (:See just above:)
+    let $str2-prefix := fn:substring($str2, 1, $str2-dot[fn:count($str2-dot)] - 1)
+    for $val in xs:integer($str1-val) to xs:integer($str2-val)
+    return fn:concat($str1-prefix, ".", $val)
+  )
+  else ($range)
 };
 
 (:

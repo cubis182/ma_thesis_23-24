@@ -90,8 +90,39 @@ return array{fn:base-uri($harrington[$n]), fn:base-uri($harrington[(fn:index-of(
 
 :)
 
-fn:distinct-values($proiel//token/fn:string(@citation-part))
+(:$sents: All the sentence nodes from ONE treebank:)
+declare function local:summation($sents as element()*)
+{
+  if (fn:contains($sents[1]/fn:string(@subdoc), " ") != true() and fn:string-length($sents[1]/fn:string(@subdoc)) > 0) then (
+   let $subdocs := for $sent in $sents return deh:cite-range($sent/fn:string(@subdoc))
+   let $final-vals := for $sub in $subdocs where fn:string-length($sub) > 0 let $index := functx:index-of-string($sub, ".") return if ($index = ()) then ($sub) else (fn:substring($sub, $index[fn:count($index)]))
+   return $final-vals
+ )
+ else ()
+};
 
+let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml")
+return fn:distinct-values($results/*/*/fn:string(@deh-title))
+
+(:
+for $doc in $all-ldt
+let $work-info := deh:work-info($doc)
+let $tokens := ($doc//word)
+
+let $expanded := 
+  for $token in $tokens
+  
+  let $subdoc := deh:subdoc($token)
+  return if (fn:contains($subdoc, '-')) then (
+    for $cite in deh:cite-range($token)
+    return (functx:add-attributes(functx:add-attributes(functx:add-attributes($token, xs:QName("cite"), $cite), xs:QName("title"), $work-info[1]), xs:QName("author"), $work-info(2))
+  )
+  else (functx:add-attributes(functx:add-attributes(functx:add-attributes($token, xs:QName("cite"), $subdoc), xs:QName("title"), $work-info[1]), xs:QName("author"), $work-info(2))
+
+
+for $token in $expanded
+return ($token/fn:string(@cite), $token/fn:string(@author), $token/fn:string(@title))
+:)
 (:
 let $ldt-sents := 
 for $sentence in $ldt2.1-treebanks//sentence
