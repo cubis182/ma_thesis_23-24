@@ -101,8 +101,14 @@ declare function local:summation($sents as element()*)
  else ()
 };
 
-let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml")
-return fn:distinct-values($results/*/*/fn:string(@deh-title))
+$proiel//token[fn:string(@form) = "inquiens"]/..
+
+(: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
+(:
+let $quotes := ("&quot;", "'", "”", "“")
+let $pres-quotes := $proiel//token[functx:contains-any-of(fn:string(@presentation-after), $quotes)]
+return fn:distinct-values($pres-quotes/fn:string(@presentation-after))
+:)
 
 (:
 for $doc in $all-ldt

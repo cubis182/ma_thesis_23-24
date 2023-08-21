@@ -534,7 +534,7 @@ declare %public function deh:lemma-match($lemma as xs:string, $terms as item()*)
   else (
   let $bools := (:This returns true for every match; if it matches even one, we want to return true below, hence the way it works 4 lines down:)
     for $term in $terms
-    where fn:matches($lemma, $term)
+    where fn:matches(fn:lower-case($lemma), $term) (:8/13/2023: Updated so the lemma is made lower case too:)
     return true()
   return if ($bools[1]) then (1)
   else (-1)
@@ -883,6 +883,32 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
 (:-------------------------END deh:query AND DEPENDENCIES------------------------------------------:)
 
 (:---------------------------END deh:postag-andSearch AND DEPENDENCIES/OTHER SEARCH TOOLS------------------------------:)
+
+(:---------------------------START QUOTE PROCESSING FUNCTIONS------------------------------:)
+(:
+SECTION DECLARATION:
+This section is where the set of quote processing functions live. Any function prefixed with 'pr' is for PROIEL, and 'ldt' is the Latin Dependency Treebank. PROIEL is a little less trivial, since punctuation is inconsistent and kept in the @presentation-after.
+:)
+
+(:
+deh:pr-extract-quotes()
+8/20/2023
+
+This function accepts any full treebank or a portion and extracts the nodes in sets; a set of nodes between quotes will be kept together in a sequence, and packed into an array.
+
+$elements: Either a treebank document or portion of a treebank document. 
+:)
+declare function deh:pr-extract-quotes($elements) as array(*)
+{
+  let $tokens := deh:tokens-from-unk($elements)
+  return array {for tumbling window $w in $tokens
+    start $s at $n-start when $tokens[$n-start - 1][functx:contains-any-of(fn:string(@presentation-after), ("'", "&quot;", "”", "“"))]
+    end $e at $n-end when $e[functx:contains-any-of(fn:string(@presentation-after), ("'", "&quot;", "”", "“"))]
+  return array{$w}}
+};
+(:---------------------------END QUOTE PROCESSING FUNCTIONS--------------------------------:)
+
+
 
 (: Winter Break 2022-23 Phase :)
 (: Adds attributes to the node with the path of the document, s Only do this at the end of the process (when spitting out results) and (6/25/2023) IGNORE THE FOLLOWING: (this function is private because it does not check for the type of node) INSTEAD, I made this public because it can be used optionally that way. Instead, it simply ignores nodes which are not "words"
