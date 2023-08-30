@@ -886,6 +886,11 @@ declare %private function deh:check-rel-options($map as map(*)) as map(*)
 
 (:---------------------------START QUOTE PROCESSING FUNCTIONS------------------------------:)
 (:
+Section Catalog:
+deh:pr-extract-quotes: will be obsolete, but it looks for spans of tokens starting after a token whose @presentation-after attribute has a quote in it and ending with a token which has a @presentation-after quote. This came before I even noticed @presentation-before, but since the annotation is inconsistent anyway, this will likely never help.
+deh:extract-quotes: this function will take every punctuation node with a quote OR whose @presentation-before/@presentation-after has a quote, making this a cross-treebank compatible function.
+:)
+(:
 SECTION DECLARATION:
 This section is where the set of quote processing functions live. Any function prefixed with 'pr' is for PROIEL, and 'ldt' is the Latin Dependency Treebank. PROIEL is a little less trivial, since punctuation is inconsistent and kept in the @presentation-after.
 :)
@@ -901,11 +906,36 @@ $elements: Either a treebank document or portion of a treebank document.
 declare function deh:pr-extract-quotes($elements) as array(*)
 {
   let $tokens := deh:tokens-from-unk($elements)
+  let $quotes :=  ("'", "&quot;", "”", "“")
   return array {for tumbling window $w in $tokens
-    start $s at $n-start when $tokens[$n-start - 1][functx:contains-any-of(fn:string(@presentation-after), ("'", "&quot;", "”", "“"))]
-    end $e at $n-end when $e[functx:contains-any-of(fn:string(@presentation-after), ("'", "&quot;", "”", "“"))]
+    start $s at $n-start when $tokens[$n-start - 1][functx:contains-any-of(fn:string(@presentation-after), $quotes)]
+    end $e at $n-end when $e[functx:contains-any-of(fn:string(@presentation-after),$quotes)]
   return array{$w}}
 };
+
+(:
+deh:extract-quotes()
+8/30/2023
+
+ this function will take every punctuation node with a quote OR whose @presentation-before/@presentation-after has a quote, making this a cross-treebank compatible function.
+ 
+$doc-or-tok: A treebank document or documents or <word/>/<token/> elements, from LDT or PROIEL respectively
+
+:)
+declare function deh:extract-quotes($doc-or-tok) as item()*
+{
+  let $tokens := deh:tokens-from-unk($doc-or-tok)
+  let $quotes := ("'", "&quot;", "”", "“")
+  let $ldt-lemmas := ("QUOTE1", "double", "quote1", "QUOTE'", "'", "quote", "punc1", "unknown", "punc", "question", " ") (:Based on blue notebook notes:)
+  let $ldt := $tokens[functx:contains-any-of(fn:string(@form), $quotes) and functx:contains-any-of(fn:string(@lemma), $ldt-lemmas)]
+  let $pr := $tokens[name() = "token"]
+  let $pr-results := $pr[functx:contains-any-of(fn:string(@presentation-before), $quotes) or functx:contains-any-of(fn:string(@presentation-after), $quotes)]
+  return ($ldt, $pr-results)
+};
+
+
+
+
 (:---------------------------END QUOTE PROCESSING FUNCTIONS--------------------------------:)
 
 

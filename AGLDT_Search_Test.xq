@@ -101,7 +101,8 @@ declare function local:summation($sents as element()*)
  else ()
 };
 
-$proiel//token[fn:string(@form) = "inquiens"]/..
+
+deh:extract-quotes(($proiel[1], $all-ldt[1]))
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:
