@@ -1363,3 +1363,39 @@ declare function deh:work-info-fromcsv($urn as xs:string) as item()*
   let $index := fn:index-of($check-title, $processed)
   return $seq/csv/record[$index]
 };
+
+(:--------------------------------START random--------------------------------------------:)
+
+(:
+deh:pick-random($seq as item()*)
+9/3/2023
+
+This function picks one or more random values from a sequence; specify the number you want with $iter. It will return distinct values, or in other words it makes sure to retrieve no duplicates from the given sequence.
+
+$seq: A $seq of any length and any item
+$iter: Number of random items to retrieve (can't be 0, of course)
+
+Depends on:
+deh:proc-random
+:)
+declare function deh:pick-random($seq as item()*, $iter as xs:integer) 
+{
+  for $i in deh:proc-random((), fn:count($seq), $iter, 0)
+  return $seq[$i]
+};
+
+(:
+
+$rand: At first iteration, must be an empty sequence
+$leng-total: length of the sequence we are drawing random values from
+$start: must be 0
+:)
+declare %private function deh:proc-random($rand as item()*, $leng-total as xs:integer, $iter as xs:integer, $start as xs:integer)
+{
+  let $rand-val := (random:integer($leng-total) + 1)
+  return if ($start = $iter) then ($rand)
+  else if (fn:index-of($rand, $rand-val) > 0) then (deh:proc-random($rand, $leng-total, $iter, $start))
+  else (deh:proc-random(($rand, $rand-val), $leng-total, $iter, ($start + 1)))
+};
+
+(:--------------------------------END random--------------------------------------------:)
