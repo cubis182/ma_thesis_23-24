@@ -1,5 +1,7 @@
 xquery version "3.1";
 
+(:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
+
 import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
@@ -65,6 +67,8 @@ declare variable $proiel := (fn:collection("./PROIEL-DATA/syntacticus-treebank-d
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
+declare variable $ola := fn:collection("./../latinnlp/texts/ola");
+
 (:
 DEPRECATED, better to use the local collection and to reference the whole folder
 declare variable $treebanks := (doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Caes Gall.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Ov Met.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Petr.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Phaedrus.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Sal Cat.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Suet Aug.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Verg A.xml"), doc("C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/vulgate.xml"));
@@ -101,7 +105,22 @@ declare function local:summation($sents as element()*)
  else ()
 };
 
-deh:search(("sdjlfak"), (), (), $all-trees)
+(:title, then author 
+urn:cts:latinLit:phi0690.phi003.perseus-lat1 
+6.295
+:)
+
+(:Other subordinators in PROIEL: interrogative adv, interrogative pronoun, relative adverb and relative pronoun respectively :)
+for $doc in $harrington
+let $info := deh:work-info($doc)
+return <biblStruct>
+        <monogr>
+          <author>{$info(2)}</author>
+          <title>{$info(1)}</title>
+        </monogr>
+      </biblStruct>
+
+
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:

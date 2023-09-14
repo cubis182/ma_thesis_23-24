@@ -1,9 +1,13 @@
 xquery version "3.1";
 
+(:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
+
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
 import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
-(:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm :)
+(:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
+  
+:)
 
 (:
 5/18/2023: 
@@ -32,6 +36,20 @@ declare %public function deh:postags($treebank) as item()* (:7/22/2023: removed 
 };
 
 (:
+deh:remove-punct()
+9/4/2023
+
+This function removes any period, comma or semicolon from a string; you can add any other punctuation you want, too, I was just lazy today.
+
+$str: A SINGLE string which you want to remove punctuation from.
+
+:)
+declare function deh:remove-punct($str as xs:string) as xs:string
+{
+  fn:replace($str, "[.,;]", "")
+};
+
+(:
 deh:get-postags
 7/30/2023
 
@@ -48,6 +66,20 @@ declare function deh:get-postags($tokens as element()*, $postags as item()*)
      for $char at $n in functx:chars($token/fn:string(@postag))
      return $postags[$n]($char)
    )
+};
+
+(:
+deh:lem()
+9/8/2023
+
+This function takes a string or sequence of strings to be used as a search term for a lemma and automatically adds the proper reg ex syntax to make the search work.
+
+$str: A string or sequence of strings, usually a bare lemma; only reason this is necessary is because of the LDT's tendency to number different lemmas
+:)
+declare function deh:lem($str as item()*) as item()*
+{
+   for $item in $str
+   return ("^" || $str || "?$")
 };
 
 (:
@@ -93,14 +125,19 @@ declare function deh:info-from-html($doc as node()*)
 {
   let $urn := deh:cts-urn($doc) 
   return if (fn:string-length($urn) > 0) then (
+    deh:info-from-urn($urn)
+)
+else ()
+};
+
+declare %public function deh:info-from-urn($urn as xs:string) as array(*)
+{
   let $html := html:parse(fetch:binary(fn:concat("https://catalog.perseus.org/catalog/", $urn))) (:Get the Perseus Catalog entry:)
   let $node := $html//h4[text() eq "Work Information"]/../dl (:Gets the bundle of work info:)
   let $work-info := $node/dd (:Get the nodes which contain the work info:)
   let $title := $work-info[2]
   let $author := $node//*[text() eq "Author:"]/following-sibling::dd[1]/a/text()
   return deh:return-info(fn:concat($title, ", "), $author) (:Updated 8/1/2023, now uses a function to ensure each array has two fields; whichever was empty is replaced with "UNK":)
-)
-else ()
 };
 
 (:
@@ -980,7 +1017,7 @@ A function I am workshopping to return a whole range of citations from a citatio
 declare function deh:cite-range($range as xs:string) as item()*
 {
   let $dash-index := functx:index-of-string($range, '-') (:Place in the string of the dash:)
-    return if (fn:count($dash-index) != 0) then (
+    return if (fn:count($dash-index) > 0) then (
     let $str1 := fn:substring($range, 1, $dash-index - 1) (:Get the citation to the left of the dash:)
     let $str2 := fn:substring($range, $dash-index + 1) (:And get the citation to the right:)
     let $str1-dot := functx:index-of-string($str1, '.')(:Get the location of the '.' in the left citation:)
@@ -1399,3 +1436,27 @@ declare %private function deh:proc-random($rand as item()*, $leng-total as xs:in
 };
 
 (:--------------------------------END random--------------------------------------------:)
+
+(:------------------------------------START of special use-case stuff------------------------------------------:)
+
+(:Pass the $all-ldt var from AGLDT_Search_Test, get the duplicates based on BOTH urn and subdoc:)
+declare function deh:get-duplicates($all-ldt)
+{
+  let $subdocs := 
+  for $doc in $all-ldt
+  let $sents := $doc//sentence
+  return fn:distinct-values(
+  for $sent in $sents
+  return fn:concat(fn:string($sent/@document_id), " ", $sent/fn:string(@subdoc))
+)
+
+for $item in $subdocs
+where fn:count(fn:index-of($subdocs, $item)) > 1
+return $item
+};
+
+declare function deh:get-ldt-conj-relations($all-ldt)
+{
+  fn:distinct-values(deh:return-children(deh:search((), "AuxC", (), $all-ldt))/fn:string(@relation))
+};
+(:-------------------------------------END of special use-case stuff------------------------------------------:)

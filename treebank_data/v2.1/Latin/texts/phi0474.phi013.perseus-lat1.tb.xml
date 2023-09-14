@@ -88,7 +88,7 @@
       <word id="7" form="audacia" lemma="audacia1" postag="n-s---fn-" relation="SBJ" head="6"/>
       <word id="8" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
-    <sentence id="4" document_id="" subdoc="">
+    <sentence id="4" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="1.1">
       <word id="1" form="Nihil" lemma="" postag="" relation="nil" head=""/>
       <word id="2" form="-ne" lemma="" postag="" relation="nil" head=""/>
       <word id="3" form="te" lemma="" postag="" relation="nil" head=""/>

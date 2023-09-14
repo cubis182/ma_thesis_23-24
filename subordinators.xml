@@ -1,0 +1,19 @@
+<?xml version ="1.0"?>
+<!-- Some query basics:
+	-NEVER assume the numbering scheme is the same between treebanks for lemmas (proiel has a quod#2, ldt does not)
+	-If there are different lemmas for a single 
+-->
+<lemmas>
+	<sub cat="time">dum<note>Sometimes contains -dum or dummodo, which frustratingly has its own lemma as well.</note></sub>
+	<sub cat="time">quamdiu<note>Sometimes separated, quam...diu; in forms, I have seen quamdiu, quam diu and quandiu</note></sub>
+	<sub cat="time">quando<note>Has no alternate forms under the lemma.</note></sub>
+	<sub cat="time">quandoque<note>Note that 'quandocumque' does not seem to appear</note></sub>
+	<sub cat="time">quotiens<note>quoties is also an accepted form</note></sub>
+	<sub cat="time">quotienscumque</sub>
+	<sub cat="time">cum<note>with the indicative, that is; options with this lemma are cum, quon and quom in the corpus</note></sub>
+	<sub cat="time">donec</sub>
+	<sub cat="time">postquam<note>seems never to be used as a lemma for the separated </note></sub>
+	<sub cat="time">priusquam<note>sometimes prius quam; again, does not seem to include single words, so you have to account for this in more complex queries.</note></sub>
+	<sub cat="time">antequam<note>Same as postquam above; and may be ante quam or ante-quam</note></sub>
+	<sub cat="manner">quomodo<note>In proiel, the verb it is subordinated to is in apposition the "ita" it goes with</note></sub>
+</lemmas>
