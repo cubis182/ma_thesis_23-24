@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          version="1.5"
-          direction="ltr"
-          format="harrington">
-   <date>2017-10-13 20:17:34 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
+   <date>2017-10-13 20:17:34 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -35,10 +30,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="2a.1-13"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="2a.1-13" span="">
       <word id="1" form="Passer" lemma="passer" postag="n-s---mv-" relation="V-VOC_AP" head="2"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="APOS" head="53"/>
       <word id="3" form="deliciae" lemma="deliciae" postag="n-p---fv-" relation="V-VOC_AP" head="2"/>

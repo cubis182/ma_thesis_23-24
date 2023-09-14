@@ -111,14 +111,7 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 :)
 
 (:Other subordinators in PROIEL: interrogative adv, interrogative pronoun, relative adverb and relative pronoun respectively :)
-for $doc in $harrington
-let $info := deh:work-info($doc)
-return <biblStruct>
-        <monogr>
-          <author>{$info(2)}</author>
-          <title>{$info(1)}</title>
-        </monogr>
-      </biblStruct>
+fn:count($harrington//biblStruct)
 
 
 

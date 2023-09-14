@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          version="1.5"
-          direction="ltr"
-          format="harrington">
-   <date>2017-09-15 22:22:40 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
+   <date>2017-09-15 22:22:40 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -29,10 +24,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="2a.1-7"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="2a.1-7" span="">
       <word id="1" form="Passer" lemma="passer" postag="n-s---mv-" relation="V-VOC_AP" head="2"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="APOS" head="0"/>
       <word id="3" form="deliciae" lemma="deliciae" postag="n-p---fv-" relation="V-VOC_AP" head="2"/>
@@ -81,10 +73,7 @@
       <word id="46" form="ardor" lemma="ardor" postag="n-s---mn-" relation="N-SUBJ" head="45"/>
       <word id="47" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="2a.9-13"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="2a.9-13" span="">
       <word id="1" form="te" lemma="tu" postag="p-s---mb-" relation="AB-ACCOMP" head="2"/>
       <word id="2" form="-cum" lemma="cum" postag="r--------" relation="AuxP" head="3"/>
       <word id="3" form="ludere" lemma="ludo" postag="v--pna---" relation="INF-COMP_CO" head="7"/>

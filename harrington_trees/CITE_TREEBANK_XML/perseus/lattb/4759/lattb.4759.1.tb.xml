@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-10-19 13:58:14 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-10-19 13:58:14 +0000</date><biblStruct><monogr><author>Tibullus</author><title>Elegiae, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 4"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 4" span="">
       <word id="1" form="Gratum" lemma="gratus" postag="a-s---nn-" relation="N-PRED" head="2"/>
       <word id="2" form="est" lemma="sum1" postag="v3spia---" relation="PRED" head="0"/>
       <word id="3" form="," lemma="punc1" postag="u--------" relation="AuxX" head="11"/>
@@ -46,10 +38,7 @@
       <word id="17" form="cadam" lemma="cado" postag="v1spsa---" relation="ADV-PURP" head="14"/>
       <word id="18" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 4"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 4" span="">
       <word id="1" form="Sit" lemma="sum1" postag="v3spsa---" relation="PRED-HORT" head="0"/>
       <word id="2" form="tibi" lemma="tu" postag="p-s---md-" relation="D-REFER" head="5"/>
       <word id="3" form="cura" lemma="cura" postag="n-s---fn-" relation="N-SUBJ_CO" head="7"/>
@@ -67,10 +56,7 @@
       <word id="15" insertion_id="0012e" artificial="elliptic" relation="APOS" form="[ ]" head="16"/>
       <word id="16" insertion_id="0013e" artificial="elliptic" relation="ADV-COMPAR" form="(est)" head="10"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 4"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 4" span="">
       <word id="1" form="Solliciti" lemma="sollicitus" postag="a-p---mn-" relation="N-PRED" head="2"/>
       <word id="2" form="sunt" lemma="sum1" postag="v3ppia---" relation="PRED" head="0"/>
       <word id="3" form="pro" lemma="pro1" postag="r--------" relation="AuxP" head="1"/>

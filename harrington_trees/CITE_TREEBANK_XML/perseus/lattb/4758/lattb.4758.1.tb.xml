@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-10-19 13:56:55 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-10-19 13:56:55 +0000</date><biblStruct><monogr><author>Tibullus</author><title>Elegiae, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 3"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 3" span="">
       <word id="1" form="Scis" lemma="scio" postag="v2spia---" relation="PRED" head="0"/>
       <word id="2" form="iter" lemma="iter" postag="n-s---na-" relation="A-SUBJ" head="5"/>
       <word id="3" form="ex" lemma="ex" postag="r--------" relation="AuxP" head="5"/>
@@ -36,10 +28,7 @@
       <word id="7" form="puellae" lemma="puella" postag="n-s---fg-" relation="G-POSS" head="4"/>
       <word id="8" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 3"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 3" span="">
       <word id="1" form="natali" lemma="natalis1" postag="a-s---mb-" relation="AB-LOCAT" head="5"/>
       <word id="2" form="Romae" lemma="Roma" postag="n-s---fl-" relation="L-LOCAT" head="5"/>
       <word id="3" form="iam" lemma="jam" postag="d--------" relation="ADV" head="4"/>
@@ -48,10 +37,7 @@
       <word id="6" form="meo" lemma="meus" postag="a-s---mb-" relation="ATR" head="1"/>
       <word id="7" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 3"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 3" span="">
       <word id="1" form="Omnibus" lemma="omnis" postag="a-p---mb-" relation="ATR" head="4"/>
       <word id="2" form="ille" lemma="ille" postag="p-s---mn-" relation="ATR" head="3"/>
       <word id="3" form="dies" lemma="dies" postag="n-s---mn-" relation="N-SUBJ" head="6"/>

@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-09-27 22:10:42 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-09-27 22:10:42 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="Lugete" lemma="lugeo" postag="v2ppma---" relation="PRED" head="0"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="AuxX" head="6"/>
       <word id="3" form="o" lemma="o" postag="e--------" relation="INTRJ" head="6"/>
@@ -41,10 +33,7 @@
       <word id="12" form="venustiorum" lemma="venustus" postag="a-p----gc" relation="ATR" head="11"/>
       <word id="13" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="passer" lemma="passer1" postag="n-s---m--" relation="N-SUBJ_AP" head="6"/>
       <word id="2" form="mortuus" lemma="morior" postag="v-srppmn-" relation="PRED" head="0"/>
       <word id="3" form="est" lemma="sum1" postag="v3spia---" relation="AuxV" head="2"/>
@@ -65,10 +54,7 @@
       <word id="18" form="amabat" lemma="amo" postag="v3siia---" relation="ADJ-RC" head="6"/>
       <word id="19" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="nam" lemma="nam" postag="c--------" relation="AuxY" head="15"/>
       <word id="2" form="mellitus" lemma="mellitus" postag="a-s---mn-" relation="N-PRED" head="3"/>
       <word id="3" form="erat" lemma="sum1" postag="v3siia---" relation="PRED_CO" head="5"/>
@@ -104,10 +90,7 @@
       <word id="33" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="34" insertion_id="0011e" artificial="elliptic" relation="" form="(novit)" head="10"/>
    </sentence>
-   <sentence id="4"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="4" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="qui" lemma="qui1" postag="n-s---mn-" relation="N-SUBJ" head="3"/>
       <word id="2" form="nunc" lemma="nunc" postag="d--------" relation="ADV" head="3"/>
       <word id="3" form="it" lemma="eo1" postag="v3spia---" relation="PRED" head="0"/>
@@ -122,10 +105,7 @@
       <word id="12" form="quemquam" lemma="quisquam" postag="p-s---ma-" relation="A-SUBJ" head="11"/>
       <word id="13" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="5"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="5" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="at" lemma="at" postag="c--------" relation="COORD" head="0"/>
       <word id="2" form="vobis" lemma="tu" postag="p-p---fd-" relation="D-INTER" head="4"/>
       <word id="3" form="male" lemma="malus" postag="d-------p" relation="ADV" head="4"/>
@@ -141,10 +121,7 @@
       <word id="13" form="devoratis" lemma="devoro" postag="v2ppia---" relation="ADJ-RC" head="7"/>
       <word id="14" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="6"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="6" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="tam" lemma="tam" postag="d--------" relation="ADV" head="2"/>
       <word id="2" form="bellum" lemma="bellus" postag="a-s---ma-" relation="ATR" head="4"/>
       <word id="3" form="mihi" lemma="ego" postag="p-s---md-" relation="D-INTER" head="5"/>
@@ -155,19 +132,13 @@
       <word id="8" form="male" lemma="malus" postag="d-------p" relation="ADV" head="7"/>
       <word id="9" form="!" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="7"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="7" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="o" lemma="o" postag="e--------" relation="INTRJ" head="3"/>
       <word id="2" form="miselle" lemma="misellus" postag="a-s---mv-" relation="ATR" head="3"/>
       <word id="3" form="passer" lemma="passer" postag="n-s---mv-" relation="V-VOC" head="0"/>
       <word id="4" form="!" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="8"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 3"
-             span="">
+   <sentence id="8" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 3" span="">
       <word id="1" form="tua" lemma="tuus" postag="a-s---fb-" relation="ATR" head="3"/>
       <word id="2" form="nunc" lemma="nunc" postag="d--------" relation="ADV" head="8"/>
       <word id="3" form="opera" lemma="opera" postag="n-s---fb-" relation="AB-CAUSE" head="8"/>

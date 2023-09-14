@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          version="1.5"
-          direction="ltr"
-          format="harrington">
-   <date>2016-09-28 15:47:43 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
+   <date>2016-09-28 15:47:43 +0000</date><biblStruct><monogr><author>Virgil</author><title>Aeneid, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -47,10 +42,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.559"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.559" span="">
       <word id="1" form="At" lemma="at" postag="c--------" relation="COORD" head="0"/>
       <word id="2" form="me" lemma="ego" postag="p-s---ma-" relation="A-EXTENT" head="6"/>
       <word id="3" form="tum" lemma="tum" postag="d--------" relation="ADV" head="6"/>
@@ -60,10 +52,7 @@
       <word id="7" form="horror" lemma="horror" postag="n-s---mn-" relation="N-SUBJ" head="6"/>
       <word id="8" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.560-2.563"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.560-2.563" span="">
       <word id="1" form="Obstipui" lemma="obstipesco" postag="v1sria---" relation="PRED_CO" head="2"/>
       <word id="2" form=";" lemma="punc1" postag="u--------" relation="COORD" head="0"/>
       <word id="3" form="subiit" lemma="subeo" postag="v3sria---" relation="PRED_CO" head="2"/>
@@ -94,10 +83,7 @@
       <word id="28" form="Iuli" lemma="Iulus" postag="n-s---mg-" relation="G-POSS" head="27"/>
       <word id="29" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.564"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.564" span="">
       <word id="1" form="Respicio" lemma="respicio" postag="v1spia---" relation="PRED_CO" head="3"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="AuxX" head="3"/>
       <word id="3" form="et" lemma="et" postag="c--------" relation="COORD" head="0"/>
@@ -109,10 +95,7 @@
       <word id="9" form="lustro" lemma="lustro1" postag="v1spia---" relation="PRED_CO" head="3"/>
       <word id="10" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="4"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.565-2.566"
-             span="">
+   <sentence id="4" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.565-2.566" span="">
       <word id="1" form="Deseruere" lemma="desero2" postag="v3pria---" relation="PRED_CO" head="5"/>
       <word id="2" form="omnes" lemma="omnis" postag="a-p---mn-" relation="N-SUBJ" head="5"/>
       <word id="3" form="defessi" lemma="defatiscor" postag="v-prppmn-" relation="ATR" head="2"/>
@@ -129,10 +112,7 @@
       <word id="14" form="dedere" lemma="do" postag="v3pria---" relation="PRED_CO" head="11"/>
       <word id="15" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="5"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.567-2.569"
-             span="">
+   <sentence id="5" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.567-2.569" span="">
       <word id="1" form="Iam" lemma="jam" postag="d--------" relation="ADV" head="6"/>
       <word id="2" form="-que" lemma="-que" postag="c--------" relation="COORD" head="0"/>
       <word id="3" form="adeo" lemma="adeo2" postag="d--------" relation="ADV" head="6"/>
@@ -154,10 +134,7 @@
       <word id="19" form="aspicio" lemma="aspicio" postag="v1spia---" relation="ADV-TEMPOR" head="8"/>
       <word id="20" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="6"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.569-2.570"
-             span="">
+   <sentence id="6" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.569-2.570" span="">
       <word id="1" form="dant" lemma="do" postag="v3ppia---" relation="PRED" head="0"/>
       <word id="2" form="clara" lemma="clarus" postag="a-p---nn-" relation="ATR" head="3"/>
       <word id="3" form="incendia" lemma="incendium" postag="n-p---nn-" relation="N-SUBJ" head="1"/>
@@ -172,10 +149,7 @@
       <word id="12" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="13" insertion_id="0004e" artificial="elliptic" relation="D-IO" lemma="" postag="" form="(mihi)" head="1"/>
    </sentence>
-   <sentence id="7"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.571-2.574"
-             span="">
+   <sentence id="7" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.571-2.574" span="">
       <word id="1" form="Illa" lemma="ille" postag="p-s---fn-" relation="N-SUBJ_AP" head="16"/>
       <word id="2" form="sibi" lemma="sui" postag="p-s---fd-" relation="D-REFER" head="3"/>
       <word id="3" form="infestos" lemma="infestus" postag="a-p---ma-" relation="ATR" head="7"/>
@@ -206,10 +180,7 @@
       <word id="28" form="sedebat" lemma="sedeo" postag="v3siia---" relation="PRED_CO" head="25"/>
       <word id="29" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="8"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.575-2.576"
-             span="">
+   <sentence id="8" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.575-2.576" span="">
       <word id="1" form="Exarsere" lemma="ex-ardeo" postag="v3pria---" relation="PRED_CO" head="4"/>
       <word id="2" form="ignes" lemma="ignis" postag="n-p---mn-" relation="N-SUBJ" head="1"/>
       <word id="3" form="animo" lemma="animus" postag="n-s---mb-" relation="AB-ORIENT" head="1"/>
@@ -225,10 +196,7 @@
       <word id="13" form="poenas" lemma="poena" postag="n-p---fa-" relation="A-DO" head="12"/>
       <word id="14" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="9"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.577-2.580"
-             span="">
+   <sentence id="9" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.577-2.580" span="">
       <word id="1" form="“" lemma="" postag="" relation="AuxG" head="12"/>
       <word id="2" form="Scilicet" lemma="scilicet" postag="d--------" relation="AuxY" head="12"/>
       <word id="3" form="haec" lemma="hic" postag="p-s---fn-" relation="N-SUBJ" head="9"/>
@@ -265,10 +233,7 @@
       <word id="34" form="ministris" lemma="minister" postag="n-p---mb-" relation="AB-MANN_CO" head="31"/>
       <word id="35" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="10"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.581"
-             span="">
+   <sentence id="10" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.581" span="">
       <word id="1" form="Occiderit" lemma="occido" postag="v3stia---" relation="PRED_CO" head="4"/>
       <word id="2" form="ferro" lemma="ferrum" postag="n-s---nb-" relation="AB-MEANS" head="1"/>
       <word id="3" form="Priamus" lemma="Priamus" postag="n-s---mn-" relation="N-SUBJ" head="1"/>
@@ -278,10 +243,7 @@
       <word id="7" form="igni" lemma="ignis" postag="n-s---mb-" relation="AB-MANN" head="6"/>
       <word id="8" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="11"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.582"
-             span="">
+   <sentence id="11" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.582" span="">
       <word id="1" form="Dardanium" lemma="Dardanius" postag="a-s---nn_" relation="ATR" head="5"/>
       <word id="2" form="totiens" lemma="totiens" postag="d--------" relation="ADV" head="3"/>
       <word id="3" form="sudarit" lemma="sudo" postag="v3stia---" relation="PRED" head="0"/>
@@ -289,19 +251,13 @@
       <word id="5" form="litus" lemma="litus3" postag="n-s---nn-" relation="N-SUBJ" head="3"/>
       <word id="6" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="12"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.583"
-             span="">
+   <sentence id="12" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.583" span="">
       <word id="1" form="Non" lemma="non" postag="d--------" relation="ADV" head="4"/>
       <word id="2" form="ita" lemma="ita" postag="d--------" relation="ADV" head="4"/>
       <word id="3" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="4" insertion_id="0002e" artificial="elliptic" relation="PRED" lemma="" postag="" form="(erit)" head="0"/>
    </sentence>
-   <sentence id="13"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.583-2.587"
-             span="">
+   <sentence id="13" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.583-2.587" span="">
       <word id="1" form="nam" lemma="nam" postag="c--------" relation="AuxY" head="28"/>
       <word id="2" form="-que" lemma="-que" postag="c--------" relation="COORD" head="0"/>
       <word id="3" form="etsi" lemma="etsi" postag="c--------" relation="AuxC" head="28"/>
@@ -342,10 +298,7 @@
       <word id="38" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="39" form="”" lemma="punc1" postag="u--------" relation="AuxX" head="38"/>
    </sentence>
-   <sentence id="14"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.588-2.594"
-             span="">
+   <sentence id="14" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.588-2.594" span="">
       <word id="1" form="Talia" lemma="talis" postag="a-p---na-" relation="A-DO" head="2"/>
       <word id="2" form="iactabam" lemma="jacto" postag="v1siia---" relation="PRED_CO" head="4"/>
       <word id="3" form="," lemma="punc1" postag="u--------" relation="AuxX" head="4"/>
@@ -411,10 +364,7 @@
       <word id="63" form="iras" lemma="ira" postag="n-p---fa-" relation="A-DO" head="62"/>
       <word id="64" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="15"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.595"
-             span="">
+   <sentence id="15" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.595" span="">
       <word id="1" form="Quid" lemma="quis1" postag="n-s---na-" relation="A-ADVERB" head="2"/>
       <word id="2" form="furis" lemma="furo" postag="v2spia---" relation="PRED_CO" head="4"/>
       <word id="3" form="," lemma="punc1" postag="u--------" relation="AuxX" head="4"/>
@@ -426,10 +376,7 @@
       <word id="9" form="recessit" lemma="recedo" postag="v3sria---" relation="PRED_CO" head="4"/>
       <word id="10" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="16"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.596-2.598"
-             span="">
+   <sentence id="16" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.596-2.598" span="">
       <word id="1" form="Non" lemma="non" postag="d--------" relation="ADV" head="3"/>
       <word id="2" form="prius" lemma="prior" postag="a-s---nac" relation="A-ADVERB" head="3"/>
       <word id="3" form="aspicies" lemma="aspicio" postag="v2sfia---" relation="PRED" head="0"/>
@@ -454,10 +401,7 @@
       <word id="22" insertion_id="0015e" artificial="elliptic" relation="APOS" form="[ ]" head="19"/>
       <word id="23" insertion_id="0019e" artificial="elliptic" relation="APOS" form="[ ]" head="19"/>
    </sentence>
-   <sentence id="17"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.598-2.600"
-             span="">
+   <sentence id="17" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.598-2.600" span="">
       <word id="1" form="Quos" lemma="qui2" postag="p-p---ma-" relation="A-EXTENT" head="5"/>
       <word id="2" form="omnes" lemma="omnis" postag="a-p---fn-" relation="ATR" head="7"/>
       <word id="3" form="undique" lemma="undique" postag="d--------" relation="ADV" head="6"/>
@@ -482,10 +426,7 @@
       <word id="22" form="ensis" lemma="ensis" postag="n-s---mn-" relation="N-SUBJ" head="21"/>
       <word id="23" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="18"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.601-2.603"
-             span="">
+   <sentence id="18" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.601-2.603" span="">
       <word id="1" form="Non" lemma="non" postag="d--------" relation="ADV" head="8"/>
       <word id="2" form="tibi" lemma="tu" postag="p-s---md-" relation="D-AGENT" head="8"/>
       <word id="3" form="Tyndaridis" lemma="Tyndaris" postag="n-s---fg-" relation="G-POSS" head="4"/>
@@ -511,10 +452,7 @@
       <word id="23" form="Troiam" lemma="Troia" postag="n-s---fa-" relation="A-DO" head="19"/>
       <word id="24" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="19"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.604-2.607"
-             span="">
+   <sentence id="19" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.604-2.607" span="">
       <word id="1" form="Aspice" lemma="aspicio" postag="v2spma---" relation="PRED_CO" head="3"/>
       <word id="2" form="nam" lemma="nam" postag="c--------" relation="AuxY" head="20"/>
       <word id="3" form="-que" lemma="-que" postag="c--------" relation="COORD" head="21"/>
@@ -549,10 +487,7 @@
       <word id="32" form="parere" lemma="pareo" postag="v--pna---" relation="INF-COMP" head="33"/>
       <word id="33" form="recusa" lemma="recuso" postag="v2spma---" relation="PRED_CO" head="30"/>
    </sentence>
-   <sentence id="20"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.608-2.612"
-             span="">
+   <sentence id="20" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.608-2.612" span="">
       <word id="1" form="hic" lemma="hic" postag="d--------" relation="ADV" head="27"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="AuxX" head="10"/>
       <word id="3" form="ubi" lemma="ubi" postag="c--------" relation="AuxC" head="1"/>
@@ -586,10 +521,7 @@
       <word id="31" form="eruit" lemma="eruo" postag="v3spia---" relation="PRED_CO" head="27"/>
       <word id="32" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="21"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.612-2.614"
-             span="">
+   <sentence id="21" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.612-2.614" span="">
       <word id="1" form="hic" lemma="hic" postag="d--------" relation="ADV" head="10"/>
       <word id="2" form="Iuno" lemma="Iuno" postag="n-s---fn-" relation="N-SUBJ" head="7"/>
       <word id="3" form="Scaeas" lemma="Scaeus" postag="a-p---fa_" relation="ATR" head="5"/>
@@ -610,10 +542,7 @@
       <word id="18" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="19" insertion_id="0010e" artificial="elliptic" relation="N-SUBJ" form="(Iuno)" head="17"/>
    </sentence>
-   <sentence id="22"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.615-2.616"
-             span="">
+   <sentence id="22" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.615-2.616" span="">
       <word id="1" form="Iam" lemma="jam" postag="d--------" relation="ADV" head="9"/>
       <word id="2" form="summas" lemma="superus" postag="a-p---fa-" relation="ATR" head="3"/>
       <word id="3" form="arces" lemma="arx" postag="n-p---fa-" relation="A-ORIENT" head="9"/>
@@ -631,10 +560,7 @@
       <word id="15" form="saeva" lemma="saevus" postag="a-s---fb-" relation="ATR" head="14"/>
       <word id="16" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="23"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.617-2.618"
-             span="">
+   <sentence id="23" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.617-2.618" span="">
       <word id="1" form="Ipse" lemma="ipse" postag="p-s---mn-" relation="ATR" head="2"/>
       <word id="2" form="pater" lemma="pater" postag="n-s---mn-" relation="N-SUBJ" head="8"/>
       <word id="3" form="Danais" lemma="Danaus" postag="a-p---md_" relation="D-IO" head="8"/>
@@ -652,10 +578,7 @@
       <word id="15" form="arma" lemma="arma" postag="n-p---na-" relation="A-ORIENT" head="12"/>
       <word id="16" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="24"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.619"
-             span="">
+   <sentence id="24" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.619" span="">
       <word id="1" form="Eripe" lemma="eripio" postag="v2spma---" relation="PRED_CO" head="8"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="AuxX" head="3"/>
       <word id="3" form="nate" lemma="natus" postag="a-s---nv-" relation="V-VOC" head="1"/>
@@ -668,10 +591,7 @@
       <word id="10" form="labori" lemma="labor2" postag="n-s---md-" relation="D-REFER" head="9"/>
       <word id="11" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="25"
-             document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1"
-             subdoc="2.620"
-             span="">
+   <sentence id="25" document_id="urn:cts:latinLit:phi0690.phi003.perseus-lat1" subdoc="2.620" span="">
       <word id="1" form="Nusquam" lemma="nusquam" postag="d--------" relation="ADV" head="2"/>
       <word id="2" form="abero" lemma="absum" postag="v1sfia---" relation="PRED_CO" head="4"/>
       <word id="3" form="," lemma="punc1" postag="u--------" relation="AuxX" head="4"/>

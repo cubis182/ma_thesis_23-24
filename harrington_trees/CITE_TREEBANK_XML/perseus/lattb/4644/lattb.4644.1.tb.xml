@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-10-06 12:03:03 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-10-06 12:03:03 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 11"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 11" span="">
       <word id="1" form="Furi" lemma="Furius" postag="a-s---mvp" relation="V-VOC_CO" head="2"/>
       <word id="2" form="et" lemma="et" postag="c--------" relation="COORD" head="85"/>
       <word id="3" form="Aureli" lemma="Aurelius" postag="a-s---mvp" relation="V-VOC_CO" head="2"/>
@@ -116,10 +108,7 @@
       <word id="87" insertion_id="0035e" artificial="elliptic" relation="ADV-PROTAS_CO" form="(penetrabit in)" head="30"/>
       <word id="88" insertion_id="0043e" artificial="elliptic" relation="ADV-PROTAS_CO" form="(penetrabit in)" head="37"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 11"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 11" span="">
       <word id="1" form="cum" lemma="cum" postag="r--------" relation="AuxP" head="5"/>
       <word id="2" form="suis" lemma="suus" postag="a-p---mb-" relation="ATR" head="6"/>
       <word id="3" form="vivat" lemma="vivo" postag="v3spsa---" relation="PRED-HORT_CO" head="5"/>
@@ -144,10 +133,7 @@
       <word id="22" form="rumpens" lemma="rumpo" postag="v-spp-fn-" relation="ATR_CO" head="18"/>
       <word id="23" form=";" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 11"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 11" span="">
       <word id="1" form="ne" lemma="ne1" postag="d--------" relation="ADV" head="4"/>
       <word id="2" form="-c" lemma="-que" postag="c--------" relation="COORD" head="0"/>
       <word id="3" form="meum" lemma="meus" postag="a-s---ma-" relation="ATR" head="9"/>

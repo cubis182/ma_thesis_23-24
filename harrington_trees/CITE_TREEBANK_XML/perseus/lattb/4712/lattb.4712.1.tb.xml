@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-10-13 14:14:14 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-10-13 14:14:14 +0000</date><biblStruct><monogr><author>Tibullus</author><title>Elegiae, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1"
-             subdoc="poem 6"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0660.phi003.perseus-lat1" subdoc="poem 6" span="">
       <word id="1" form="Ne" lemma="ne1" postag="d--------" relation="ADV" head="3"/>
       <word id="2" form="tibi" lemma="tu" postag="p-s---md-" relation="D-INTER" head="3"/>
       <word id="3" form="sim" lemma="sum1" postag="v1spsa---" relation="PRED-OPT" head="0"/>

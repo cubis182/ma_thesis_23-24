@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<treebank xmlns:saxon="http://saxon.sf.net/"
-          xml:lang="lat"
-          format="harrington"
-          direction="ltr"
-          version="1.5">
-   <date>2016-10-05 13:43:17 +0000</date>
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
+   <date>2016-10-05 13:43:17 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>
@@ -23,10 +18,7 @@
       <address>matthew.harrington@tufts.edu</address>
       <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
   </annotator>
-   <sentence id="1"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 5"
-             span="">
+   <sentence id="1" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 5" span="">
       <word id="1" form="Vivamus" lemma="vivo" postag="v1ppsa---" relation="PRED-HORT_CO" head="5"/>
       <word id="2" form="mea" lemma="meus" postag="a-s---fv-" relation="ATR" head="3"/>
       <word id="3" form="Lesbia" lemma="Lesbia" postag="n-s---fv-" relation="V-VOC" head="5"/>
@@ -44,10 +36,7 @@
       <word id="15" form="assis" lemma="as" postag="n-s---mg-" relation="G-VALUE" head="14"/>
       <word id="16" form="!" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="2"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 5"
-             span="">
+   <sentence id="2" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 5" span="">
       <word id="1" form="soles" lemma="sol" postag="n-p---mn-" relation="N-SUBJ" head="5"/>
       <word id="2" form="occidere" lemma="occido1" postag="v--pna---" relation="INF-COMP_CO" head="3"/>
       <word id="3" form="et" lemma="et" postag="c--------" relation="COORD" head="5"/>
@@ -55,10 +44,7 @@
       <word id="5" form="possunt" lemma="possum" postag="v3ppia---" relation="PRED" head="0"/>
       <word id="6" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="3"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 5"
-             span="">
+   <sentence id="3" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 5" span="">
       <word id="1" form="nobis" lemma="nos" postag="p-p---md-" relation="D-INTER" head="4"/>
       <word id="2" form="cum" lemma="cum" postag="c--------" relation="AuxC" head="12"/>
       <word id="3" form="semel" lemma="semel" postag="d--------" relation="ADV" head="4"/>
@@ -73,10 +59,7 @@
       <word id="12" form="dormienda" lemma="dormio" postag="v-s-g-fn-" relation="PRED" head="0"/>
       <word id="13" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
    </sentence>
-   <sentence id="4"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 5"
-             span="">
+   <sentence id="4" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 5" span="">
       <word id="1" form="da" lemma="do" postag="v2spma---" relation="PRED_CO" head="5"/>
       <word id="2" form="mi" lemma="ego" postag="p-s---md-" relation="D-IO" head="5"/>
       <word id="3" form="basia" lemma="basium" postag="n-p---na-" relation="A-DO" head="1"/>
@@ -107,10 +90,7 @@
       <word id="28" insertion_id="0017e" artificial="elliptic" relation="PRED_CO" form="(da)" head="5"/>
       <word id="29" insertion_id="0022e" artificial="elliptic" relation="PRED_CO" form="(da)" head="5"/>
    </sentence>
-   <sentence id="5"
-             document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2"
-             subdoc="poem 5"
-             span="">
+   <sentence id="5" document_id="urn:cts:latinLit:phi0472.phi001.perseus-lat2" subdoc="poem 5" span="">
       <word id="1" form="dein" lemma="deinde" postag="d--------" relation="ADV" head="8"/>
       <word id="2" form="," lemma="punc1" postag="u--------" relation="AuxX" head="6"/>
       <word id="3" form="cum" lemma="cum" postag="c--------" relation="AuxC" head="8"/>
