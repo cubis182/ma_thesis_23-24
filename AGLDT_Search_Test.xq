@@ -110,9 +110,9 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 6.295
 :)
 
-(:Other subordinators in PROIEL: interrogative adv, interrogative pronoun, relative adverb and relative pronoun respectively :)
-fn:count($harrington//biblStruct)
+(:@form s to look up: "Ulixes dixit", :)
 
+deh:pick-random($proiel//token[@empty-token-sort="P"]/.., 10)
 
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)

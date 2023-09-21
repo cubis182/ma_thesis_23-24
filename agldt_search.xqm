@@ -57,6 +57,7 @@ Returns the postags in text format, from LDT or PROIEL (although you must supply
 :)
 declare function deh:get-postags($tokens as element()*, $postags as item()*)
 {
+  
    for $token in $tokens
    return if ($token/name() = 'token') then (
      for $char at $n in functx:chars($token/fn:string(@morphology))
@@ -149,13 +150,10 @@ $doc: One or more treebank documents (not nodes)
 declare function deh:work-info($doc as node()*)
 {
   let $xml := $doc (:May remove this redundant step later; originally, this accepted nodes as well as documents:)
-  return if ($xml/*/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
+  return if ($xml/*/name() eq "treebank") then ( (:Updated 9/14/2023: now tests for "treebank" as the root, not version, since this operation will now work with Harrington and LDT trees:)
     let $words := $xml//sentence[1]//word (:Get some example words: perhaps an intermediate step, but I want to be call this with a whole document in the args:)
     return deh:ldt2.1-work-info($words[1]) 
   )  
-  else if ($xml/*/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
-    deh:info-from-html($xml)
-  )
   else if ($xml/*/name() = "proiel" and $xml/*/fn:string(@schema-version) = "2.1") then (
     let $tokens := $xml//div[1]/sentence[1]//token
     return deh:proiel-work-info($tokens[1])
@@ -170,12 +168,9 @@ See deh:work-info desc for more details; this just works on individual words
 :)
 declare function deh:token-info($token as element()) as array(*)
 {
-  if ($token/ancestor::treebank/fn:string(@version) eq "2.1") then ( (:For the newer, 2.1 version of the official LDT:)
+  if ($token/name() eq "word") then ( (:Updated 9/14/2023: now there is one requirement for all Perseus treebanks, since the Harrington and LDT trees are now aligned in work-info:)
     deh:ldt2.1-work-info($token) 
-  )  
-  else if ($token/ancestor::treebank/fn:string(@version) eq "1.5") then ( (:For the older version (1.5) of the official LDT:)
-    deh:info-from-html(doc(fn:base-uri($token))) (:Must pass the whole document without changing the function; but, since it is rare that this needs to happen, it is fine by me.:)
-  )
+  ) 
   else if ($token/name() = "token" and $token/ancestor::proiel/fn:string(@schema-version) = "2.1") then (
     deh:proiel-work-info($token)
   )
@@ -234,10 +229,34 @@ declare %public function deh:relations() as item()*
   return $tag//short/text()
 };
 
+(:
+deh:print()
+9/15/2023:
+
+$sents: sentence elements from either the LDT or PROIEL
+
+:)
+declare function deh:print($sents as item()*)
+{
+  for $sent in $sents
+  return fn:string-join($sent/*/fn:string(@form), " ")
+};
+
+(:
+deh:print-relation()
+9/15/2023
+
+
+:)
+declare function deh:print-relation($sents as item()*)
+{
+  
+};
+
 (: KINDA OBSOLETE, THERE IS LIKELY A BETTER WAY TO DO THIS... Winter Break 2022-23 Phase :)
 (:IF YOU WANT TO UPDATE PUNCTUATION, COME HERE
 This function takes a string, and returns true if it matches punctuation. This is meant to take the 
-form of a word and check if it is punctuation so it does not get counted when checking sentence length:)
+form of a word and check if it is punctuation so it does not get counted when checking sentence length. HOWEVER, THIS ONLY CHECKS WHETHER PUNCTUATION IS PRESENT, NOT WHETHER IT IS ONLY PUNCTUATION:)
 declare %private function deh:check-punct($form as xs:string) as xs:boolean
 {
    let $illegal-chars :=  ('!', ',', '.', ';', '?', '-')
@@ -1012,7 +1031,7 @@ declare function deh:subdoc($token as element()) as xs:string
 deh:cite-range()
 8/1/2023:
 
-A function I am workshopping to return a whole range of citations from a citation with a dash. LDT luckily puts the full citation on each side of the dash (i.e. 13.463-13.465), so there is not guesswork involved, although I did not check every single example; since PROIEL gives a citation on every word, there are no dashes, so this function is not necessary there. THIS FUNCTION WILL ALSO SPIT OUT STRINGS WITH NO HYPHENS, so this can be used on any string.
+A function I am workshopping to return a whole range of citations from a citation with a dash. LDT luckily puts the full citation on each side of the dash (i.e. 13.463-13.465), so there is not guesswork involved, although I did not check every single example (YEP, there are some Harrington trees which don't match this, so that has to be accounted for (i.e. writing 13.463-465)); since PROIEL gives a citation on every word, there are no dashes, so this function is not necessary there. THIS FUNCTION WILL ALSO SPIT OUT STRINGS WITH NO HYPHENS, so this can be used on any string.
 :)
 declare function deh:cite-range($range as xs:string) as item()*
 {
@@ -1049,8 +1068,9 @@ declare function deh:relation-freq($words as element()*) as item()*
   return ($item, fn:count(fn:index-of($val, $item)))
 };
 
-(: Winter Break 2022-23 Phase :)
+(: Winter Break 2022-23 Phase (OBSOLETE: 9/20/2023):)
 (: Change the confusing terms later: this works either way:)
+(:
 declare %private function deh:process-pairs($original-descendants as element()*, $processed-descendants as element()*, $original-heads as element()*, $processed-heads as element()*) as element()*
 {
   for $first-node at $n in $original-heads
@@ -1062,19 +1082,23 @@ declare %private function deh:process-pairs($original-descendants as element()*,
   return ($first-node, $return[$n])
   
 };
+:)
 
-(: Winter Break 2022-23 Phase :)
+(: Winter Break 2022-23 Phase (OBSOLETE: 9/20/2023):)
 (: THIS WON'T WORK, COME UP WITH ANOTHER SOLUTION:)
 (: Just note that the proc-results function should return a list which includes elements that overlap with the targets list, and that the proc-targets function should return a list which overlaps with the results list:)
+(:
 declare %public function deh:return-pairs($results as element()*, $targets as element()*, $proc-results, $proc-targets)
 {
   let $proc-results := $proc-targets($targets)
   let $proc-heads := $proc-results($results)
   return deh:process-pairs($targets, $proc-targets, $results, $proc-results)
 };
+:)
 
-(: Winter Break 2022-23 Phase :)
+(: Winter Break 2022-23 Phase (OBSOLETE: 9/20/2023):)
 (: Should be private and used in the deh:return-pairs function later!!! :)
+(:
 declare %public function deh:parent-return-pairs($descendants as element()*, $heads as element()*) as element()*
 {
   
@@ -1093,6 +1117,7 @@ declare %public function deh:parent-return-pairs($descendants as element()*, $he
   </parent-return-pair>
   
 };
+:)
 
 (: Winter Break 2022-23 Phase :)
 (: Returns a list of the WORD (AGLDT) parents of each word.
@@ -1298,7 +1323,6 @@ The impetus was that sometimes PRED is not going to be the base node of a senten
 
 $postag-search: A set of POS tag search parameters, like ("comparative", "nominative", "plural")
 $doc: A treebank, like "C:\Users\T470s\Documents\2023 Spring Semester\Latin Dependency Treebank (AGLDT)\vulgate.xml"
-$postags: Just the deh:postags function, every time
 
 7/21/2023: Added PROIEL compatibility with deh:check-head
 
@@ -1307,11 +1331,11 @@ deh:proc-highest (private, made for this function to handle looping through each
 deh:postag-andSearch
 deh:check-head
 :)
-declare function deh:find-highest($postag-search as item()*, $doc as node()*, $postags)
+declare function deh:find-highest($postag-search as item()*, $sents as element(sentence)*)
 {
-  for $sent in $doc//sentence
-    let $head := $sent/*[fn:number(deh:check-head(.)) eq 0]
-    return deh:proc-highest($postag-search, $head, $postags)
+  for $sent in $sents
+    let $head := $sent/*[(fn:number(deh:check-head(.)) > 0) ne true()]
+    return deh:proc-highest($postag-search, $head, deh:postags(if ($head[1]/name() = 'token') then ('proiel') else ('ldt')))
 };
 
 (:
@@ -1460,3 +1484,93 @@ declare function deh:get-ldt-conj-relations($all-ldt)
   fn:distinct-values(deh:return-children(deh:search((), "AuxC", (), $all-ldt))/fn:string(@relation))
 };
 (:-------------------------------------END of special use-case stuff------------------------------------------:)
+
+(:-------------------------------------START of utility functions---------------------------------------------:)
+(:This section is for functions particularly related to the chosen thesis topic. I want to be able to:
+  -extract main verbs (which is different between trees)
+  -extract as many quotations as possible.
+  -extract proper conjunctions (which will include relative adverbs)
+  -extract AND remove (two separate things) non-finite clauses
+  -remove clause by subordinator/list of subordinators function
+  -implement an extract AND remove all satellite/adjuncts
+  -also remove all non-adjunct, finite subordinators as a third category? That would be complement clauses, various kinds of indirect question/command in that category too, relative clauses
+
+:)
+
+(:
+deh:extract-nonfinite()
+9/20/2023
+
+This will eventually have a corresponding function deh:remove-nonfinite, where the results of this function can be used to get the parts of the sentence NOT removed. This means whole constituents need to be removed, not just the verb, although we'll get there.
+
+$
+
+Depends on:
+deh:get-preds() (indirectly, I am currently testing it to put it in a higher function)
+:)
+
+(:
+deh:get-preds()
+9/20/2023
+
+This function should return the "main verbs" of every sentence in both PROIEL and LDT. I include some notes here. First, this should be able to return elliptical verbs. 
+
+
+Depends on:
+deh:lowest-numbers()
+:)
+declare function deh:get-preds($sents as element(sentence)*)
+{
+  for $sent in $sents
+  let $verbs := $sent/*[fn:matches(fn:string(@postag), "v[^-].......") or ($sent/*[@part-of-speech="V-" and fn:matches(fn:string(@morphology), "[^-].........")])] (:For both LDT and PROIEL; checks for finite verbs (hence the [^-] regex, which makes sure there is a "person" value:)
+  let $depth := fn:for-each($verbs, deh:return-depth(?, 0))
+  return if (fn:count($depth) > 0) then (
+  let $indices := fn:index-of($depth, fn:min($depth)) (:get the location of the lowest ones:)
+  return $verbs[fn:position() = $indices])
+  else ()
+};
+
+(:
+deh:lowest-numbers()
+9/20/2023
+
+Out of a sequence, returns only the lowest values
+:)
+declare function deh:lowest-numbers($seq as xs:integer*)
+{
+  $seq[. = fn:min($seq)]
+};
+
+(:
+deh:search-text()
+9/20/2023
+
+Should take a string, and, stripping punctuation, return matches in the treebanks. Make sure to put spaces between everything that is tokenized, including que's and turning 'nec' into 'ne c' for proiel!
+
+
+:)
+declare function deh:search-text($str as xs:string, $trees as item()*)
+{
+  let $docs := functx:distinct-nodes(for $tree in $trees return doc(fn:base-uri($tree))) (:Make sure we have the full documents for searching:)
+  
+  for $sentence in $docs//sentence
+  let $print := deh:print($sentence) (:Get the sentence as a string:)
+  let $print-no-punc := fn:replace($print, "[^a-z ]", "") (:Remove anything that is not a letter, or a space (note the extra space after 'a-z':)
+  return if (fn:contains($print-no-punc, $str)) then ($sentence) (:If what we are searching is contained within the sentence, return it:)
+  else ()
+};
+
+(:
+deh:is-finite()
+9/20/2023
+
+Returns whether any single token (ldt or proiel) is a finite verb
+:)
+declare function deh:is-finite($tok as element()) as xs:boolean
+{
+  let $str := ($tok/fn:string(@postag), $tok/fn:string(@morphology))
+  return (fn:matches($str[fn:string-length(.) > 0] , "[0-3]"))
+};
+
+(:-------------------------------------END of utility functions-----------------------------------------------:)
+

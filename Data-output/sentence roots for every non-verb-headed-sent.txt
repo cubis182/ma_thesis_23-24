@@ -1,0 +1,528 @@
+The Query:
+fn:distinct-values(
+for $sent in $all-trees//sentence
+let $children := ($sent//word[fn:string(@head) = '0'], $sent//token[fn:data(@head-id) < 1])
+return if (fn:count(deh:search(("verb", "V-"), (), (), $children)) > 0) then ()
+else (fn:string-join($children/fn:string(@form), " ")))
+
+, , , , , - ?
+, ?
+, !
+, ;
+, .
+autem .
+an :
+, :
+at .
+et .
+sed .
+atque .
+di !
+et !
+aut ?
+ac !
+et :
+nec ?
+atque ;
+sed ?
+ac ;
+ut ?
+an ?
+-que ;
+sic .
+vel .
+-que .
+ac .
+nisi .
+rem !
+sed :
+aut .
+condicionem !
+sed ;
+quam .
+vero
+autem ;
+autem ?
+bellum !
+et ;
+nec .
+at !
+neque .
+nec :
+Qualis ;
+qualis :
+donec .
+dum .
+nedum .
+nec ;
+nec !
+at ;
+et ?
+neve !
+atque !
+neque :
+vero :
+quies !
+neu .
+at :
+nam nec :
+-que :
+-que !
+Et .
+quin :
+dolor !
+nam .
+Sed .
+, que .
+ac :
+quod ;
+quia .
+sed spe metu partibus .
+que .
+inediae algoris vigiliae . [0]
+; [0]
+. [0]
+que dum .
+Sed ;
+iurgia discordias simultates , .
+quod et .
+Sed Carthago aemula .
+nam ;
+ne .
+, pudorem pudicitiam , atque , .
+nam ?
+sed stupri ganeae :
+.
+dicam .
+atque :
+reges tetrarchae , populi nationes ;
+que :
+:
+que ;
+At .
+, ac .
+At :
+haveto .
+que alii pars .
+uti ;
+veluti .
+nam :
+an uti ?
+que , .
+verum ? [0]
+quia ?
+an quia ?
+At ?
+minume .
+neve ;
+que mirum :
+immo vero maxume .
+iis genus aetas eloquentia sed .
+, ,
+sed incultu tenebris odore ;
+modo Galliam , .
+deus ecce deus !
+Neque .
+cum !
+Atque .
+Atque :
+' -que .
+At ' ' .
+quale .
+vel ?
+Nec .
+c .
+Nam .
+An ?
+c , .
+c :
+Sed :
+cumque .
+aut ;
+et , .
+Sed ?
+? [0]
+que ?
+: [0]
+eque :
+! [0]
+ei c .
+cum :
+c ;
+inque .
+et que .
+inque !
+, , .
+- .
+Et :
+Ac .
+Et ;
+Ceterum .
+Et ?
+;
+autem :
+si .
+Heu heu quotidie peius .
+enim .
+aut :
+Quod .
+Itaque .
+Nam ;
+Cum :
+Nam :
+Deinde Trimalchio Quid ?
+quid ?
+Cum quid ?
+postea .
+Ita .
+Quod ,
+Caesar pote .
+At ;
+quia ;
+Tanquam .
+Ceterum ?
+deia deia .
+VII :
+nati ;
+die :
+Quid ?
+Ceterum ;
+enim ?
+Quo , ?
+ad , ?
+medicus si ;
+nummularius .
+boves ;
+oves quod .
+Argentum .
+Cervical .
+Quia .
+ecce , :
+Ad si et sponsiunculam :
+Occuponem propitium .
+iste , .
+recta domum ;
+Aut :
+Nec ;
+asinus .
+et plane .
+Quid deverbia ?
+Quid tonstrinum ?
+tinuoque .
+Circa et .
+Sed , ?
+Ecce alius ludus
+Necdum :
+praeterea ut .
+Horologium in ut .
+Inscriptio quoque vide diligenter si haec satis idonea tibi videtur :
+Pius , fortis , fidelis , ex parvo crevit , sestertium reliquit trecenties , nec umquam philosophum audivit .
+et tu .
+Ac ;
+Longe .
+coniectus .
+; [1]
+canis .
+Contra Trimalchio Quid ?
+Quid multa ?
+vinumet .
+Postquam manum de :
+Interim .
+quoniam ;
+me !
+verum .
+Verum .
+Heus !
+Si :
+cum .
+anima !
+namque .
+Aut ?
+ut .
+Nec
+ne ;
+. quod
+ut :
+Quamvis .
+. [1]
+: .
+et , :
+postquam .
+; bellum
+·
+uero ac ;
+-que , .
+uerum .
+. ,
+dominum !
+quod .
+ita .
+si :
+seu .
+nec , .
+-c :
+-c .
+? (fuit)
+. (fuit)
+? (moverunt)
+sed
+(illi dicerent)
+. (dicerent)
+(talis pater diceret)
+? (talis pater diceret)
+; (talis pater diceret)
+. (talis pater diceret)
+? (est)
+. (sunt)
+(aliquis dicet)
+; .
+atqui .
+(accusatores aiunt)
+. (accusatores aiunt)
+Testis !
+homines !
+vim !
+! (fecit)
+? (fecit)
+. (hic lectum est)
+? (Caelius mulieri venenum dara voluit)
+? (credidit)
+at ?
+; (est)
+! (est)
+-que ?
+pusio .
+: (sunt)
+Ast .
+-que
+[ -que .
+] -que .
+. (est)
+; (dicunt)
+? (concubis)
+. (erit)
+atque ?
+! (sit)
+! (salta)
+: ?
+et ....
+; (sunt)
+-c ;
+. (simus)
+? (necavisti)
+! (necavissem)
+. (locutus)
+(locutus) .
+. (clamitabat)
+? (clamitabat)
+? (clamitabat) .
+et : ?
+; (dono)
+passer !
+– .
+,
+A !
+. (dicit)
+-c ?
+. (admonent)
+. [ ]
+Atque ?
+vel !
+. (rogat)
+At !
+lusum !
+? (dixisset)
+; (erat)
+. (everterunt)
+Romam :
+! (erat)
+. (rediit)
+sed !
+uel .
+(Deucalion fatur)
+et
+(Deucalion ait)
+-ve .
+? (ero)
+? (agitem)
+? (movit)
+(inquit)
+, (est)
+; (venit)
+(dicas)
+? (fit)
+. (pretium est)
+pectora .
+(discipulus dicit)
+(sophistae conclamant)
+(roges)
+? (erat)
+. (dent)
+; (vivit)
+(Laronia inquit)
+? (dixit)
+(Creticus inquit)
+habitum .
+? (ortum est)
+(unus inquit)
+(alter inquit)
+Sed
+quamvis ?
+ast :
+vel :
+(quaeretur)
+set .
+. (venit)
+(ebrius exclamat)
+? (faciuntur)
+. (Iuppiter dixit)
+; (Iuppiter dixit)
+(Iuppiter dixit)
+(Neptunus dixit)
+verum :
+? (tacere nil valet)
+(erat)
+(Phoebus dixerat)
+(Cupidus ait)
+(Daphne dixit)
+(Phoebus dixit)
+; (sic deus et virgo sunt ...)
+: (sic deus et virgo sunt ...)
+(Daphne inquit)
+; (Phoebus dixit)
+o nuntii !
+-ve ?
+libellum !
+[...
+An ;
+verum ?
+; ! .
+aut !
+— .
+— !
+-c !
+Me !
+verum ;
+; ;
+. (testimonium hic redditum est)
+(inquii)
+-u .
+At . (Aiax inquit)
+Sed : (Aiax inquit)
+-que . (Aiax inquit)
+-c : (Aiax inquit)
+sed : (Aiax inquit)
+Atque . (Aiax inquit)
+-que : (Aiax inquit)
+. (est) (Aiax inquit)
+, ! (Aiax inquit)
+An ? (Aiax inquit)
+! (Aiax inquit) (sunt)
+Et ! (Aiax inquit)
+aut ! (Aiax inquit)
+, . (Aiax inquit)
+-que ; (Aiax inquit)
+-que ! (Aiax inquit)
+, : (Aiax inquit)
+? (est) (Aiax inquit)
+atque . (Aiax inquit)
+et ! (Aiax inquit)
+? (date) (Aiax inquit)
+et . (Aiax inquit)
+: . (Aiax inquit)
+: ? (Aiax inquit)
+(est) ?
+(clamabam)
+-c ! .
+(dices)
+que
+(Achilles inquit)
+(Polyxena dixit)
+(Hecuba dixit)
+(dixit)
+(Polymestor dixit)
+-que . (Ulixes dixit)
+sed . (Ulixes dixit)
+Sed : (Ulixes dixit)
+Aut . (Ulixes dixit)
+? (est) (Ulixes dixit)
+-c : (Ulixes dixit)
+et . (Ulixes dixit)
+-que ! (Ulixes dixit)
+(Ulixes dixit)
+, ; (Ulixes dixit)
+-que : (Ulixes dixit)
+, . (Ulixes dixit)
+atque . (Ulixes dixit)
+At . (Ulixes dixit)
+? (Ulixes dixit) (est)
+-c ? (Ulixes dixit)
+-c ! (Ulixes dixit)
+-ve ? (Ulixes dixit)
+atque ; (Ulixes dixit)
+At ! (Ulixes dixit)
+Sed ? (Ulixes dixit)
+-c . (Ulixes dixit)
+at ! (Ulixes dixit)
+-ve . (Ulixes dixit)
+An ? (Ulixes dixit)
+et ! (Ulixes dixit)
+Et ? (Ulixes dixit)
+, ! (Ulixes dixit)
+, : (Ulixes dixit)
+: ; (Ulixes dixit)
+-que ; (Ulixes dixit)
+. (est) (Ulixes dixit)
+an ? (Aiax inquit)
+(Haedui dixerunt)
+(Divico dixit)
+(Caesar respondit)
+(Caesar interrogavit)
+(Liscus dixit)
+. (Liscus dixit)
+(Caesar reperit)
+(Caesar reperiebat)
+(Diviciacus dixit)
+(Aurora dixit)
+; (Orgetorix probat)
+. (erat)
+(Considius dicit)
+(Caesar per litteras dixit)
+. (fuerunt)
+. (legati dixerunt)
+(milites dixerunt)
+(legati dixerunt)
+(Ariovistus dixit)
+(Ariovistus postulavit)
+(Caesar docebat)
+(Caesar dicebat)
+(Ariovistus respondit)
+(Caesar dixit)
+(Ariovistus per legatos dixit)
+(Ariovistus per legatos postulavit)
+: (fuerunt)
+. (dicebat)
+(Anius dixit)
+(principes dixerunt)
+(Diviciacus locutus est)
+(Caesar per legatos dixit)
+(veniebant) ;
+(veniebant) .
+(Caesar incusavit)
+(Galatea dixit)
+(Scylla dixit)
+(Glaucus inquit)
+(Venus dixit)
+Ac
+(Aeneas dixit)
+: (respondit)
+? (sunt)
+-c- :
+(Iuno dixit)
+(respondit) ;
+(Aeolus respondit)
+(Aeneas refert)
+ast .
+(Neptunus fatur)
+: (confugerant)
+(Caesar inveniebat)
