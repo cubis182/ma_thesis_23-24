@@ -236,10 +236,25 @@ deh:print()
 $sents: sentence elements from either the LDT or PROIEL
 
 :)
-declare function deh:print($sents as item()*)
+declare function deh:print($sents as element(sentence)*) (:9/25/23, changed arg from item()* to element(sentence)*:)
 {
   for $sent in $sents
   return fn:string-join($sent/*/fn:string(@form), " ")
+};
+
+(:
+deh:print-rel()
+9/25/2023:
+
+Like print(), but also puts the @relation in parentheses after each word.
+
+
+:)
+declare function deh:print-rel($sents as element(sentence)*)
+{
+  for $sent in $sents
+  let $words := for $tok in $sent/* return ($tok/fn:string(@form) || "(" || $tok/fn:string(@relation) || ")")
+  return fn:string-join($words, " ")
 };
 
 (:
@@ -1139,6 +1154,19 @@ declare %public function deh:return-parent($nodes as element()*, $width as xs:in
 };
 
 (:
+deh:return-parent-nocoord()
+9/22/2023
+
+This is a variant of deh:return-parent which skips coordinating constructions. This should include COORD, AuxX (comma), AuxG (bracketing punctuation), and AuxK (terminal punctuation)
+:)
+declare function deh:return-parent-nocoord($nodes as element()*)
+{
+  let $parent := deh:return-parent($nodes, 0)
+  return if (($parent[name() = "word"]/fn:string(@relation) = ("COORD", "AuxX", "AuxG", "AuxK")) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
+  else ($parent)
+};
+
+(:
 deh:check-head
 7/21/2023:
 Returns the head id, whether it is an LDT or PROIEL tree
@@ -1334,8 +1362,15 @@ deh:check-head
 declare function deh:find-highest($postag-search as item()*, $sents as element(sentence)*)
 {
   for $sent in $sents
-    let $head := $sent/*[(fn:number(deh:check-head(.)) > 0) ne true()]
+    let $head := $sent/*[(fn:data(deh:check-head(.)) > 0) ne true()]
     return deh:proc-highest($postag-search, $head, deh:postags(if ($head[1]/name() = 'token') then ('proiel') else ('ldt')))
+};
+
+(:9/22/2023: another version of the function where you find the highest, no matter the postag:)
+declare function deh:find-highest($sents as element(sentence)*)
+{
+  for $sent in $sents
+  return $sent/*[(fn:data(deh:check-head(.)) > 0) != true()]
 };
 
 (:
@@ -1572,5 +1607,100 @@ declare function deh:is-finite($tok as element()) as xs:boolean
   return (fn:matches($str[fn:string-length(.) > 0] , "[0-3]"))
 };
 
+(:
+deh:remove()
+9/21/2023
+
+This removes a series of nodes from their respective sentences.
+
+$toks: A series of word/token elements
+
+Depends on:
+deh:remove-from-sent()
+:)
+declare function deh:remove($toks as element()*) as element(sentence)*
+{
+  let $sents := functx:distinct-nodes($toks/..) (:retrieve the sentences from the provided token/word elements:)
+  for $sent in $sents
+  let $final-toks := $toks[./.. = $sent] (:Get all the the tokens which are in this sentence:)
+  return if (fn:count($final-toks) = 0) then ($sent) (:Put a condition here because, if there is nothing to remove from the sentence, we should, logically, return the whole sentence and not nothing:)
+  else  (deh:remove-from-sent($final-toks)) (:For each sentence, submit only the tokens which have an equivalent parent; technically, I think this may allow duplicates, but that should be impossible :)
+};
+
+(:
+deh:remove-from-sent()
+9/21/2023
+
+This function takes a sequence of tokens FROM A SINGLE SENTENCE and returns their original sentences with said tokens removed. It will NOT work with tokens from multiple sentences ALSO KEEP IN MIND THIS FUNCTION RETURNS A SENTENCE NODE WHETHER IT IS EMPTY OR NOT
+
+$toks := a sequence of token/word elements
+:)
+declare %private function deh:remove-from-sent($toks as element()*) as element(sentence)*
+{
+  (:Use group by?:)
+  let $ids := $toks/@id
+  return <sentence> {
+  $toks[1]/../* except $toks[1]/../*[@id = $ids] (:$token refers to the ones retrieved from sentences, not the ones passed to the function as an argument:)}
+  </sentence>
+};
+
+(:9/21/2023: This takes tokens, retrieves only the UNIQUE sentences:)
+declare %private function deh:get-sents($tok as element()*) as element(sentence)*
+{
+  functx:distinct-nodes($tok/..)
+};
+
+(:
+deh:main-verbs()
+9/21/2023
+
+Returns only the main verbs from a set of documents/sentences/tokens/etc. Note that, for this reason, in much of the LDT, this won't get most main verbs in direct speech; however, if it goes on for multiple sentences, it might include that. ANOTHER CHARACTERISTIC OF THIS is the fact that it retrieves auxiliaries in the LDT, and the participles within a periphrastic in PROIEL; for now, that does not matter, just keep it in mind.
+
+$nodes: A doc, sentence, token, or a sequence of any of those
+
+Depends on:
+deh:pr-main-verbs()
+:)
+declare function deh:main-verbs($nodes as node()*) as element()*
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  (:For LDT, we just need to take away the PREDs:)
+  
+  (:First, separate the two types of tokens:)
+  let $ldt := $toks[name() = "word"]
+  let $proiel := $toks[name() = "token"]
+  
+  (:Second, extract out the main verbs:)
+  let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT"))) and ((fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent(., 0)/fn:string(@lemma), ("inquam", "aio"))))) and fn:matches(fn:string(@postag), "v[1-3].......")] (:This gets complicated. FIRST, every verb must be finite, so that is the last condition. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG', or, since the . Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here.:)
+  let $proiel-main := deh:pr-main-verbs($proiel)
+  
+  return ($ldt-main, $proiel-main)
+};
+
+(:
+deh:pr-main-verbs()
+9/21/2023
+
+This is a helper function to deh:main-verbs, which handles extracting PROIEL main verbs. The process is different, since @relation="pred" is allowed in more contexts than the LDT. THERE IS A QUESTION I NEED TO ANSWER EVENTUALLY: do I include parpreds in this? Since they can be "main" verbs, I should probably say yes, especially since they mark out parentheticals, which are a symptom of parataxis.
+:)
+declare %public function deh:pr-main-verbs($toks as element()*) as element(token)*
+{
+  let $preds := $toks[fn:contains(fn:string(@relation), "pred") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
+  return $preds[(deh:return-parent(., 0)/fn:string(@part-of-speech) = "G-") = false()] 
+};
+
+(:
+deh:non-pred()
+9/27/2023
+
+Get every verb which is not a main verb
+:)
+
+(:
+deh:is-conjunction()
+9/21/2023:
+
+This function tests whether 
+:)
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 

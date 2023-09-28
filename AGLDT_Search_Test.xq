@@ -112,8 +112,9 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 
 (:@form s to look up: "Ulixes dixit", :)
 
-deh:pick-random($proiel//token[@empty-token-sort="P"]/.., 10)
-
+let $sents := deh:pick-random($all-trees//sentence, 10)
+for $sent in $sents
+return (deh:print($sent), deh:print(deh:remove(deh:main-verbs($sent))))
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:
