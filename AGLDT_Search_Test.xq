@@ -112,9 +112,13 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 
 (:@form s to look up: "Ulixes dixit", :)
 
-let $sents := deh:pick-random($all-trees//sentence, 10)
-for $sent in $sents
-return (deh:print($sent), deh:print(deh:remove(deh:main-verbs($sent))))
+(:Removing 67% of the Vulgate, so keep 37,485:)
+let $vulg := $proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]
+let $a := function($val) {fn:count($val//token) > 1000}
+let $b := function($val) {deh:pick-random($proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]//sentence, 1)}
+let $sents := hof:until($a(?), $b(?), deh:pick-random($vulg//sentence, 1))
+return fn:count($sents)
+
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:

@@ -1670,8 +1670,10 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   let $ldt := $toks[name() = "word"]
   let $proiel := $toks[name() = "token"]
   
+   let $complementizers := ("aio", "inquam") (:This is the list of words that mainly introduce direct speech; since no other words contain the same sequence of strings within, it is fine the just use functx:contains-any-of as below, you don't have to use regex syntax:)
+  
   (:Second, extract out the main verbs:)
-  let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT"))) and ((fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent(., 0)/fn:string(@lemma), ("inquam", "aio"))))) and fn:matches(fn:string(@postag), "v[1-3].......")] (:This gets complicated. FIRST, every verb must be finite, so that is the last condition. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG', or, since the . Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here.:)
+  let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] (:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
   let $proiel-main := deh:pr-main-verbs($proiel)
   
   return ($ldt-main, $proiel-main)
@@ -1690,6 +1692,21 @@ declare %public function deh:pr-main-verbs($toks as element()*) as element(token
 };
 
 (:
+deh:direct-speech-ldt()
+9/29/2023
+
+This function should get every word governing direct speech in the LDT. It does this by looking for subordinate AuxG, 
+
+:)
+declare function deh:direct-speech-ldt($nodes as node()*) as element(word)*
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  let $ds := deh:main-verbs($toks)[fn:contains(fn:string(@relation), "PRED") = false()]/deh:return-parent(., 0) (:This takes all the "main verbs," which, as defined in that function, returns also verbs in direct speech. This takes those which are not PRED (and therefore should only be direct speech), and returns their parents to get the words which govern it:)
+  return $ds
+  
+};
+
+(:
 deh:non-pred()
 9/27/2023
 
@@ -1700,7 +1717,11 @@ Get every verb which is not a main verb
 deh:is-conjunction()
 9/21/2023:
 
-This function tests whether 
+This function tests whether a token is a conjunction in the LDT (will add PROIEL support)
 :)
+declare function deh:is-conjunction($tok as element(word)) as xs:boolean
+{
+  fn:contains($tok/fn:string(@relation), "COORD")
+};
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
