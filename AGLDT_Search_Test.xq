@@ -4,7 +4,7 @@ xquery version "3.1";
 
 import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:In case it is being weird, get functx from:
-C:/Program Files (x86)/BaseX/src/functx_lib.xqm
+C:/Program Files (x86)/BaseC:\Users\matth\Documents\GitHub\ma_thesis_23-24\Vulgate Backup\latin-nt.xmlX/src/functx_lib.xqm
 Website is:
 http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -112,12 +112,20 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 
 (:@form s to look up: "Ulixes dixit", :)
 
-(:Removing 67% of the Vulgate, so keep 37,485; total sentences: 11851:)
+declare %updating function local:func($index) {
+  let $sent := ($proiel[4]/proiel/source/div/sentence)[$index]
+  return (delete node $sent)
+};
+
+(:Removing 67% of the Vulgate, so keep 37,485 out of 112,454; total sentences: 11851:)
 let $vulg := $proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]
-let $num-sent := fn:count($vulg/source/div/sentence)
-let $num-tok := fn:count($vulg/source/div/sentence/token)
 let $sentences := deh:pick-random(1 to 11851, 10000)
-return hof:until(function($count) {$count > 37485}, function($count) {})
+let $lengths := for $sent in $sentences return fn:count(($vulg//sentence)[$sent]/*)
+
+for $item at $n in $sentences
+return if (fn:fold-left($lengths[fn:position() = 0 to $n], 0, function($a, $b) {$a + $b}) < 74969) then (local:func($item))
+else ()
+
 
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
