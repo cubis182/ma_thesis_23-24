@@ -4,9 +4,9 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
-  
+  http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
 
 (:
@@ -1461,6 +1461,27 @@ declare function deh:work-info-fromcsv($urn as xs:string) as item()*
 };
 
 (:--------------------------------START random--------------------------------------------:)
+(:
+deh:pick-random()
+9/29/2023
+
+$size: Size of the sequence you are drawing from
+$n: Total number of random values you need
+
+:)
+(:
+declare function deh:pick-random($size as xs:integer, $n as xs:integer)
+:)(:
+{
+  let $predicate := function($seq) {fn:count($seq) >= $n} 
+  let $action := function($seq) {
+    let $final-rand := hof:until(function($rand) {functx:is-value-in-sequence($rand, $seq) = false()}, function($rand) {(random:integer($size) + 1)}, random:integer($size) + 1)
+    return ($seq, $final-rand)
+  }
+  let $zero := random:integer($size) + 1
+  return hof:until($predicate(), $action(), $zero)
+};
+:)
 
 (:
 deh:pick-random($seq as item()*)
@@ -1479,6 +1500,7 @@ declare function deh:pick-random($seq as item()*, $iter as xs:integer)
   for $i in deh:proc-random((), fn:count($seq), $iter, 0)
   return $seq[$i]
 };
+
 
 (:
 

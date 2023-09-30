@@ -2,7 +2,7 @@ xquery version "3.1";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
 Website is:
@@ -112,12 +112,12 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 
 (:@form s to look up: "Ulixes dixit", :)
 
-(:Removing 67% of the Vulgate, so keep 37,485:)
+(:Removing 67% of the Vulgate, so keep 37,485; total sentences: 11851:)
 let $vulg := $proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]
-let $a := function($val) {fn:count($val//token) > 1000}
-let $b := function($val) {deh:pick-random($proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]//sentence, 1)}
-let $sents := hof:until($a(?), $b(?), deh:pick-random($vulg//sentence, 1))
-return fn:count($sents)
+let $num-sent := fn:count($vulg/source/div/sentence)
+let $num-tok := fn:count($vulg/source/div/sentence/token)
+let $sentences := deh:pick-random(1 to 11851, 10000)
+return hof:until(function($count) {$count > 37485}, function($count) {})
 
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
