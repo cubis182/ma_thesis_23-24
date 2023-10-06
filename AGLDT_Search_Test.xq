@@ -2,9 +2,9 @@ xquery version "3.1";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 (:In case it is being weird, get functx from:
-C:/Program Files (x86)/BaseC:\Users\matth\Documents\GitHub\ma_thesis_23-24\Vulgate Backup\latin-nt.xmlX/src/functx_lib.xqm
+C:/Program Files (x86)/BaseX/src/functx_lib.xqm
 Website is:
 http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -55,15 +55,15 @@ YOU NEED TO UPDATE THIS SO IT DRAWS ITS SPECIFICATION FROM THE TAGSET.XML FILE I
 declare variable $postags := [map{"n":"noun", "v":"verb", "t":"participle", "a":"adjective", "d":"adverb", "c":"conjunction", "r":"preposition","p":"pronoun", "m":"numberal", "i":"interjection", "e":"exclamation", "u":"punctuation"}, map{"1":"first person", "2":"second person", "3":"third person"}, map{"s":"singular", "p":"plural"}, map{"-":"none", "p":"present", "i":"imperfect", "r":"perfect", "l":"pluperfect", "t":"future perfect", "f":"future"}, map{"-":"none", "i":"indicative", "s":"subjunctive", "n":"infinitive", "m":"imperative", "p":"participle", "d":"gerund", "g":"gerundive", "u":"supine"}, map{"a":"active", "p":"passive"}, map{"m":"masculine", "f":"feminine", "n":"neuter"}, map{"n":"nominative", "g":"genitive", "d":"dative", "a":"accusative", "b":"ablative", "v":"vocative", "l":"locative"}, map{"c":"comparative", "s":"superlative"}];
 :)
 
-declare variable $ldt2.1-treebanks := fn:collection("./treebank_data/v2.1/Latin/texts");
+declare variable $ldt2.1-treebanks := db:get("ldt2.1-treebanks");
 
 declare variable $ldt2.1-with-caes-jerome := fn:collection("./treebank_data/v2.1/Latin");
 
-declare variable $all-ldt := ($ldt2.1-treebanks, fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb"));
+declare variable $all-ldt := (db:get("ldt2.1-treebanks"), db:get("harrington")); (:10/4/2023, obsolete with new databases($ldt2.1-treebanks, fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb"));:)
 
-declare variable $harrington := fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb");
+declare variable $harrington := db:get("harrington");(:10/4/2023, see above fn:collection("./harrington_trees/CITE_TREEBANK_XML/perseus/lattb");:)
 
-declare variable $proiel := (fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));
+declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));:)
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
@@ -111,22 +111,9 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 :)
 
 (:@form s to look up: "Ulixes dixit", :)
+(:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-declare %updating function local:func($index) {
-  let $sent := ($proiel[4]/proiel/source/div/sentence)[$index]
-  return (delete node $sent)
-};
-
-(:Removing 67% of the Vulgate, so keep 37,485 out of 112,454; total sentences: 11851:)
-let $vulg := $proiel/*[fn:contains(fn:base-uri(.), "latin-nt")]
-let $sentences := deh:pick-random(1 to 11851, 10000)
-let $lengths := for $sent in $sentences return fn:count(($vulg//sentence)[$sent]/*)
-
-for $item at $n in $sentences
-return if (fn:fold-left($lengths[fn:position() = 0 to $n], 0, function($a, $b) {$a + $b}) < 74969) then (local:func($item))
-else ()
-
-
+deh:main-verbs($all-trees)
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:

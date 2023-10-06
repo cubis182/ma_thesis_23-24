@@ -4,7 +4,7 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -1167,6 +1167,24 @@ declare function deh:return-parent-nocoord($nodes as element()*)
 };
 
 (:
+deh:return-children-nocoord
+10/2/2023
+
+Same as deh:return-parent-nocoord above, but for children
+
+$nodes: either LDT or PROIEL tokens
+:)
+declare function deh:return-children-nocoord($nodes as element()*)
+{
+  let $child := deh:return-children($nodes)
+  let $ldt-coords := ("COORD", "AuxX", "AuxG", "AuxK")
+  let $pr-coord := "C-"
+  
+  let $coords := ($child[functx:contains-any-of(fn:string(@relation), $ldt-coords)], $child[fn:string(@part-of-speech) = $pr-coord])
+  return ()
+};
+
+(:
 deh:check-head
 7/21/2023:
 Returns the head id, whether it is an LDT or PROIEL tree
@@ -1625,8 +1643,29 @@ Returns whether any single token (ldt or proiel) is a finite verb
 :)
 declare function deh:is-finite($tok as element()) as xs:boolean
 {
-  let $str := ($tok/fn:string(@postag), $tok/fn:string(@morphology))
-  return (fn:matches($str[fn:string-length(.) > 0] , "[0-3]"))
+  (:First, check if something is even a verb and therefore eligible in the first place; otherwise, return false:)
+  if (deh:is-verb($tok)) then (
+  let $str := ($tok/@postag, $tok/@morphology)
+  let $is-periphrastic := (deh:return-parent($tok, 0)/fn:contains(fn:string(@relation), "AuxV") or ($tok/fn:string(@relation) = "pred" and $tok/fn:matches(fn:string(@morphology), "...(p|g)......"))) (:10/3/2023, added this to account for participles in periphrastics; if a verb is dependent on an AuxV be-verb, it must be in a periphrastic in the LDT; if it is a predicate but is also a participle, in PROIEL it must be in a periphrastic:)
+ return (fn:matches(fn:string($str), "[0-3]") or $is-periphrastic) (:If it has a number in the @postag (LDT) or @morphology (PROIEL), it must be finite, for digits are only used for that element; even elliptical nodes often have number marked, so it should even catch periphrastics with consistency:)
+ (:DOESN'T MATTER, I'm tired; it will catch either the auxiliary or main verb no matter what. let $bool-b := (deh:return-parent($tok, 0)/fn:contains(fn:string(@relation), "AuxV") or $tok/fn:string(@relation) = "pred") (:10/3/2023, added this to account for participles in periphrastics:) :)
+)
+else (false())
+};
+
+(:
+deh:has-personal-agreement()
+10/4/2023:
+
+This is like the old deh:is-finite, which only tests for person
+:)
+declare function deh:has-personal-agreement($tok as element()) as xs:boolean
+{
+  if (deh:is-verb($tok)) then (
+   let $str := ($tok/@postag, $tok/@morphology) 
+   return (fn:matches(fn:string($str), "[0-3]"))
+ )
+ else (false())
 };
 
 (:
@@ -1685,20 +1724,32 @@ deh:pr-main-verbs()
 :)
 declare function deh:main-verbs($nodes as node()*) as element()*
 {
-  let $toks := deh:tokens-from-unk($nodes)
-  (:For LDT, we just need to take away the PREDs:)
   
+  let $toks := deh:tokens-from-unk($nodes)
   (:First, separate the two types of tokens:)
   let $ldt := $toks[name() = "word"]
   let $proiel := $toks[name() = "token"]
   
    let $complementizers := ("aio", "inquam") (:This is the list of words that mainly introduce direct speech; since no other words contain the same sequence of strings within, it is fine the just use functx:contains-any-of as below, you don't have to use regex syntax:)
   
-  (:Second, extract out the main verbs:)
-  let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] (:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
+  (:Second, extract out the main verbs for LDT in stages:)
+  
+  (:Get all verbs which are in scope:)
+  let $l-stage-a := $ldt[deh:is-finite(.) or deh:is-periphrastic-p(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER:)
+  (:narrow it down to predicates, return this:)
+  let $l-stage-b := $l-stage-a[functx:contains-any-of(fn:string(@relation), "PRED")](:Return all the PRED's, this should be directly returned at the end:)
+  
+  (:Now deal with direct speech:)
+  let $dirstats := $l-stage-a[fn:contains(fn:string(@relation), "DIRSTAT")] (:This will be returned directly at the end:)
+  
+  (:Get direct speech from main LDT:)
+  let $l-stage-c :=$l-stage-a[fn:contains(fn:string(@relation), "OBJ")]
+  
+  let $l-stage-d := ($l-stage-c[(fn:count(deh:return-siblings(., false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0],  $l-stage-c[(functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))])
+  (:let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] :)(:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
   let $proiel-main := deh:pr-main-verbs($proiel)
   
-  return ($ldt-main, $proiel-main)
+  return (functx:distinct-nodes(($l-stage-b, $dirstats, $l-stage-d)), $proiel-main)
 };
 
 (:
@@ -1710,7 +1761,13 @@ This is a helper function to deh:main-verbs, which handles extracting PROIEL mai
 declare %public function deh:pr-main-verbs($toks as element()*) as element(token)*
 {
   let $preds := $toks[fn:contains(fn:string(@relation), "pred") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
-  return $preds[(deh:return-parent(., 0)/fn:string(@part-of-speech) = "G-") = false()] 
+  return $preds[(deh:return-parent-nocoord(.)/fn:string(@part-of-speech) = "G-") = false()]  (:10/3/2023, made it deh:return-parent-nocoord, it may break it, but I'm trying it:)
+};
+
+(:USED FOR THE LDT ONLY:)
+declare function deh:is-periphrastic-p($tok as element()) as xs:boolean
+{
+  fn:count($tok/../*[fn:contains(fn:string(@relation), "AuxV") and (@id = $tok/@head)]) > 0
 };
 
 (:
@@ -1744,6 +1801,146 @@ This function tests whether a token is a conjunction in the LDT (will add PROIEL
 declare function deh:is-conjunction($tok as element(word)) as xs:boolean
 {
   fn:contains($tok/fn:string(@relation), "COORD")
+};
+
+(:
+deh:finite-clauses()
+
+Some notes:
+PROIEL's annotation guide table of contents gives the AcI, ablative absolute, and 
+:)
+
+(:
+deh:clause-noclause()
+9/30/2023
+
+This function should only return verbs which are in a clause (whether finite or non-finite). What is not a verb at the head of a clause is easier to determine, and the following are the tentative criteria:
+-a main verb (for that matter, no imperative can be either! Are there any imperatives which the "main verbs" algorithm does not get? You need to check (9/30))
+-a supine (unless used with venio? but that's rare; however, that is more of an complementary construction, especially since the subject is controlled; so, all supines can be excluded)
+-On that same token, infinitives of purpose and complementary infinitives are not clauses. This will be difficult to determine in the LDT; for PROIEL, we know that XOBJ is used for these infinitives where the subject is controlled for. These are discussed in the "open predications" section of the annotation guide. However, XOBJ is also used for AcP, where the noun and participle are not connected directly, but both made objects
+-a gerund/noun with embedded predication  (unless said gerund takes a direct object?) Note that, in noun phrases, Pinkster refers to elements of the embedded predication as ATTRIBUTES, not as arguments, adjuncts, etc. Therefore, anything with an ATR is fine (in LDT); in PROIEL, gerunds take on a lot of properties of verbs, but I'm sticking to my guns: parataxis and complex noun phrases seem like different things, and the idea of subordination specifying relations seems separate to me. However, preposition plus gerund should be a non-finite clause to me: there is a governing construction which 
+-a prolative infinitive (see PInkster 126ff.), like admoneo te venire, will not be considered a clause; 
+-participles, when used just as attributes, without arguments, will not be under consideration. However, this means we must remove participles which are not 1) in abl abs, 2) praedicative, 3) have arguments, 
+
+Also keep in mind related parts of speech: only nouns can have Pd, Px, 
+:)
+
+(:
+deh:particip-clauses
+
+We'll need this for the finite/non-finite stuff, and for deh:clause-noclause. This will automatically extract participles, so no need to be careful with the input. See within the body of the function for notes on how this will work
+
+$nodes: Any node from a treebank, LDT or PROIEL
+:)
+declare function deh:particip-clauses($nodes as node()*) as element()*
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  
+  let $parts := "(d|g|p)"(:In the 5th position in the LDT, mood, we need one of these values (d gerund, g gerundive, p participle); the values are the same for PROIEL, but are in the 4th position:)
+  
+  let $proiel := $toks[name() = 'token' and fn:matches(fn:string(@morphology), ("..." || $parts || "......"))]
+  let $ldt := $toks[name() = 'word' and fn:matches(fn:string(@postag), ("...." || $parts || "...."))]
+  
+  
+  (: Praedicativa (xadv in PROIEL, Atv/AtvV :)
+  let $pr-praetags := "XADV"
+  let $ldt-praetags := ("atv", "atvv") (:Made these variables in case I change them later:)
+  let $praedicativa := ($proiel[fn:string(@relation) = $pr-praetags], $ldt[fn:string(@relation) = $ldt-praetags])
+  
+  (: NIXING THIS FOR NOW, IT SEEMS LIKE I SHOULD JUST AcP constructions (XOBJ in proiel, LDT gives no specification in guidelines or Harrington, which is worrying, but I have worked out the algorithm below; it seems to be the case that it is often an attributive NOT subordinated to its noun, but being in scope with the noun.) :)
+  
+  (:Gerunds/Gerundives after prepositions, NOT in periphrastics:)
+  
+  return ($proiel, $ldt)
+};
+
+
+(:The following may not be necessary, but I started making them anyway; I think the is-conjunction thing should be enough:)
+(:
+deh:check-postag-coord()
+:)
+(:
+deh:check-lemma-coord
+:)
+(:
+deh:check-form-coord
+:)
+(:
+deh:check-rel-coord()
+10/2/2023
+
+This function comes about because, sometimes, you are looking for something in a parent or child but coordination screws things up. This will check if there is coordination, and instead look at the children.
+
+$str := A string with the desired relation; this function uses fn:contains to check
+$tok := an element or series of elements, which are somehow related to your target word (usually either parents or children). I restrict it to the LDT, because PROIEL makes the coordinating conjunction take on the relation of its child, giving us a method of dealing with the issue
+
+:)
+declare function deh:check-rel-coord($str as xs:string, $tok as element(word)*)
+{
+  let $rel := deh:return-parent($tok, 0)/fn:string(@relation)
+  return ()
+};
+
+(:
+deh:finite-clause()
+10/3/2023
+
+This returns every finite clause in the LDT and PROIEL, from whatever you submit as the argument. The deh:main-verbs() function can help, because it is essentially every finite verb which is not one of those. Specifically, it is every non-PRED finite verb in the LDT and every "pred" not dependent on a "G-" (subordinating conjunction). Again, note the mismatch between LDT and PROIEL for auxiliaries, and which is the head (aux head in LDT, participle head in PROIEL)
+
+Errors:
+Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="2.5">, shows that "nescioquod" is considered finite, because it is a finite non-main-verb
+:)
+declare function deh:finite-clause($nodes as node()*) as element()*
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  let $remove := function($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)} (:This function removes any element not in the @param $seq, we'll use a map on the finite verbs with the main verbs as the $seq:)
+  let $finite-verbs := $toks[deh:is-finite(.)]
+  let $main-verbs := deh:main-verbs($toks)
+  
+  let $sub-verbs := $finite-verbs ! $remove(., $main-verbs)
+  for $verb in $sub-verbs
+  let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
+  return if (fn:contains($parent/fn:string(@relation), "AuxC") or fn:contains($parent/fn:string(@part-of-speech), "G-")) then ($parent) else ($verb) 
+};
+
+(:
+deh:local-remove()
+10/4/2023
+
+Deal with this later, make it pretty
+:)
+declare function deh:local-remove($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)}; 
+
+(:
+deh:non-finite-clause()
+10/3/2023
+
+Pretty much any verbal which is not finite, but if it has a parent that has @relation="AuxC" or @part-of-speech="G-", return that. There are also some exceptions to keep in mind: the historical infinitive is weird
+:)
+declare function deh:non-finite-clause($nodes as node()*) as element()*
+{
+  let $toks := (deh:tokens-from-unk($nodes))[deh:is-verb(.) and (deh:is-finite(.) = false())] 
+  let $final := for $tok in $toks where fn:count(deh:main-verbs($tok)) = 0 return $tok
+  return $final
+};
+
+(:
+  Gets predicates from either treebank, excluding conjunctions for PROIEL
+:)
+declare function deh:is-predicate($tok as element()) as xs:boolean
+{
+  fn:contains(fn:lower-case(fn:string($tok/@relation)), 'pred') and (deh:is-conjunction($tok) = false())
+};
+
+(:
+deh:is-verb()
+10/3/2023
+
+:)
+declare %public function deh:is-verb($tok as element()) as xs:boolean
+{
+  (:let $by-rel := ($tok/fn:string(@relation) = ("pred", "parpred") and fn:string-length($tok/fn:string(@empty-token-sort)) > 0):)(:Created this 'check by relation' thing because empty tokens have no morph in PROIEL:)
+  (($tok/fn:string(@part-of-speech) = 'V-') or (fn:matches($tok/fn:string(@postag), "v........")))
 };
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
