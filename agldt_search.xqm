@@ -1242,30 +1242,18 @@ declare function deh:return-ancestors($nodes as element()*, $depth as xs:integer
 7/5/2023:
 Previous statement is true if you set $depth to 0, in which case the function does simply perform the deh:return-function iteratively, returning that entire sub-branch of the tree. $depth allows you to specify whether you want a specific generation within those results. If you start from the highest word in the tree, you could specify any level you wanted, in other words
 
-$nodes: One or many nodes, each of which is processed individually. Currently must be an LDT node
-$depth: The depth within the 'descendants' results which you want to return; if 0, this returns all descendants, but, for example, a depth of 2 would return all the grandchildren of each $node passed into the function
+$node: 10/6/2023: this is now only accepting a single node, in an attempt to get this function under control//////OBSOLETEOne or many nodes, each of which is processed individually. Currently must be an LDT node
+
+$depth: CURRENTLY VESTIGIAL, I'LL FIX IT LATERThe depth within the 'descendants' results which you want to return; if 0, this returns all descendants, but, for example, a depth of 2 would return all the grandchildren of each $node passed into the function
 
 Depends on:
 deh:return-children()
 deh:return-depth()
 
 :)
-declare %public function deh:return-descendants($nodes as element()*, $depth as xs:integer) as element()*
+declare %public function deh:return-descendants($node as element(), $depth as xs:integer) as element()*
 {
-  if ($depth eq 0) then
-  (
-    for $node in $nodes
-      let $children := deh:return-children($node)
-      for $child in $children
-        return ($child, deh:return-descendants($child, 0)) (:Instead of passing depth directly, just passing "0" just in case:)
-    )
-    else (
-      for $node in $nodes
-        let $node-depth := deh:return-depth($node, 1) (:Get the absolute depth from the root of the $node:)
-        let $final-depth := $node-depth + $depth (:Add the specified depth to the node depth to get the absolute depth of the final values:)
-        for $word in deh:return-descendants($node, 0)
-          return $word[deh:return-depth(., 1) eq $final-depth] (:Only return descendants which match the right depth:)
-    )
+  hof:until(function($seq){fn:count($seq) eq fn:count(functx:distinct-nodes((deh:return-children($seq), $seq)))}, function($seq) {functx:distinct-nodes((deh:return-children($seq), $seq))}, $node)
 };
 
 (:
@@ -1942,5 +1930,6 @@ declare %public function deh:is-verb($tok as element()) as xs:boolean
   (:let $by-rel := ($tok/fn:string(@relation) = ("pred", "parpred") and fn:string-length($tok/fn:string(@empty-token-sort)) > 0):)(:Created this 'check by relation' thing because empty tokens have no morph in PROIEL:)
   (($tok/fn:string(@part-of-speech) = 'V-') or (fn:matches($tok/fn:string(@postag), "v........")))
 };
+
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 

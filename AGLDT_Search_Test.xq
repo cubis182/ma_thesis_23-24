@@ -113,7 +113,10 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-deh:main-verbs($all-trees)
+let $rand := deh:pick-random($all-ldt//word, 3000)
+for $word in $rand
+return ($word, deh:print($word/..), deh:return-descendants($word, 2))
+
 
 (: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
 (:
