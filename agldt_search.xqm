@@ -1723,7 +1723,7 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Second, extract out the main verbs for LDT in stages:)
   
   (:Get all verbs which are in scope:)
-  let $l-stage-a := $ldt[deh:is-finite(.) or deh:is-periphrastic-p(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER:)
+  let $l-stage-a := $ldt[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
   let $l-stage-b := $l-stage-a[functx:contains-any-of(fn:string(@relation), "PRED")](:Return all the PRED's, this should be directly returned at the end:)
   
@@ -1758,6 +1758,8 @@ declare function deh:is-periphrastic-p($tok as element()) as xs:boolean
   fn:count($tok/../*[fn:contains(fn:string(@relation), "AuxV") and (@id = $tok/@head)]) > 0
 };
 
+
+
 (:
 deh:direct-speech-ldt()
 9/29/2023
@@ -1791,12 +1793,6 @@ declare function deh:is-conjunction($tok as element(word)) as xs:boolean
   fn:contains($tok/fn:string(@relation), "COORD")
 };
 
-(:
-deh:finite-clauses()
-
-Some notes:
-PROIEL's annotation guide table of contents gives the AcI, ablative absolute, and 
-:)
 
 (:
 deh:clause-noclause()
@@ -1873,7 +1869,7 @@ declare function deh:check-rel-coord($str as xs:string, $tok as element(word)*)
 deh:finite-clause()
 10/3/2023
 
-This returns every finite clause in the LDT and PROIEL, from whatever you submit as the argument. The deh:main-verbs() function can help, because it is essentially every finite verb which is not one of those. Specifically, it is every non-PRED finite verb in the LDT and every "pred" not dependent on a "G-" (subordinating conjunction). Again, note the mismatch between LDT and PROIEL for auxiliaries, and which is the head (aux head in LDT, participle head in PROIEL)
+This returns every finite clause in the LDT and PROIEL, from whatever you submit as the argument. The deh:main-verbs() function can help, because it is essentially every finite verb which is not one of those. Specifically, it is every non-PRED finite verb in the LDT and every "pred" not dependent on a "G-" (subordinating conjunction). Again, note the mismatch between LDT and PROIEL for auxiliaries, and which is the head (aux head in LDT, participle head in PROIEL). However, I seem to have set up both to return the be verb, so maybe I'm crazy. Also, keep in mind that questions do not count as subordinate clauses.
 
 Errors:
 Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="2.5">, shows that "nescioquod" is considered finite, because it is a finite non-main-verb
@@ -1883,13 +1879,19 @@ declare function deh:finite-clause($nodes as node()*) as element()*
   let $toks := deh:tokens-from-unk($nodes)
   let $remove := function($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)} (:This function removes any element not in the @param $seq, we'll use a map on the finite verbs with the main verbs as the $seq:)
   let $finite-verbs := $toks[deh:is-finite(.)]
-  let $main-verbs := deh:main-verbs($toks)
+  let $main-verbs := (deh:main-verbs($toks)) (:10/9/2023:)
   
   let $sub-verbs := $finite-verbs ! $remove(., $main-verbs)
-  for $verb in $sub-verbs
-  let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
-  return if (fn:contains($parent/fn:string(@relation), "AuxC") or fn:contains($parent/fn:string(@part-of-speech), "G-")) then ($parent) else ($verb) 
+  let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
+    for $verb in $sub-verbs
+    let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
+    return if (fn:contains($parent/fn:string(@relation), "AuxC") or fn:contains($parent/fn:string(@part-of-speech), "G-")) then ($parent) else ($verb) 
+  return functx:distinct-nodes($final)
 };
+
+(:
+deh:is-
+:)
 
 (:
 deh:local-remove()
