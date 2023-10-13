@@ -115,79 +115,22 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-for $sent in deh:pick-random($all-trees, 15)
-return (deh:print($sent), deh:finite-clause($sent))
-
-(:To review: Ac sic ergo visa loca (find visa, is it a main verb?)
-sollicitudine non pigri, no empty node?
-hoc deus in nympha Peneide, what is the empty node?
-ius que bonum apud eos non legibus, what is the empty node?
-ERROR: Pernicies ait Tibi paratur, why is 'ait' not identified as a main verb?
-
-:)
 
 
-(: This gets the doc where all the words of all the treebanks were annotated 8/6/2023: let $results := doc("./Data-output/mark-node_8.6.23_all_trees.xml") :)
-(:
-let $quotes := ("&quot;", "'", "”", "“")
-let $pres-quotes := $proiel//token[functx:contains-any-of(fn:string(@presentation-after), $quotes)]
-return fn:distinct-values($pres-quotes/fn:string(@presentation-after))
-:)
+let $finite-clause := (deh:finite-clause(deh:pick-random($all-trees, 500)))
+return fn:distinct-values(($finite-clause/fn:string(@relation), deh:return-children-nocoord($finite-clause[fn:contains(fn:string(@relation), "AuxC")])[deh:is-finite(.)]/fn:string(@relation)))
 
 (:
-for $doc in $all-ldt
-let $work-info := deh:work-info($doc)
-let $tokens := ($doc//word)
-
-let $expanded := 
-  for $token in $tokens
-  
-  let $subdoc := deh:subdoc($token)
-  return if (fn:contains($subdoc, '-')) then (
-    for $cite in deh:cite-range($token)
-    return (functx:add-attributes(functx:add-attributes(functx:add-attributes($token, xs:QName("cite"), $cite), xs:QName("title"), $work-info[1]), xs:QName("author"), $work-info(2))
-  )
-  else (functx:add-attributes(functx:add-attributes(functx:add-attributes($token, xs:QName("cite"), $subdoc), xs:QName("title"), $work-info[1]), xs:QName("author"), $work-info(2))
+qua re  velim ut  scribis... because ut was not considered a subordinator directly
+in primis que versutum et callidum factum Solonis... is quo later in the sentence a 'G-'?
+omnis autem et animadversio et castigatio contumelia... is castigat really subordinate?
+itaque ut eandem nos modestiam... Is a result clause considered relative? maybe so
+magis quid se dignum foret  quam quid in illos iure fieri posset... why is only the foret and not the posset considered subordinate? Because of the quam?
 
 
-for $token in $expanded
-return ($token/fn:string(@cite), $token/fn:string(@author), $token/fn:string(@title))
+
+
 :)
-(:
-let $ldt-sents := 
-for $sentence in $ldt2.1-treebanks//sentence
-return fn:string-join($sentence//word/fn:string(@form), " ")
-
-let $harrington-sents :=
-for $sentence in $harrington//sentence
-return fn:string-join($sentence//word/fn:string(@form), " ")
-
-let $doubles :=
-let $sents-full := $harrington//sentence
-for $sent in $ldt-sents
-where functx:contains-any-of($sent, $harrington-sents)
-let $indexes := fn:index-of($harrington-sents, $sent)
-for $index in $indexes
-return array{$sent, $sents-full[$index]}
-
-return $doubles
-:)
-
-(:
-let $sixthreesevenoh := fn:base-uri($harrington/treebank[fn:contains(fn:base-uri(.), "6370")])
-let $sixfivesixone := fn:base-uri($harrington/treebank[fn:contains(fn:base-uri(.), "6561")])
-
-let $tree-one := doc($sixthreesevenoh)//word
-let $tree-two := doc($sixfivesixone)//word
-
-let $matches :=
-for $word at $n in $tree-one
-where (($word/@id = $tree-two[$n]/@id) and ($word/@form = $tree-two[$n]/@form) and ($word/@lemma = $tree-two[$n]/@lemma) and ($word/@relation = $tree-two[$n]/@relation) and ($word/@postag = $tree-two[$n]/@postag) and ($word/@head = $tree-two[$n]/@head)) ne true()
-return array{$word, $tree-two[$n]}
-return $matches
-:)
-
-
 
 (:
 let $preds := deh:search((), "pred", (), $all-trees)

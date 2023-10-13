@@ -689,7 +689,7 @@ declare %private function deh:get-rels($tok as element()?)
 (: Winter Break 2022-23 Phase :)
 (: $search is a sequence of strings, $doc is 1 or more documents, and the $postages (HOPEFULLY TO BE REPLACED - 5/18/2023) var stores a map of all the appropriate terms
 
-Dieses Funktion müß so operiert werden; Beispiele:
+Dieses Funktion darf so operiert werden; Beispiele:
 
 let $doc := ("C:\Users\etwas_nonsinn.txt")
 let $search := ("participle", "present", "active")
@@ -1612,14 +1612,13 @@ Should take a string, and, stripping punctuation, return matches in the treebank
 
 
 :)
-declare function deh:search-text($str as xs:string, $trees as item()*)
+declare function deh:search-text($str as xs:string, $trees as element(sentence)*)
 {
-  let $docs := functx:distinct-nodes(for $tree in $trees return doc(fn:base-uri($tree))) (:Make sure we have the full documents for searching:)
   
-  for $sentence in $docs//sentence
+  for $sentence in $trees
   let $print := deh:print($sentence) (:Get the sentence as a string:)
-  let $print-no-punc := fn:replace($print, "[^a-z ]", "") (:Remove anything that is not a letter, or a space (note the extra space after 'a-z':)
-  return if (fn:contains($print-no-punc, $str)) then ($sentence) (:If what we are searching is contained within the sentence, return it:)
+  let $print-no-punc := fn:replace($print, "[^a-zA-Z ]", "") (:Remove anything that is not a letter, or a space (note the extra space after 'a-z':)
+  return if (fn:contains($print-no-punc, $str)) then (($sentence)) (:If what we are searching is contained within the sentence, return it:)
   else ()
 };
 
@@ -1878,15 +1877,48 @@ declare function deh:finite-clause($nodes as node()*) as element()*
 {
   let $toks := deh:tokens-from-unk($nodes)
   let $remove := function($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)} (:This function removes any element not in the @param $seq, we'll use a map on the finite verbs with the main verbs as the $seq:)
-  let $finite-verbs := $toks[deh:is-finite(.)]
-  let $main-verbs := (deh:main-verbs($toks)) (:10/9/2023:)
   
-  let $sub-verbs := $finite-verbs ! $remove(., $main-verbs)
+  (:First, we need to get only the finite verbs:)
+  let $finite-verbs := $toks[deh:is-finite(.)]
+  (:However, we have an issue: this list includes auxiliaries, which the deh:main-verbs function will never return, so they will not be removed, even if they are from main clauses. Therefore, we will replace them with their participle heads (well, heads in PROIEL, not LDT, but, either way, the participle holds the relation info) :)
+  let $finite-verbs := for $tok in $finite-verbs return if (fn:contains(fn:lower-case(fn:string($tok/@relation)), "aux")) then (deh:participle-from-auxiliary($tok)) 
+  else ($tok)
+    
+  let $main-verbs := (deh:main-verbs($toks)) (:10/9/2023:)
+  let $nescioquid := (deh:nescioquid($toks)) (:10/13/2023, see comment on $sub-verbs below:)
+  
+  let $sub-verbs := $finite-verbs ! $remove(., ($main-verbs, $nescioquid)) (:10/13/2023, added this function and the variable $nescioquid above to make sure the grammaticalized phrase 'nescioquid' is not considered a subordinate clause:)
   let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
     for $verb in $sub-verbs
     let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
-    return if (fn:contains($parent/fn:string(@relation), "AuxC") or fn:contains($parent/fn:string(@part-of-speech), "G-")) then ($parent) else ($verb) 
+    return if (fn:contains($parent/fn:string(@relation), "AuxC") or functx:contains-any-of($parent/fn:string(@part-of-speech), ("G-"))) then ($parent)
+     else ($verb) (:10/13/2023: added more conditions to the PROIEL string check, because it turns out that non-"subjunctions" can also head clauses. However, I also removed some that I added after testing: 'Pr' only appears as a head in certain circumstances, but never as a subordinator; removed "Du" because it never seems to actually head a phrase; I'm not sure why I included Px (indefinite pronoun), but it's gone; 'Dq' is also never used at the head of its clause; finally, removed "Df", ultimately because it was silly to think such a broad category could be helpful. My main issue was that compounds with "quam" are sometimes marked this way, but, ultimately, the verb is still annotated with the relation info, so it remains that case that we have the info we need with just 'G-' as the exception. :)
   return functx:distinct-nodes($final)
+};
+
+(:
+deh:nescioquid()
+10/13/2023
+
+This serves to select "nescioquid" from the results, because it is considered a "clause," but I feel it is much too grammaticalized for that. The good news is that, in PROIEL, this seems to be annotated differently from a normal relative clause, where the verb is the head; in this case, the pronoun remains the head of the phrase. This appears to be the case in LDT as well. Although AuxZ seems to be the favored way for marking the 'nescio' in LDT, that does not seem to be carried out consistently
+:)
+declare function deh:nescioquid($nodes as node()*)
+{
+  let $nescio := deh:tokens-from-unk($nodes)[fn:string(@form) = 'nescio'] (:It must only be the first person, so just get the form directly:)
+  return $nescio[deh:return-parent(., 0)/fn:contains(fn:string(@lemma), "qui")] (:Then, if the parent lemma contains 'qui' (which includes 'quis' as well), it must be nescioquid or nescioquod or something:)
+};
+
+(:
+deh:participle-from-auxiliary()
+10/10/2023
+
+Returns the participle in a periphrastic construction in both treebanks from the provided auxiliary. THIS FUNCTION DOES NOT CHECK FOR AUXILIARY STATUS
+:)
+declare function deh:participle-from-auxiliary($tok as element()) as element()*
+{
+  if ($tok/name() = 'token') then (deh:return-parent($tok, 0))
+  else if ($tok/name() = 'word') then (deh:return-children($tok)[deh:is-periphrastic-p(.)])
+  else()
 };
 
 (:
@@ -1932,6 +1964,29 @@ declare %public function deh:is-verb($tok as element()) as xs:boolean
   (:let $by-rel := ($tok/fn:string(@relation) = ("pred", "parpred") and fn:string-length($tok/fn:string(@empty-token-sort)) > 0):)(:Created this 'check by relation' thing because empty tokens have no morph in PROIEL:)
   (($tok/fn:string(@part-of-speech) = 'V-') or (fn:matches($tok/fn:string(@postag), "v........")))
 };
+
+(:
+deh:finite-clause-verb-head()
+10/10/2023
+
+This function returns all verbs in subordinate clauses which do not have a subordinator as their head. It pretty heavily relies on the deh:finite-clause function.
+
+@param $nodes := Any node, document level or below, from LDT or PROIEL
+:)
+declare function deh:finite-clause-verb-head($nodes as node()*) as element()*
+{
+  (:Remember there is no need to process the nodes into tokens, deh:finite-clause already does that:)
+  deh:finite-clause($nodes)[deh:is-verb(.)]
+};
+
+(:
+deh:adjunct-clauses()
+10/12/2023
+
+For retrieving adjunct clauses WHICH ARE FINITE; A few notes:
+-Relative clauses of purpose and quo + comp. need to considered
+
+:)
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
