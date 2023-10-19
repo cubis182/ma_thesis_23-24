@@ -9,6 +9,46 @@ import module namespace functx = "http://www.functx.com" at "C:/Program Files (x
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
 
+(:PRED:)
+(:SBJ
+$sbj := ("N-SUBJ", "A-SUBJ")
+:)
+(:OBJ
+$obj := ("D-IO", "A-INTOBJ", "A-PRED")
+:)
+(:ATR
+$atr := ("G-POSS", "G-PART", "G-OBJEC", "G-DESC", "G-CHAR", "G-MATER", "D-REFER") (:Not sure what to do with G-VALUE or G-CHARGE, since those are more adverbial and not adnominal:)
+:)
+(:ADV
+$adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT") (:10/15, STOPPED AT A-RESPECT!:)
+:)
+(:ATV/AtvV:)
+(:PNOM
+let $pnom := ("N-PRED")
+:)
+
+(:OCOMP:)
+(:COORD:)
+(:APOS:)
+(:AuxP:)
+(:AuxC:)
+(:AuxR:)
+(:AuxV:)
+(:AuxX:)
+(:AuxG:)
+(:AuxK:)
+(:AuxY:)
+(:AuxZ:)
+(:ExD:)
+(:
+HARRINGTON TREES:
+The section below has some sequences of strings relevant for dealing with Harrington trees, with a focus on what is equivalent in the LDT, for use with future functions.
+:)
+
+
+
+(:-------------------------------------------------------------------------------------------------:)
+
 (:
 5/18/2023: 
 This function takes the TAGSET.xml from the dependency treebank and returns a sequence, which has the possible postags in order; it does the same from PROIEL-TAGSET.xml in the repository, which I copied from the PROIEL treebank caes-gall.xml. I did this so both would be able to pull the tagset without an example node
@@ -143,11 +183,11 @@ declare %public function deh:info-from-urn($urn as xs:string) as array(*)
 
 (:
 7/3/2023:
-This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author. If either cannot be found, it will return "unknown"
+This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author. If either cannot be found, the array will have a size of one and will only have the base uri, so you can use array:size() to check this.
 
 $doc: One or more treebank documents (not nodes)
 :)
-declare function deh:work-info($doc as node()*)
+declare function deh:work-info($doc as node()*) as array(*)
 {
   let $xml := $doc (:May remove this redundant step later; originally, this accepted nodes as well as documents:)
   return if ($xml/*/name() eq "treebank") then ( (:Updated 9/14/2023: now tests for "treebank" as the root, not version, since this operation will now work with Harrington and LDT trees:)
@@ -158,6 +198,7 @@ declare function deh:work-info($doc as node()*)
     let $tokens := $xml//div[1]/sentence[1]//token
     return deh:proiel-work-info($tokens[1])
   )
+  else (array{fn:base-uri($xml)}) (:Added 10/18, because we want to make sure this never returns an empty sequence, but an array data type, because that is what we expect. Therefore, one way to test whether the results were successful or not is with the size; if it failed, the array will have a size of one and will only have the base uri:)
 };
 
 (:
@@ -1253,7 +1294,10 @@ deh:return-depth()
 :)
 declare %public function deh:return-descendants($node as element(), $depth as xs:integer) as element()*
 {
-  hof:until(function($seq){fn:count($seq) eq fn:count(functx:distinct-nodes((deh:return-children($seq), $seq)))}, function($seq) {functx:distinct-nodes((deh:return-children($seq), $seq))}, $node)
+  let $results :=  hof:until(function($seq){fn:count($seq) eq fn:count(functx:distinct-nodes((deh:return-children($seq), $seq)))}, function($seq) {functx:distinct-nodes((deh:return-children($seq), $seq))}, $node)
+  for $result in $results
+  order by $result/@id
+  return $result
 };
 
 (:
@@ -1875,6 +1919,7 @@ Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:p
 :)
 declare function deh:finite-clause($nodes as node()*) as element()*
 {
+  
   let $toks := deh:tokens-from-unk($nodes)
   let $remove := function($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)} (:This function removes any element not in the @param $seq, we'll use a map on the finite verbs with the main verbs as the $seq:)
   
@@ -1987,6 +2032,33 @@ For retrieving adjunct clauses WHICH ARE FINITE; A few notes:
 -Relative clauses of purpose and quo + comp. need to considered
 
 :)
+
+(:
+deh:get-tree-data()
+10/18/2023
+
+This returns, in .csv format (yes, COMMA separated) the information about every tree document; unrecognized formats will give just one field, the base uri. All the others will give the work title, author, and token count, in that order.
+
+$docs: 
+:)
+declare function deh:get-tree-data() as item()*
+{
+  for $tree in (db:get('ldt2.1-treebanks'), db:get('harrington'), db:get('proiel'))
+  let $info := deh:work-info($tree)
+  return if (array:size($info) > 1) then (fn:concat(deh:remove-punct($info(1)), ",", deh:remove-punct($info(2)), ",", fn:count($tree//sentence/*)))
+  else (fn:base-uri($tree))
+};
+
+(:
+deh:remove-nodes-from-seq()
+10/18/2023
+
+
+:)
+declare function deh:remove-nodes-from-seq($tok as element(), $seq as element()*) 
+{
+  if (functx:is-node-in-sequence($tok, $seq)) then () else ($tok)
+};
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
