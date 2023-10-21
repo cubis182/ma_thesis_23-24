@@ -1195,15 +1195,29 @@ declare %public function deh:return-parent($nodes as element()*, $width as xs:in
 };
 
 (:
+deh:is-punc()
+10/19/2023
+:)
+declare function deh:is-punc($tok as element()) as xs:boolean
+{
+  ($tok/fn:string(@relation) = ("AuxX", "AuxG", "AuxK") or $tok/fn:matches(fn:string(@postag), "u........"))
+};
+
+
+(:
 deh:return-parent-nocoord()
 9/22/2023
 
 This is a variant of deh:return-parent which skips coordinating constructions. This should include COORD, AuxX (comma), AuxG (bracketing punctuation), and AuxK (terminal punctuation)
+
+Note from deh:get-auxc-verb:
+Punctuation dependent on AuxC only seems to separate the verb from the AuxC once, in Harrington. Nonetheless, all the others will be cancelled out by the fact they are not verbs, so I will continue with the no punctuation rule for -nocoord
 :)
 declare function deh:return-parent-nocoord($nodes as element()*)
 {
-  let $parent := deh:return-parent($nodes, 0)
-  return if (($parent[name() = "word"]/fn:string(@relation) = ("COORD", "AuxX", "AuxG", "AuxK")) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
+  let $parents := deh:return-parent($nodes, 0)
+  for $parent in $parents
+  return if (functx:contains-any-of($parent[name() = "word"]/fn:string(@relation), ("COORD", "AuxX", "AuxG", "AuxK") or $parent/deh:is-punc(.)) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
   else ($parent)
 };
 
@@ -1213,16 +1227,34 @@ deh:return-children-nocoord
 
 Same as deh:return-parent-nocoord above, but for children
 
+Note from deh:get-auxc-verb:
+Punctuation dependent on AuxC only seems to separate the verb from the AuxC once, in Harrington. Nonetheless, all the others will be cancelled out by the fact they are not verbs, so I will continue with the no punctuation rule for -nocoord
+
 $nodes: either LDT or PROIEL tokens
 :)
 declare function deh:return-children-nocoord($nodes as element()*)
 {
-  let $child := deh:return-children($nodes)
+  (:Retrieve the children:)
+  let $children := deh:return-children($nodes)
+  
+  (:These are all the potential tags for coordinating constructions (the non "COORD" tags for LDT are somewhat vestigial, I am considering removing them but they seem to do either no harm nor good, so I'll keep investigating):)
   let $ldt-coords := ("COORD", "AuxX", "AuxG", "AuxK")
   let $pr-coord := "C-"
   
-  let $coords := ($child[functx:contains-any-of(fn:string(@relation), $ldt-coords)], $child[fn:string(@part-of-speech) = $pr-coord])
-  return ()
+  (:Split them up early to avoid nasty predicates:)
+  let $ldt := $children[name() = 'word']
+  let $proiel := $children[name() = 'token']
+  
+  (:Then return each which isn't a coordinating conjunction, and pass the others right back into the function (just in case we have a coordinating conjunction coordinating other coordinating conjunctions):)
+  let $final-ldt :=
+    for $child in $ldt
+    return if (functx:contains-any-of($child/fn:string(@relation), $ldt-coords) or $child/deh:is-punc(.)) then (deh:return-children-nocoord($child)) else ($child)
+    
+  let $final-proiel :=
+    for $child in $proiel
+    return if ($child/fn:string(@part-of-speech) = $pr-coord) then (deh:return-children-nocoord($child)) else ($child)
+    
+  return ($final-ldt, $final-proiel)
 };
 
 (:
@@ -1292,10 +1324,11 @@ deh:return-children()
 deh:return-depth()
 
 :)
-declare %public function deh:return-descendants($node as element(), $depth as xs:integer) as element()*
+declare %public function deh:return-descendants($nodes as element()*, $depth as xs:integer) as element()*
 {
+  for $node in $nodes
   let $results :=  hof:until(function($seq){fn:count($seq) eq fn:count(functx:distinct-nodes((deh:return-children($seq), $seq)))}, function($seq) {functx:distinct-nodes((deh:return-children($seq), $seq))}, $node)
-  for $result in $results
+  for $result in $results[name() = 'word' or name() = 'token']
   order by $result/@id
   return $result
 };
@@ -1818,6 +1851,15 @@ declare function deh:direct-speech-ldt($nodes as node()*) as element(word)*
   
 };
 
+declare function deh:direct-speech-pr($nodes as node()*) as element(token)*
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  let $lemmas := ("aio", "inquam") (:Get the lemmas for Direct Speech; this can be expanded:)
+  let $ds := $toks[(fn:string(@lemma) = $lemmas)]
+  let $final-ds := $ds[fn:count(deh:return-children-nocoord(.)) > 0]
+  return $final-ds
+};
+
 (:
 deh:non-pred()
 9/27/2023
@@ -1916,6 +1958,7 @@ This returns every finite clause in the LDT and PROIEL, from whatever you submit
 
 Errors:
 Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="2.5">, shows that "nescioquod" is considered finite, because it is a finite non-main-verb
+How can this deal with situations where there is a conjunction within the clause? 
 :)
 declare function deh:finite-clause($nodes as node()*) as element()*
 {
@@ -2059,6 +2102,53 @@ declare function deh:remove-nodes-from-seq($tok as element(), $seq as element()*
 {
   if (functx:is-node-in-sequence($tok, $seq)) then () else ($tok)
 };
+
+(:
+deh:is-subjunction
+10/19/2023
+
+Determiners if the given is a subordinating conjunction (called subjunction for brevity, and because conjunction is already taken), in LDT, PROIEL or Harrington.
+:)
+declare function deh:is-subjunction($tok as element()) as xs:boolean
+{
+  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-"))
+};
+
+(:
+(See above)
+:)
+declare function deh:is-subjunction-pr($tok as element()) as xs:boolean
+{
+  fn:contains($tok/fn:string(@part-of-speech), "G-")
+};
+
+(:
+(See deh:is-subjunction; this works on LDT or Harrington)
+:)
+declare function deh:is-subjunction-ldt($tok as element()) as xs:boolean
+{
+  fn:contains($tok/fn:string(@relation), "AuxC") 
+};
+
+(:
+deh:get-auxc-verb()
+10/19/2023
+
+For situations where you want the verb in an auxc-headed clause in the LDT or Harrington, use this.
+
+Notes:
+Punctuation dependent on AuxC only seems to separate the verb from the AuxC once, in Harrington. Nonetheless, all the others will be cancelled out by the fact they are not verbs, so I will continue with the no punctuation rule for -nocoord
+
+Only instances of non-finite verbs was with quam! A few other odd instances, but one was a mistag with quoniam, and there were others where "et" was mistagged as AuxC. However, this does open my eyes that finiteness is only so good a criterion. 
+:)
+declare function deh:get-auxc-verb($toks as element(word)*) as element(word)*
+{
+  for $tok in $toks
+  where fn:contains($tok/fn:string(@relation), "AuxC")
+  let $children := deh:return-children-nocoord($tok)
+  return $children[deh:is-verb(.)]
+};
+
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
