@@ -962,7 +962,7 @@ declare %private function deh:use-rel-func($map as map(*), $nodes as element()*)
   else if ($map("relation") eq "parent") then
   (deh:return-parent($nodes, $width))
   else if ($map("relation") eq "descendant") then
-  (deh:return-descendants($nodes, $depth))
+  (deh:return-descendants($nodes))
   else if ($map("relation") eq "ancestor") then
   (deh:return-ancestors($nodes, $depth, $width))
   else if ($map("relation") eq "sibling") then
@@ -1217,7 +1217,7 @@ declare function deh:return-parent-nocoord($nodes as element()*)
 {
   let $parents := deh:return-parent($nodes, 0)
   for $parent in $parents
-  return if (functx:contains-any-of($parent[name() = "word"]/fn:string(@relation), ("COORD", "AuxX", "AuxG", "AuxK") or $parent/deh:is-punc(.)) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
+  return if (functx:contains-any-of($parent[name() = "word"]/fn:string(@relation), ("COORD", "AuxX", "AuxG", "AuxK")) or $parent/deh:is-punc(.) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
   else ($parent)
 };
 
@@ -1324,13 +1324,15 @@ deh:return-children()
 deh:return-depth()
 
 :)
-declare %public function deh:return-descendants($nodes as element()*, $depth as xs:integer) as element()*
+declare %public function deh:return-descendants($node as element()*)
+{  
+  deh:descendants-aux($node, 1)
+};
+
+declare %private function deh:descendants-aux($node as element()*,$count as xs:integer)
 {
-  for $node in $nodes
-  let $results :=  hof:until(function($seq){fn:count($seq) eq fn:count(functx:distinct-nodes((deh:return-children($seq), $seq)))}, function($seq) {functx:distinct-nodes((deh:return-children($seq), $seq))}, $node)
-  for $result in $results[name() = 'word' or name() = 'token']
-  order by $result/@id
-  return $result
+  if ($count < 50) then (deh:descendants-aux(functx:distinct-nodes(($node, deh:return-children($node))), ($count + 1)))
+  else ($node)
 };
 
 (:
@@ -1346,11 +1348,16 @@ deh:return-parent
 :)
 declare function deh:return-depth($node, $iter as xs:integer)
 {
-  if (fn:count(deh:return-parent($node, 0)) eq 0) then
+  if (fn:count(deh:return-parent-cheap($node)) eq 0) then
     ($iter)
   else (
-    deh:return-depth(deh:return-parent($node, 0), ($iter + 1))
+    deh:return-depth(deh:return-parent-cheap($node), ($iter + 1))
   )
+};
+
+declare %public function deh:return-parent-cheap($node as element()) as element()*
+{
+  $node/../*[@id = deh:check-head($node)]
 };
 
 
@@ -1799,9 +1806,10 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Second, extract out the main verbs for LDT in stages:)
   
   (:Get all verbs which are in scope:)
-  let $l-stage-a := $ldt[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
+  let $l-verbs := $ldt[deh:is-verb(.)]
+  let $l-stage-a := $l-verbs[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
-  let $l-stage-b := $l-stage-a[functx:contains-any-of(fn:string(@relation), "PRED")](:Return all the PRED's, this should be directly returned at the end:)
+  let $l-stage-b := $l-stage-a[functx:contains-any-of(fn:string(@relation), ("PRED", "ExD")) and functx:contains-any-of(fn:string(@relation), ("ADV")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV":)
   
   (:Now deal with direct speech:)
   let $dirstats := $l-stage-a[fn:contains(fn:string(@relation), "DIRSTAT")] (:This will be returned directly at the end:)
@@ -2147,6 +2155,103 @@ declare function deh:get-auxc-verb($toks as element(word)*) as element(word)*
   where fn:contains($tok/fn:string(@relation), "AuxC")
   let $children := deh:return-children-nocoord($tok)
   return $children[deh:is-verb(.)]
+};
+
+(:
+deh:var-info()
+10/26/2023:
+
+Returns the info we need for statistical processing
+:)
+declare function deh:var-info($toks as element()*)
+{
+  for $tok in $toks
+  (:Lemma:)
+  
+  
+  
+  let $lemma := if (deh:is-verb($tok)) then (fn:string-join(deh:verb-headed-clause-sub($tok)/fn:string(@lemma), ", ")) else ($tok/fn:string(@lemma))
+  
+  (:Rel:)
+  let $rel := if (deh:is-subjunction-ldt($tok)) then (deh:get-auxc-verb($tok)/fn:string(@relation)) else ($tok/fn:string(@relation))
+  
+  (:Parent pos nocoord:)
+  let $par-pos := deh:return-parent-nocoord($tok)/deh:part-of-speech(.)
+  
+  (:parent lemma:)
+  let $par-lemma := deh:return-parent-nocoord($tok)/fn:string(@lemma)
+  
+  (:subordinated tokens:)
+  let $sub-tokens := fn:count(deh:return-descendants($tok))
+  
+  (:sub. clauses:)
+  let $sub-clauses := fn:count(deh:finite-clause(deh:return-descendants($tok)))
+  
+  (:Val: clause, or non-clause?:)
+  
+  (:Main, or subordinate?:)
+  
+  (:ID:)
+  let $id := $tok/fn:string(@id)
+  
+  (:Sentence ID:)
+  let $sen-id := $tok/../fn:string(@id)
+  
+  (:Work info:)
+  let $work-info := deh:remove-punct(fn:string-join(deh:token-info($tok)?*))
+  
+  let $final-seq := ($lemma, $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id)
+  return fn:string-join($final-seq, ", ")
+  
+};
+
+(:
+deh:verb-headed-clause-sub()
+10/26/2023
+
+If you want this function to consistently retrieve the subordinator, it will have to account for the fact that, in the LDT, if two verbs are coordinated within a clause, the verbs are siblings of the relative
+The argument MUST be a verb which we already know is the head of a clause
+:)
+declare function deh:verb-headed-clause-sub($tok as element())
+{
+  let $pos := ("d", "p", "Du", "Pi", "Dq", "Pr") (:parts of speech of subordinators:)
+  
+  return if ((deh:return-descendants($tok)/deh:part-of-speech(.) = $pos) = false()) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
+  else (  
+  let $nodes := deh:vhcs-helper($tok, $pos)
+  
+  let $sub := $nodes[deh:part-of-speech(.) = $pos]
+  
+  let $thread := deh:vhcs-helper-b($sub, $tok)
+
+  return if (fn:count($thread[deh:is-finite(.)]) > 1) then ()
+  else ($sub)
+  
+)
+};
+
+declare function deh:vhcs-helper($tok as element()*, $pos)
+{
+  if ((($tok/fn:string(@part-of-speech), $tok/fn:substring(fn:string(@postag), 1, 1)) = $pos)) then (
+    $tok
+  )
+  else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper($pos))
+};
+
+declare function deh:vhcs-helper-b($pronoun as element()*, $target as element()) as element()*
+{
+  if (functx:is-node-in-sequence($target, $pronoun)) then ($pronoun)
+  else (functx:distinct-nodes((deh:return-parent($pronoun, 0), $pronoun)) => deh:vhcs-helper-b($target))
+};
+
+(:
+10/26/2023
+:)
+declare function deh:part-of-speech($toks as element()*) as xs:string
+{
+  for $tok in $toks
+  return if ($tok/name() = 'word') then ($tok/fn:substring(fn:string(@postag), 1, 1))
+  else if ($tok/name() = 'token') then ($tok/fn:string(@part-of-speech))
 };
 
 
