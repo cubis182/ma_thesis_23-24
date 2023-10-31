@@ -1881,9 +1881,9 @@ deh:is-conjunction()
 
 This function tests whether a token is a conjunction in the LDT (will add PROIEL support)
 :)
-declare function deh:is-conjunction($tok as element(word)) as xs:boolean
+declare function deh:is-conjunction($tok as element()) as xs:boolean
 {
-  fn:contains($tok/fn:string(@relation), "COORD")
+  fn:contains($tok/fn:string(@relation), "COORD") or fn:string($tok/@part-of-speech) = "C-"
 };
 
 
@@ -1968,7 +1968,7 @@ Errors:
 Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="2.5">, shows that "nescioquod" is considered finite, because it is a finite non-main-verb
 How can this deal with situations where there is a conjunction within the clause? 
 :)
-declare function deh:finite-clause($nodes as node()*) as element()*
+declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean := false()) as element()*
 {
   
   let $toks := deh:tokens-from-unk($nodes)
@@ -1987,7 +1987,7 @@ declare function deh:finite-clause($nodes as node()*) as element()*
   let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
     for $verb in $sub-verbs
     let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
-    return if (fn:contains($parent/fn:string(@relation), "AuxC") or functx:contains-any-of($parent/fn:string(@part-of-speech), ("G-"))) then ($parent)
+    return if ($parent/deh:is-subjunction(.) and $verb-only = false()) then ($parent)
      else ($verb) (:10/13/2023: added more conditions to the PROIEL string check, because it turns out that non-"subjunctions" can also head clauses. However, I also removed some that I added after testing: 'Pr' only appears as a head in certain circumstances, but never as a subordinator; removed "Du" because it never seems to actually head a phrase; I'm not sure why I included Px (indefinite pronoun), but it's gone; 'Dq' is also never used at the head of its clause; finally, removed "Df", ultimately because it was silly to think such a broad category could be helpful. My main issue was that compounds with "quam" are sometimes marked this way, but, ultimately, the verb is still annotated with the relation info, so it remains that case that we have the info we need with just 'G-' as the exception. :)
   return functx:distinct-nodes($final)
 };
@@ -2072,7 +2072,7 @@ This function returns all verbs in subordinate clauses which do not have a subor
 declare function deh:finite-clause-verb-head($nodes as node()*) as element()*
 {
   (:Remember there is no need to process the nodes into tokens, deh:finite-clause already does that:)
-  deh:finite-clause($nodes)[deh:is-verb(.)]
+  deh:finite-clause($nodes, false())[deh:is-verb(.)]
 };
 
 (:
@@ -2185,7 +2185,7 @@ declare function deh:var-info($toks as element()*)
   let $sub-tokens := fn:count(deh:return-descendants($tok))
   
   (:sub. clauses:)
-  let $sub-clauses := fn:count(deh:finite-clause(deh:return-descendants($tok)))
+  let $sub-clauses := fn:count(deh:finite-clause(deh:return-descendants($tok), false()))
   
   (:Val: clause, or non-clause?:)
   
@@ -2214,15 +2214,15 @@ The argument MUST be a verb which we already know is the head of a clause
 :)
 declare function deh:verb-headed-clause-sub($tok as element())
 {
-  let $pos := ("d", "p", "Du", "Pi", "Dq", "Pr") (:parts of speech of subordinators:)
+  let $lemma := ('quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators:)
   
-  return if ((deh:return-descendants($tok)/deh:part-of-speech(.) = $pos) = false()) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
+  return if ((functx:contains-any-of(deh:return-descendants($tok)/fn:string(@lemma), $lemma)) = false()) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
   else (  
-  let $nodes := deh:vhcs-helper($tok, $pos)
+  let $nodes := deh:vhcs-helper($tok, $lemma)
   
-  let $sub := $nodes[deh:part-of-speech(.) = $pos]
+  let $sub := $nodes[functx:contains-any-of(fn:string(@lemma), $lemma)]
   
-  let $thread := deh:vhcs-helper-b($sub, $tok)
+  let $thread := deh:vhcs-helper-b($sub, $tok) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence:)
 
   return if (fn:count($thread[deh:is-finite(.)]) > 1) then ()
   else ($sub)
@@ -2232,9 +2232,12 @@ declare function deh:verb-headed-clause-sub($tok as element())
 
 declare function deh:vhcs-helper($tok as element()*, $pos)
 {
-  if ((($tok/fn:string(@part-of-speech), $tok/fn:substring(fn:string(@postag), 1, 1)) = $pos)) then (
+  (:10/30/2023, $pos refers to lemmas now:)
+  (:If there are any tokens:)
+  if (fn:count(for $t in $tok return $t[functx:contains-any-of($tok/fn:string(@lemma), $pos)]) > 0) then (
     $tok
   )
+  else if (fn:count($tok) = fn:count(($tok, deh:return-children($tok)))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
   else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper($pos))
 };
 
@@ -2253,6 +2256,12 @@ declare function deh:part-of-speech($toks as element()*) as xs:string
   return if ($tok/name() = 'word') then ($tok/fn:substring(fn:string(@postag), 1, 1))
   else if ($tok/name() = 'token') then ($tok/fn:string(@part-of-speech))
 };
+
+(:
+10/31/2023 (spooky)
+deh:is-subordinate()
+:)
+
 
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
