@@ -14,13 +14,13 @@ import module namespace functx = "http://www.functx.com" at "C:/Program Files (x
 $sbj := ("N-SUBJ", "A-SUBJ")
 :)
 (:OBJ
-$obj := ("D-IO", "A-INTOBJ", "A-PRED")
+$obj := ("D-IO", "A-INTOBJ", "A-PRED", "D-INTER", "D-REFER", "AB-RESPECT")
 :)
 (:ATR
 $atr := ("G-POSS", "G-PART", "G-OBJEC", "G-DESC", "G-CHAR", "G-MATER", "D-REFER") (:Not sure what to do with G-VALUE or G-CHARGE, since those are more adverbial and not adnominal:)
 :)
 (:ADV
-$adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT") (:10/15, STOPPED AT A-RESPECT!:)
+$adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB") (:10/15, STOPPED AT A-RESPECT! 11/1, WHICH I THINK IT ADVERBIAL, it is rare, but was never ATR; YES, note the sentence: hic primum nigrantis terga iuvencos constituit, the terga is an ADV:)
 :)
 (:ATV/AtvV:)
 (:PNOM
@@ -39,7 +39,9 @@ let $pnom := ("N-PRED")
 (:AuxK:)
 (:AuxY:)
 (:AuxZ:)
-(:ExD:)
+(:ExD
+let $exd := ("A-EXCLAM") (:This does not cover every case; in the Met. example, it is an OBJ for being in direct speech, and AuxY seems to be used for other exclamations...:)
+:)
 (:
 HARRINGTON TREES:
 The section below has some sequences of strings relevant for dealing with Harrington trees, with a focus on what is equivalent in the LDT, for use with future functions.
@@ -1326,7 +1328,7 @@ deh:return-depth()
 :)
 declare %public function deh:return-descendants($node as element()*)
 {  
-  deh:descendants-aux($node, 1)
+  deh:descendants-aux($node, 1)[fn:deep-equal(., $node) = false()]
 };
 
 declare %private function deh:descendants-aux($node as element()*,$count as xs:integer)
@@ -1379,6 +1381,18 @@ declare function deh:return-siblings($nodes as element()*, $include as xs:boolea
     else (
       $final[fn:string(@id) ne $node/fn:string(@id)]
     )
+};
+
+(:
+10/31/2023:
+deh:return-siblings-nocoord()
+:)
+declare function deh:return-siblings-nocoord($nodes as element()*, $include as xs:boolean) as element()*
+{
+  let $siblings := deh:return-siblings($nodes, $include)
+  for $sib in $siblings
+  return if ($sib/deh:is-conjunction(.)) then (deh:return-children-nocoord($sib))
+  else ($sib)
 };
 
 (: 
@@ -1717,8 +1731,9 @@ declare function deh:is-finite($tok as element()) as xs:boolean
   (:First, check if something is even a verb and therefore eligible in the first place; otherwise, return false:)
   if (deh:is-verb($tok)) then (
   let $str := ($tok/@postag, $tok/@morphology)
-  let $is-periphrastic := (deh:return-parent($tok, 0)/fn:contains(fn:string(@relation), "AuxV") or ($tok/fn:string(@relation) = "pred" and $tok/fn:matches(fn:string(@morphology), "...(p|g)......"))) (:10/3/2023, added this to account for participles in periphrastics; if a verb is dependent on an AuxV be-verb, it must be in a periphrastic in the LDT; if it is a predicate but is also a participle, in PROIEL it must be in a periphrastic:)
- return (fn:matches(fn:string($str), "[0-3]") or $is-periphrastic) (:If it has a number in the @postag (LDT) or @morphology (PROIEL), it must be finite, for digits are only used for that element; even elliptical nodes often have number marked, so it should even catch periphrastics with consistency:)
+  (:I just want to account for every scenario here: if it is a periphrastic:)
+  let $tok := if ($tok/fn:contains(fn:string(@lemma), "sum") and $tok/fn:contains(fn:lower-case(fn:string(@relation)), "aux")) then ($tok) else if (deh:is-periphrastic-p($tok)) then (deh:return-children($tok)[fn:string(@lemma) = 'sum']) else ($tok)(:10/3/2023, added this to account for participles in periphrastics; if a verb is dependent on an AuxV be-verb, it must be in a periphrastic in the LDT; if it is a predicate but is also a participle, in PROIEL it must be in a periphrastic; 10/31/2023, modified the spooky is-periphrastic-p function, now it should be usable here:)
+ return (fn:matches(fn:string($str), "[0-3]")) (:If it has a number in the @postag (LDT) or @morphology (PROIEL), it must be finite, for digits are only used for that element; even elliptical nodes often have number marked, so it should even catch periphrastics with consistency:)
  (:DOESN'T MATTER, I'm tired; it will catch either the auxiliary or main verb no matter what. let $bool-b := (deh:return-parent($tok, 0)/fn:contains(fn:string(@relation), "AuxV") or $tok/fn:string(@relation) = "pred") (:10/3/2023, added this to account for participles in periphrastics:) :)
 )
 else (false())
@@ -1806,16 +1821,15 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Second, extract out the main verbs for LDT in stages:)
   
   (:Get all verbs which are in scope:)
-  let $l-verbs := $ldt[deh:is-verb(.)]
-  let $l-stage-a := $l-verbs[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
+  let $l-verbs := $ldt[deh:is-verb(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
-  let $l-stage-b := $l-stage-a[functx:contains-any-of(fn:string(@relation), ("PRED", "ExD")) and functx:contains-any-of(fn:string(@relation), ("ADV")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV":)
+  let $l-stage-b := $l-verbs[functx:contains-any-of(fn:string(@relation), ("PRED", "ExD")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
   
   (:Now deal with direct speech:)
-  let $dirstats := $l-stage-a[fn:contains(fn:string(@relation), "DIRSTAT")] (:This will be returned directly at the end:)
+  let $dirstats := $l-verbs[functx:contains-any-of(fn:string(@relation), ("DIRSTAT", "-DS-"))] (:This will be returned directly at the end:)
   
   (:Get direct speech from main LDT:)
-  let $l-stage-c :=$l-stage-a[fn:contains(fn:string(@relation), "OBJ")]
+  let $l-stage-c :=$l-verbs[fn:contains(fn:string(@relation), "OBJ")]
   
   let $l-stage-d := ($l-stage-c[(fn:count(deh:return-siblings(., false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0],  $l-stage-c[(functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))])
   (:let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] :)(:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
@@ -1839,7 +1853,8 @@ declare %public function deh:pr-main-verbs($toks as element()*) as element(token
 (:USED FOR THE LDT ONLY:)
 declare function deh:is-periphrastic-p($tok as element()) as xs:boolean
 {
-  fn:count($tok/../*[fn:contains(fn:string(@relation), "AuxV") and (@id = $tok/@head)]) > 0
+  let $children := deh:return-children($tok)
+  return fn:count($children[fn:contains(fn:lower-case(fn:string(@relation)), "aux") and fn:matches(fn:string(@lemma), "^sum.$")]) > 0
 };
 
 
@@ -1977,7 +1992,7 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   (:First, we need to get only the finite verbs:)
   let $finite-verbs := $toks[deh:is-finite(.)]
   (:However, we have an issue: this list includes auxiliaries, which the deh:main-verbs function will never return, so they will not be removed, even if they are from main clauses. Therefore, we will replace them with their participle heads (well, heads in PROIEL, not LDT, but, either way, the participle holds the relation info) :)
-  let $finite-verbs := for $tok in $finite-verbs return if (fn:contains(fn:lower-case(fn:string($tok/@relation)), "aux")) then (deh:participle-from-auxiliary($tok)) 
+  let $finite-verbs := for $tok in $finite-verbs return if (fn:contains(fn:lower-case(fn:string($tok/fn:string(@relation))), "aux")) then (deh:return-parent($tok, 0)) 
   else ($tok)
     
   let $main-verbs := (deh:main-verbs($toks)) (:10/9/2023:)
@@ -1992,6 +2007,11 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   return functx:distinct-nodes($final)
 };
 
+declare function deh:is-periphrastic-aux($tok as element()) as xs:boolean
+{
+  $tok/fn:matches(fn:string(@lemma), "^sum.$") and $tok/fn:contains(fn:lower-case(fn:string(@relation)), "aux")
+};
+
 (:
 deh:nescioquid()
 10/13/2023
@@ -2004,18 +2024,7 @@ declare function deh:nescioquid($nodes as node()*)
   return $nescio[deh:return-parent(., 0)/fn:contains(fn:string(@lemma), "qui")] (:Then, if the parent lemma contains 'qui' (which includes 'quis' as well), it must be nescioquid or nescioquod or something:)
 };
 
-(:
-deh:participle-from-auxiliary()
-10/10/2023
 
-Returns the participle in a periphrastic construction in both treebanks from the provided auxiliary. THIS FUNCTION DOES NOT CHECK FOR AUXILIARY STATUS
-:)
-declare function deh:participle-from-auxiliary($tok as element()) as element()*
-{
-  if ($tok/name() = 'token') then (deh:return-parent($tok, 0))
-  else if ($tok/name() = 'word') then (deh:return-children($tok)[deh:is-periphrastic-p(.)])
-  else()
-};
 
 (:
 deh:is-
@@ -2214,33 +2223,52 @@ The argument MUST be a verb which we already know is the head of a clause
 :)
 declare function deh:verb-headed-clause-sub($tok as element())
 {
-  let $lemma := ('quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators:)
+ 
   
-  return if ((functx:contains-any-of(deh:return-descendants($tok)/fn:string(@lemma), $lemma)) = false()) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
+  let $desc := (deh:return-descendants($tok))
+  let $sib := deh:return-siblings($tok, false())
+  return if ((fn:count(($desc, $sib)[deh:is-relative(.)]) = 0)) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
+  else if (fn:count($sib[deh:is-relative(.)]) > 0) then ($sib[deh:is-relative(.)])
   else (  
-  let $nodes := deh:vhcs-helper($tok, $lemma)
+  let $nodes := deh:vhcs-helper($tok) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators:)
   
-  let $sub := $nodes[functx:contains-any-of(fn:string(@lemma), $lemma)]
+  let $subs := $nodes[deh:is-relative(.)] (:Since there can be more than one at the same level, we retrieve all of them:)
   
+  (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
+  for $sub in $subs
+  (:First, if there is a coordinating conjunction as the parent, it may be the case the subordinator is a sibling: we'll check there first:)
   let $thread := deh:vhcs-helper-b($sub, $tok) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence:)
-
+   
   return if (fn:count($thread[deh:is-finite(.)]) > 1) then ()
   else ($sub)
   
 )
 };
 
-declare function deh:vhcs-helper($tok as element()*, $pos)
+(:
+A recursive function which takes a target (a verb which is in a 'relative' clause) and finds the earliest relative in the tree. The second condition is, if it has reached the end of the tree, we don't want to get stuck in a loop, so we return nothing. Technically, this should be impossible, since the very first process in verb-headed-clause-sub() eliminates ones which do not have one of these. The final part, if we have still not reached a relative but are not terminal, simply walks down the tree one more step, adds those results to the previous results, and passes it all back through.
+:)
+declare function deh:vhcs-helper($tok as element()*)
 {
   (:10/30/2023, $pos refers to lemmas now:)
   (:If there are any tokens:)
-  if (fn:count(for $t in $tok return $t[functx:contains-any-of($tok/fn:string(@lemma), $pos)]) > 0) then (
+  if (fn:count($tok[deh:is-relative(.)]) > 0) then (
     $tok
   )
-  else if (fn:count($tok) = fn:count(($tok, deh:return-children($tok)))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
-  else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper($pos))
+  else if (fn:count($tok) = fn:count(functx:distinct-nodes(($tok, deh:return-children($tok))))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
+  else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper())
 };
 
+declare function deh:is-relative($tok as element()) as xs:boolean
+{
+   let $lemma := ('quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged:)
+   
+   return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("d", "p", "Pi", "Du", "Dq", "Pr")) and (deh:is-subjunction($tok) = false())
+};
+
+(:
+Another issue is that we need to make sure no verb comes between the target and pronoun: to do this, though, we first need to retrieve the nodes between the two. We walk the tree back up from the pronoun, and stop once we have the target, the verb.
+:)
 declare function deh:vhcs-helper-b($pronoun as element()*, $target as element()) as element()*
 {
   if (functx:is-node-in-sequence($target, $pronoun)) then ($pronoun)
@@ -2261,6 +2289,17 @@ declare function deh:part-of-speech($toks as element()*) as xs:string
 10/31/2023 (spooky)
 deh:is-subordinate()
 :)
+
+(:
+11/1/2023:
+deh:is-coordinating()
+
+This function combines deh:is-punc and deh:is-conjunction and tests for both at the same time
+:)
+declare function deh:is-coordinating($tok as element()) as xs:boolean
+{
+  $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.)
+};
 
 
 
