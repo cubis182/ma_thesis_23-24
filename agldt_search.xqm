@@ -1219,7 +1219,7 @@ declare function deh:return-parent-nocoord($nodes as element()*)
 {
   let $parents := deh:return-parent($nodes, 0)
   for $parent in $parents
-  return if (functx:contains-any-of($parent[name() = "word"]/fn:string(@relation), ("COORD", "AuxX", "AuxG", "AuxK")) or $parent/deh:is-punc(.) or ($parent[name() = "token"]/fn:string(@part-of-speech) = "C-")) then (deh:return-parent-nocoord($parent))
+  return if (deh:is-coordinating($parent)) then (deh:return-parent-nocoord($parent))
   else ($parent)
 };
 
@@ -1239,24 +1239,12 @@ declare function deh:return-children-nocoord($nodes as element()*)
   (:Retrieve the children:)
   let $children := deh:return-children($nodes)
   
-  (:These are all the potential tags for coordinating constructions (the non "COORD" tags for LDT are somewhat vestigial, I am considering removing them but they seem to do either no harm nor good, so I'll keep investigating):)
-  let $ldt-coords := ("COORD", "AuxX", "AuxG", "AuxK")
-  let $pr-coord := "C-"
-  
-  (:Split them up early to avoid nasty predicates:)
-  let $ldt := $children[name() = 'word']
-  let $proiel := $children[name() = 'token']
-  
   (:Then return each which isn't a coordinating conjunction, and pass the others right back into the function (just in case we have a coordinating conjunction coordinating other coordinating conjunctions):)
-  let $final-ldt :=
-    for $child in $ldt
-    return if (functx:contains-any-of($child/fn:string(@relation), $ldt-coords) or $child/deh:is-punc(.)) then (deh:return-children-nocoord($child)) else ($child)
+  let $final :=
+    for $child in $children
+    return if (deh:is-coordinating($child)) then (deh:return-children-nocoord($child)) else ($child)
     
-  let $final-proiel :=
-    for $child in $proiel
-    return if ($child/fn:string(@part-of-speech) = $pr-coord) then (deh:return-children-nocoord($child)) else ($child)
-    
-  return ($final-ldt, $final-proiel)
+  return ($final)
 };
 
 (:
@@ -1391,7 +1379,7 @@ declare function deh:return-siblings-nocoord($nodes as element()*, $include as x
 {
   let $siblings := deh:return-siblings($nodes, $include)
   for $sib in $siblings
-  return if ($sib/deh:is-conjunction(.)) then (deh:return-children-nocoord($sib))
+  return if ($sib/deh:is-coordinating(.)) then (deh:return-children-nocoord($sib))
   else ($sib)
 };
 
@@ -1977,7 +1965,7 @@ declare function deh:check-rel-coord($str as xs:string, $tok as element(word)*)
 deh:finite-clause()
 10/3/2023
 
-This returns every finite clause in the LDT and PROIEL, from whatever you submit as the argument. The deh:main-verbs() function can help, because it is essentially every finite verb which is not one of those. Specifically, it is every non-PRED finite verb in the LDT and every "pred" not dependent on a "G-" (subordinating conjunction). Again, note the mismatch between LDT and PROIEL for auxiliaries, and which is the head (aux head in LDT, participle head in PROIEL). However, I seem to have set up both to return the be verb, so maybe I'm crazy. Also, keep in mind that questions do not count as subordinate clauses.
+This returns every finite clause in the LDT and PROIEL, from whatever you submit as the argument. The deh:main-verbs() function can help, because it is essentially every finite verb which is not one of those. Specifically, it is every non-PRED finite verb in the LDT and every "pred" not dependent on a "G-" (subordinating conjunction). Again, note the mismatch between LDT and PROIEL for auxiliaries, and which is the head (participle is the head in in both). Also, keep in mind that questions do not count as subordinate clauses.
 
 Errors:
 Also note that this sentence, <sentence id="261" document_id="urn:cts:latinLit:phi0474.phi013.perseus-lat1" subdoc="2.5">, shows that "nescioquod" is considered finite, because it is a finite non-main-verb
@@ -2001,8 +1989,8 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   let $sub-verbs := $finite-verbs ! $remove(., ($main-verbs, $nescioquid)) (:10/13/2023, added this function and the variable $nescioquid above to make sure the grammaticalized phrase 'nescioquid' is not considered a subordinate clause:)
   let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
     for $verb in $sub-verbs
-    let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head, we want the conjunction, not the verb, so we need to test it:)
-    return if ($parent/deh:is-subjunction(.) and $verb-only = false()) then ($parent)
+    let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head (or quam as a comparative), we want the conjunction, not the verb, so we need to test it:)
+    return if (($parent/deh:is-subjunction(.) or $parent/fn:matches(fn:string(@lemma), "^quam[^a-z^A-Z]*$") ) and $verb-only = false()) then ($parent)
      else ($verb) (:10/13/2023: added more conditions to the PROIEL string check, because it turns out that non-"subjunctions" can also head clauses. However, I also removed some that I added after testing: 'Pr' only appears as a head in certain circumstances, but never as a subordinator; removed "Du" because it never seems to actually head a phrase; I'm not sure why I included Px (indefinite pronoun), but it's gone; 'Dq' is also never used at the head of its clause; finally, removed "Df", ultimately because it was silly to think such a broad category could be helpful. My main issue was that compounds with "quam" are sometimes marked this way, but, ultimately, the verb is still annotated with the relation info, so it remains that case that we have the info we need with just 'G-' as the exception. :)
   return functx:distinct-nodes($final)
 };
@@ -2218,33 +2206,105 @@ declare function deh:var-info($toks as element()*)
 deh:verb-headed-clause-sub()
 10/26/2023
 
+This function returns the subordinators in clauses where the verb is the head. If no head is found, usually nothing is returned, unless the clause is identified as having a missing ut; in that case, we still return the verb; this function can therefore be used to identify those.
+
 If you want this function to consistently retrieve the subordinator, it will have to account for the fact that, in the LDT, if two verbs are coordinated within a clause, the verbs are siblings of the relative
 The argument MUST be a verb which we already know is the head of a clause
 :)
 declare function deh:verb-headed-clause-sub($tok as element())
 {
+  (:We don't want to get lost navigating the siblings and other parts of the tree if we don't have to: since the only reason the target subordinator would be among siblings is if coordination is involved, we :)
+  let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.)) then (deh:return-siblings($tok, false())) else () 
+  
+  (:We combine all the possibilities together: the relative must be in either the descendants or the siblings' descendants, and if there is no relative in there, we return nothing:)
+  let $sib-desc := (deh:return-descendants($sib), $sib) (:This is so we can check the descendants of the siblings in the condition below:)
+  let $desc := (deh:return-descendants(($tok)), $sib-desc)
+  
+  (:If there are no relatives at all in the tree, then we need another explanation: either the ut had been deleted, which is tested for here, in which case we still return the verb as the head, or the function was not able to identify it:)
+  return if ((fn:count(($desc)[deh:is-relative(.)]) = 0)) then (
+       if (deh:is-comp-clause($tok)) then () else ()
+  ) (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
  
   
-  let $desc := (deh:return-descendants($tok))
-  let $sib := deh:return-siblings($tok, false())
-  return if ((fn:count(($desc, $sib)[deh:is-relative(.)]) = 0)) then () (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
-  else if (fn:count($sib[deh:is-relative(.)]) > 0) then ($sib[deh:is-relative(.)])
   else (  
-  let $nodes := deh:vhcs-helper($tok) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators:)
-  
-  let $subs := $nodes[deh:is-relative(.)] (:Since there can be more than one at the same level, we retrieve all of them:)
-  
-  (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
-  for $sub in $subs
-  (:First, if there is a coordinating conjunction as the parent, it may be the case the subordinator is a sibling: we'll check there first:)
-  let $thread := deh:vhcs-helper-b($sub, $tok) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence:)
    
-  return if (fn:count($thread[deh:is-finite(.)]) > 1) then ()
-  else ($sub)
+  let $final-subs := deh:vhcs-recursion($tok)
   
+  let $final-subs := ($final-subs, deh:vhcs-coord-helper($tok)) (:finally, add any potential siblings:)
+  return if (fn:count($final-subs) = 0) then (
+     if (fn:count($final-subs) = 0 and deh:is-comp-clause($tok)) then ($tok) else ()
+  )
+  else ($final-subs)
 )
 };
 
+(:
+deh:vhcs-recursion()
+11/5/2023
+
+Deals with all the recursive functions
+:)
+declare %public function deh:vhcs-recursion($tok as element())
+{
+  let $nodes := deh:vhcs-helper-shell(($tok)) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators;:)
+  
+  
+  let $subs := ($nodes[deh:is-relative(.)]) (:Since there can be more than one at the same level, we retrieve all of them:)
+
+  (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
+    for $sub in $subs
+    let $thread := deh:vhcs-helper-b-shell($sub, $tok) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well, in case it is first among the siblings:)
+  
+  (:This is the last point of failure: if a finite verb comes in the tree between our target verb and the head, then it must not be the head of the clause. This is the reason we return the results of the previous loop as 'final-subs'; we need to know that there are ZERO possible subordinators before testing for the clause missing an 'ut'; if we did this at each point in the loop, we wouldn't be able to know this. :)
+  return if (fn:count($thread[deh:is-finite(.)]) > 1) then (
+  )
+  else ($sub)
+};
+
+declare %public function deh:vhcs-helper-shell($tok as element())
+{
+  deh:vhcs-helper($tok)
+};
+
+(:
+deh:coord-helper()
+11/5/2023
+:)
+declare function deh:vhcs-coord-helper($tok as element()) as item()*
+{
+   let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.)) then (deh:return-siblings($tok, false())) else () 
+  
+  (:We combine all the possibilities together: the relative must be in either the descendants or the siblings' descendants, and if there is no relative in there, we return nothing:)
+  let $sib-desc := (deh:return-descendants($sib), $sib) (:This is so we can check the descendants of the siblings in the condition below:)
+  
+  let $sib-rels := $sib-desc[deh:is-relative(.)] (:the siblings (or children of siblings) which are relatives:)
+  return if (fn:count($sib-rels) > 0) then (
+    let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative(.)], .) (:Go through each sibling:)
+    let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) > 0 return $thread[deh:is-relative(.)]
+    return $subs
+  )
+  else ()  
+};
+
+(:
+deh:is-comp-clause()
+11/5/2023
+
+This function is used in the verb-headed-clause-sub() function; it tests whether a verb is subjunctive and has the following tags: "SBJ", "OBJ", "NOM-SUBST", or "comp", which can include indirect questions and such, but that is why we test for this after ensuring the other possibilities don't match
+:)
+declare %public function deh:is-comp-clause($tok as element()) as xs:boolean
+{
+  deh:is-subjunctive($tok) and functx:contains-any-of(fn:string($tok/@relation), ("SBJ", "OBJ", "NOM-SUBST", "comp"))
+};
+
+(:
+deh:is-subjunctive()
+11/3/2023
+:)
+declare function deh:is-subjunctive($tok as element()) as xs:boolean
+{
+  fn:matches(fn:string($tok/@postag), "v[1-3]..s....") or fn:matches(fn:string($tok/@morphology), "...s......")
+};
 (:
 A recursive function which takes a target (a verb which is in a 'relative' clause) and finds the earliest relative in the tree. The second condition is, if it has reached the end of the tree, we don't want to get stuck in a loop, so we return nothing. Technically, this should be impossible, since the very first process in verb-headed-clause-sub() eliminates ones which do not have one of these. The final part, if we have still not reached a relative but are not terminal, simply walks down the tree one more step, adds those results to the previous results, and passes it all back through.
 :)
@@ -2263,15 +2323,22 @@ declare function deh:is-relative($tok as element()) as xs:boolean
 {
    let $lemma := ('quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged:)
    
-   return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("d", "p", "Pi", "Du", "Dq", "Pr")) and (deh:is-subjunction($tok) = false())
+   return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "Pi", "Du", "Dq", "Pr")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis:)
 };
 
 (:
 Another issue is that we need to make sure no verb comes between the target and pronoun: to do this, though, we first need to retrieve the nodes between the two. We walk the tree back up from the pronoun, and stop once we have the target, the verb.
 :)
+
+declare %public function deh:vhcs-helper-b-shell($pronoun as element(), $target as element()) as element()*
+{
+  deh:vhcs-helper-b($pronoun, $target)
+};
+
 declare function deh:vhcs-helper-b($pronoun as element()*, $target as element()) as element()*
 {
   if (functx:is-node-in-sequence($target, $pronoun)) then ($pronoun)
+  else if (fn:count($pronoun) = fn:count(functx:distinct-nodes(($pronoun, deh:return-parent($pronoun, 0))))) then ()
   else (functx:distinct-nodes((deh:return-parent($pronoun, 0), $pronoun)) => deh:vhcs-helper-b($target))
 };
 
@@ -2298,7 +2365,12 @@ This function combines deh:is-punc and deh:is-conjunction and tests for both at 
 :)
 declare function deh:is-coordinating($tok as element()) as xs:boolean
 {
-  $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.)
+  (:This first condition excludes ones containing AuxC, because 'ne' or 'neu' are also marked as COORD, but, when AuxC, do have the properties of 'ne' + the subjunctive:)
+  if (fn:contains($tok/fn:string(@relation), "AuxC")) then (false())
+  else (
+    if (fn:matches($tok/fn:string(@lemma), "^ne[^a-z^A-Z]*$")) then (fn:count(deh:return-children($tok)[deh:is-conjunction(.)]) > 0) else (
+    $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.))
+ )
 };
 
 

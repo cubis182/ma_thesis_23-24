@@ -115,10 +115,8 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-let $subs := deh:pick-random($ldt2.1-treebanks//sentence, 2000) => deh:finite-clause-verb-head()
-let $obj-cl := $subs[fn:matches(fn:string(@postag), "v[1-3]..s....") and fn:count(deh:verb-headed-clause-sub(.)) = 0]
-for $cl in $obj-cl[functx:contains-any-of(fn:string(@relation), ("SBJ", "OBJ")) = false()]
-return ($cl, $cl/..)
+let $sent := $ldt2.1-treebanks[fn:contains(fn:base-uri(.), "phi0972.")]//sentence[@id='499']
+return $sent
 
 
 
