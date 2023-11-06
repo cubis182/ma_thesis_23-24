@@ -1252,7 +1252,7 @@ deh:check-head
 7/21/2023:
 Returns the head id, whether it is an LDT or PROIEL tree
 :)
-declare %private function deh:check-head($word as element())
+declare %public function deh:check-head($word as element())
 {
   if ($word/name() = 'word') then ($word/@head)
   else if ($word/name() = 'token') then ($word/@head-id)
@@ -2222,7 +2222,7 @@ declare function deh:verb-headed-clause-sub($tok as element())
   
   (:If there are no relatives at all in the tree, then we need another explanation: either the ut had been deleted, which is tested for here, in which case we still return the verb as the head, or the function was not able to identify it:)
   return if ((fn:count(($desc)[deh:is-relative(.)]) = 0)) then (
-       if (deh:is-comp-clause($tok)) then () else ()
+       if (deh:is-comp-clause($tok)) then ($tok) else ()
   ) (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
  
   
@@ -2232,7 +2232,7 @@ declare function deh:verb-headed-clause-sub($tok as element())
   
   let $final-subs := ($final-subs, deh:vhcs-coord-helper($tok)) (:finally, add any potential siblings:)
   return if (fn:count($final-subs) = 0) then (
-     if (fn:count($final-subs) = 0 and deh:is-comp-clause($tok)) then ($tok) else ()
+     if (deh:is-comp-clause($tok)) then ($tok) else ()
   )
   else ($final-subs)
 )
@@ -2275,12 +2275,12 @@ declare function deh:vhcs-coord-helper($tok as element()) as item()*
    let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.)) then (deh:return-siblings($tok, false())) else () 
   
   (:We combine all the possibilities together: the relative must be in either the descendants or the siblings' descendants, and if there is no relative in there, we return nothing:)
-  let $sib-desc := (deh:return-descendants($sib), $sib) (:This is so we can check the descendants of the siblings in the condition below:)
+  let $sib-desc := functx:distinct-nodes((deh:return-descendants($sib), $sib)) (:This is so we can check the descendants of the siblings in the condition below:)
   
   let $sib-rels := $sib-desc[deh:is-relative(.)] (:the siblings (or children of siblings) which are relatives:)
   return if (fn:count($sib-rels) > 0) then (
     let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative(.)], .) (:Go through each sibling:)
-    let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) > 0 return $thread[deh:is-relative(.)]
+    let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) = 0 return $thread[deh:is-relative(.)]
     return $subs
   )
   else ()  
@@ -2321,9 +2321,9 @@ declare function deh:vhcs-helper($tok as element()*)
 
 declare function deh:is-relative($tok as element()) as xs:boolean
 {
-   let $lemma := ('quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged:)
+   let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included:)
    
-   return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "Pi", "Du", "Dq", "Pr")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis:)
+   return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "n", "Pi", "Du", "Dq", "Pr", "Df")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis; 11/5/23, temporarily (maybe) added "n" because sometimes pronouns are mistagged as nouns...; same day, added "Df" to account for 'sicut' sometimes being tagged as such:)
 };
 
 (:
@@ -2369,8 +2369,19 @@ declare function deh:is-coordinating($tok as element()) as xs:boolean
   if (fn:contains($tok/fn:string(@relation), "AuxC")) then (false())
   else (
     if (fn:matches($tok/fn:string(@lemma), "^ne[^a-z^A-Z]*$")) then (fn:count(deh:return-children($tok)[deh:is-conjunction(.)]) > 0) else (
-    $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.))
+    $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.)) or ($tok/deh:is-empty(.) and $tok/fn:contains(fn:lower-case(fn:string(@relation)), 'apos')) (:11/5/23: testing this out, this recognizes the empty APOS token :)
  )
+};
+
+(:
+deh:is-empty
+11/5/2023
+
+Used to test for an empty node; does this by seeing if there is an empty-token-sort attribute (for PROIEL) or an insertion_id (for the LDT)
+:)
+declare function deh:is-empty($tok as element()) as xs:boolean
+{
+  boolean($tok/@empty-token-sort) or boolean($tok/@insertion_id)
 };
 
 

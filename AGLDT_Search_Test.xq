@@ -115,9 +115,43 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-let $sent := $ldt2.1-treebanks[fn:contains(fn:base-uri(.), "phi0972.")]//sentence[@id='499']
-return $sent
-
+let $doc := document {
+  <sentence id="30182" status="reviewed" presentation-after=" ">
+        <token id="452893" form="sicut" citation-part="COL 2.6" lemma="sicut" part-of-speech="Df" morphology="---------n" head-id="452895" relation="adv" presentation-after=" "/>
+        <token id="452894" form="ergo" citation-part="COL 2.6" lemma="ergo" part-of-speech="Df" morphology="---------n" head-id="452901" relation="aux" presentation-after=" " alignment-id="451223"/>
+        <token id="452895" form="accepistis" citation-part="COL 2.6" lemma="accipio" part-of-speech="V-" morphology="2pria----i" head-id="452901" relation="adv" presentation-after=" " alignment-id="451224"/>
+        <token id="452896" form="Christum" citation-part="COL 2.6" lemma="Christus" part-of-speech="Ne" morphology="-s---ma--i" head-id="452895" relation="obj" presentation-after=" " alignment-id="451226"/>
+        <token id="452897" form="Iesum" citation-part="COL 2.6" lemma="Iesus" part-of-speech="Ne" morphology="-s---ma--i" head-id="452896" relation="apos" presentation-after=" " alignment-id="451227"/>
+        <token id="452898" form="Dominum" citation-part="COL 2.6" lemma="dominus" part-of-speech="Nb" morphology="-s---ma--i" head-id="452897" relation="apos" presentation-after=" " alignment-id="451229"/>
+        <token id="452899" form="in" citation-part="COL 2.6" lemma="in" part-of-speech="R-" morphology="---------n" head-id="452901" relation="adv" presentation-after=" " alignment-id="451231"/>
+        <token id="452900" form="ipso" citation-part="COL 2.6" lemma="ipse" part-of-speech="Pp" morphology="3s---mb--i" head-id="452899" relation="obl" presentation-after=" " alignment-id="451232"/>
+        <token id="452901" form="ambulate" citation-part="COL 2.6" lemma="ambulo" part-of-speech="V-" morphology="2ppma----i" relation="pred" presentation-after=" " alignment-id="451233"/>
+        <token id="452902" form="radicati" citation-part="COL 2.7" lemma="radico" part-of-speech="V-" morphology="-prppmn--i" head-id="452903" relation="xadv" presentation-after=" " alignment-id="451235"/>
+        <token id="452903" form="et" citation-part="COL 2.7" lemma="et" part-of-speech="C-" morphology="---------n" head-id="452901" relation="xadv" presentation-after=" " alignment-id="451236">
+          <slash target-id="452901" relation="xsub"/>
+        </token>
+        <token id="452904" form="superaedificati" citation-part="COL 2.7" lemma="superaedifico" part-of-speech="V-" morphology="-prppmn--i" head-id="452903" relation="xadv" presentation-after=" " alignment-id="451237"/>
+        <token id="452905" form="in" citation-part="COL 2.7" lemma="in" part-of-speech="R-" morphology="---------n" head-id="452903" relation="adv" presentation-after=" " alignment-id="451238"/>
+        <token id="452906" form="ipso" citation-part="COL 2.7" lemma="ipse" part-of-speech="Pp" morphology="3s---mb--i" head-id="452905" relation="obl" presentation-after=" " alignment-id="451239"/>
+        <token id="452907" form="et" citation-part="COL 2.7" lemma="et" part-of-speech="C-" morphology="---------n" head-id="452903" relation="aux" presentation-after=" " alignment-id="451240"/>
+        <token id="452908" form="confirmati" citation-part="COL 2.7" lemma="confirmo" part-of-speech="V-" morphology="-prppmn--i" head-id="452903" relation="xadv" presentation-after=" " alignment-id="451241"/>
+        <token id="452909" form="fide" citation-part="COL 2.7" lemma="fides" part-of-speech="Nb" morphology="-s---fb--i" head-id="452908" relation="adv" presentation-after=" " alignment-id="451243"/>
+        <token id="452910" form="sicut" citation-part="COL 2.7" lemma="sicut" part-of-speech="Dq" morphology="---------n" head-id="452912" relation="adv" presentation-after=" " alignment-id="451244"/>
+        <token id="452911" form="et" citation-part="COL 2.7" lemma="et" part-of-speech="Df" morphology="---------n" head-id="452912" relation="aux" presentation-after=" "/>
+        <token id="452912" form="didicistis" citation-part="COL 2.7" lemma="disco" part-of-speech="V-" morphology="2pria----i" head-id="452901" relation="adv" presentation-after=" " alignment-id="451245"/>
+        <token id="452913" form="abundantes" citation-part="COL 2.7" lemma="abundans" part-of-speech="A-" morphology="-p---mnp-i" head-id="452912" relation="xadv" presentation-after=" " alignment-id="451247">
+          <slash target-id="452912" relation="xsub"/>
+        </token>
+        <token id="452914" form="in" citation-part="COL 2.7" lemma="in" part-of-speech="R-" morphology="---------n" head-id="452913" relation="obl" presentation-after=" " alignment-id="451248"/>
+        <token id="452915" form="gratiarum" citation-part="COL 2.7" lemma="gratia" part-of-speech="Nb" morphology="-p---fg--i" head-id="452916" relation="narg" presentation-after=" "/>
+        <token id="452916" form="actione" citation-part="COL 2.7" lemma="actio" part-of-speech="Nb" morphology="-s---fb--i" head-id="452914" relation="obl" alignment-id="451249"/>
+      </sentence>
+}
+let $tok := $doc//token[@id='452895'] 
+let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.)) then (deh:return-siblings($tok, false())) else () 
+  
+  (:We combine all the possibilities together: the relative must be in either the descendants or the siblings' descendants, and if there is no relative in there, we return nothing:)
+  return deh:verb-headed-clause-sub($tok)
 
 
 (:
