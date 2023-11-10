@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
-   <date>2016-10-24 15:48:25 +0000</date><biblStruct><monogr><author>Virgil</author><title>Aeneid, </title></monogr></biblStruct>
+   <register-phase1><reg>dist</reg><reg>aud-elite</reg><reg>gen-poet</reg></register-phase1><date>2016-10-24 15:48:25 +0000</date><biblStruct><monogr><author>Virgil</author><title>Aeneid, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

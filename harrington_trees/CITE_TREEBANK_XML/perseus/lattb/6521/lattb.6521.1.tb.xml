@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
-   <date>2017-10-13 20:17:34 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
+   <register-phase1><reg>pers-ind</reg><reg>aud-elite</reg><reg>gen-poet</reg></register-phase1><date>2017-10-13 20:17:34 +0000</date><biblStruct><monogr><author>Catullus, Gaius Valerius</author><title>Carmina, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

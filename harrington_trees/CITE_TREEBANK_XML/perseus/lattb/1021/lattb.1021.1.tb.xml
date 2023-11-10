@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
-   <date>Tue Dec 23 15:44:42 +0000 2014</date><biblStruct><monogr><author>Cicero, Marcus Tullius</author><title>For Marcus Caelius, </title></monogr></biblStruct>
+   <register-phase1><reg>pers-pub</reg><reg>aud-elite</reg><reg>gen-prose</reg></register-phase1><date>Tue Dec 23 15:44:42 +0000 2014</date><biblStruct><monogr><author>Cicero, Marcus Tullius</author><title>For Marcus Caelius, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

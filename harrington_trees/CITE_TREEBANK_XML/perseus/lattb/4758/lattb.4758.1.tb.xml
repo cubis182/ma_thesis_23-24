@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
-   <date>2016-10-19 13:56:55 +0000</date><biblStruct><monogr><author>Tibullus</author><title>Elegiae, </title></monogr></biblStruct>
+   <register-phase1><reg>pers-ind</reg><reg>aud-elite</reg><reg>gen-poet</reg></register-phase1><date>2016-10-19 13:56:55 +0000</date><biblStruct><monogr><author>Tibullus</author><title>Elegiae, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

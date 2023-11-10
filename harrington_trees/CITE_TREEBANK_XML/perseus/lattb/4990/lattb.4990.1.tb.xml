@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
-   <date>2016-12-04 03:03:54 +0000</date><biblStruct><monogr><author>Juvenal</author><title>Satires, </title></monogr></biblStruct>
+   <register-phase1><reg>pers-ind</reg><reg>aud-elite</reg><reg>gen-poet</reg></register-phase1><date>2016-12-04 03:03:54 +0000</date><biblStruct><monogr><author>Juvenal</author><title>Satires, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

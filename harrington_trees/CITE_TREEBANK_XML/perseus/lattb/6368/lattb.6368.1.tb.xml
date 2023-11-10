@@ -1,5 +1,5 @@
 <treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" format="harrington" direction="ltr" version="1.5">
-   <date>2017-09-18 23:03:05 +0000</date><biblStruct><monogr><author>Ovid 43 B.C.-17 or 18 A.D</author><title>Amores, </title></monogr></biblStruct>
+   <register-phase1><reg>pers-ind</reg><reg>aud-elite</reg><reg>gen-poet</reg></register-phase1><date>2017-09-18 23:03:05 +0000</date><biblStruct><monogr><author>Ovid 43 B.C.-17 or 18 A.D</author><title>Amores, </title></monogr></biblStruct>
    <annotator>
       <short/>
       <name/>

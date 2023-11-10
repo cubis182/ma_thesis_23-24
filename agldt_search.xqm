@@ -2174,7 +2174,7 @@ Returns the info we need for statistical processing. It goes sentence by sentenc
 Notes as I'm constructing this:
 It should take any words which return no value for the 
 :)
-declare function deh:var-info($sents as element(sentence)*, $register as xs:string)
+declare function deh:var-info($sents as element(sentence)*)
 {
   for $sent in $sents
   let $main := for $verb in deh:main-verbs($sent) return $verb (:Retrieve all main verbs in the sentence:)
@@ -2236,11 +2236,14 @@ declare function deh:var-info($sents as element(sentence)*, $register as xs:stri
   (:URI:)
   let $uri := fn:base-uri($tok)
   
+  (:Register:)
+  let $register := $tok/preceding::register-phase1/reg
+  
   (:Full sentence:)
   let $full-sent := deh:print($tok/..)
   
   (:subordinator lemma, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register, and the full sentence:)
-  let $final-seq :=($lemma, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register, $full-sent) 
+  let $final-seq :=($lemma, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
   return fn:string-join($final-seq, " | ")
   
 };
