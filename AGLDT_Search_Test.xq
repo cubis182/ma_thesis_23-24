@@ -2,7 +2,7 @@ xquery version "3.1";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
 Website is:
@@ -115,9 +115,8 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-let $sent := deh:search-text("Furi cui", $harrington//sentence)
-let $tok := $sent/*[@id='1102565']
-return $sent
+let $data := ((deh:gen-prose()//sentence)) (:2591 sentences:)
+return deh:var-info($data, "pers-dist")
 
 
 (:

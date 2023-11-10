@@ -4,7 +4,7 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "C:/Program Files (x86)/BaseX/src/functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -1254,9 +1254,12 @@ Returns the head id, whether it is an LDT or PROIEL tree
 :)
 declare %public function deh:check-head($word as element())
 {
+  let $head :=
   if ($word/name() = 'word') then ($word/@head)
   else if ($word/name() = 'token') then ($word/@head-id)
   else ()
+  
+  return if (fn:number($head) = fn:number($word/@id)) then () else ($head) (:Added this line of code 11/9/2023, because there is one sentence (sentence 899 in phi0972.phi001) in which a coordinating node has its id and head as the same value! This causes a stack overflow, of course.:)
 };
 
 (: Winter Break 2022-23 Phase :)
