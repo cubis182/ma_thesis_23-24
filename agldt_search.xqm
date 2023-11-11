@@ -2242,7 +2242,7 @@ declare function deh:var-info($sents as element(sentence)*)
   (:Full sentence:)
   let $full-sent := deh:print($tok/..)
   
-  (:subordinator lemma, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register, and the full sentence:)
+  (:subordinator lemma, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register (all three values which you added to the treebank data), and the full sentence:)
   let $final-seq :=($lemma, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
   return fn:string-join($final-seq, " | ")
   
