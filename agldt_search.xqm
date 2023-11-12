@@ -2206,8 +2206,14 @@ declare function deh:var-info($sents as element(sentence)*)
   (:subordinator form:)
   let $sub-form := let $final := fn:string-join($subordinator/fn:string(@form), ", ") return if (fn:string-length($final) > 0) then ($final) else (" ")
   
+  
   (:Verb:)
-  let $verb := (if ($tok/deh:is-verb(.)) then ($tok/fn:string(@form)) else if (deh:is-subjunction($tok)) then (deh:return-children-nocoord($tok)[deh:is-finite(.)]/fn:string(@form)) else (" ")) => fn:string-join(", ")
+  let $verb := (if ($tok/deh:is-verb(.)) then ($tok) else if (deh:is-subjunction($tok)) then (deh:return-children-nocoord($tok)[deh:is-finite(.)]) else ())
+  
+  let $verb-form := fn:string-join($verb/fn:string(@form), "")
+  
+  (:Verb mood:)
+  let $verb-mood := fn:string-join($verb/deh:mood(.), "")
   
   (:Rel:)
   let $rel := (if (deh:is-subjunction-ldt($tok)) then (deh:get-auxc-verb($tok)/fn:string(@relation)) else ($tok/fn:string(@relation))) => fn:string-join(", ")
@@ -2252,8 +2258,8 @@ declare function deh:var-info($sents as element(sentence)*)
   (:Full sentence:)
   let $full-sent := deh:print($tok/..)
   
-  (:subordinator lemma, subordinator pos, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register (all three values which you added to the treebank data), and the full sentence:)
-  let $final-seq :=($lemma, $head-pos, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
+  (:subordinator lemma, subordinator pos, subordinator form, verb in the clause, mood of said verb, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register (all three values which you added to the treebank data), and the full sentence:)
+  let $final-seq :=($lemma, $head-pos, $sub-form, $verb-form, $verb-mood, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
   return fn:string-join($final-seq, " | ")
   
 };
@@ -2406,6 +2412,15 @@ declare function deh:part-of-speech($toks as element()*) as xs:string
   for $tok in $toks
   return if ($tok/name() = 'word') then ($tok/fn:substring(fn:string(@postag), 1, 1))
   else if ($tok/name() = 'token') then ($tok/fn:string(@part-of-speech))
+};
+
+(:
+11/12/2023
+:)
+declare function deh:mood($tok as element()) as xs:string
+{
+  if ($tok/name() = 'word') then (fn:substring(fn:string($tok/@postag), 5, 1))
+  else (fn:substring(fn:string($tok/@morphology), 4, 1))
 };
 
 (:
