@@ -4,7 +4,7 @@ xquery version "3.1";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
-import module namespace functx = "http://www.functx.com" at "http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq";
+import module namespace functx = "http://www.functx.com" at " C:/Program Files (x86)/BaseX/src/functx_lib.xqm ";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -1705,7 +1705,7 @@ declare function deh:search-text($str as xs:string, $trees as element(sentence)*
 {
   
   for $sentence in $trees
-  let $print := deh:print($sentence) (:Get the sentence as a string:)
+  let $print := fn:lower-case(deh:print($sentence)) (:Get the sentence as a string:)
   let $print-no-punc := fn:replace($print, "[^a-zA-Z ]", "") (:Remove anything that is not a letter, or a space (note the extra space after 'a-z':)
   return if (fn:contains($print-no-punc, $str)) then (($sentence)) (:If what we are searching is contained within the sentence, return it:)
   else ()
@@ -1822,7 +1822,7 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Get all verbs which are in scope:)
   let $l-verbs := $ldt[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
-  let $preds := $ldt[deh:is-verb(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
+  let $preds := $ldt[deh:is-verb(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTHq")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
   
   (:Now deal with direct speech:)
   let $dirstats := $l-verbs[functx:contains-any-of(fn:string(@relation), ("DIRSTAT", "-DS-"))] (:This will be returned directly at the end:)
@@ -2198,6 +2198,11 @@ declare function deh:var-info($sents as element(sentence)*)
   (:Lemma:)
   let $lemma := let $final := fn:string-join($subordinator/fn:string(@lemma), ", ") return if (boolean($final)) then ($final) else (" ")
   
+  let $lemma := fn:replace($lemma, "1", "") (:Added because sometimes 1 is used in ldt, sometimes not to differentiate lemmas; we really only need it if there is more than one, so get rid of it, it makes the data messy:)
+  
+  (:POS:)
+  let $head-pos := fn:string-join($subordinator/deh:part-of-speech(.), ", ")
+  
   (:subordinator form:)
   let $sub-form := let $final := fn:string-join($subordinator/fn:string(@form), ", ") return if (fn:string-length($final) > 0) then ($final) else (" ")
   
@@ -2207,12 +2212,17 @@ declare function deh:var-info($sents as element(sentence)*)
   (:Rel:)
   let $rel := (if (deh:is-subjunction-ldt($tok)) then (deh:get-auxc-verb($tok)/fn:string(@relation)) else ($tok/fn:string(@relation))) => fn:string-join(", ")
   
+  (:Make sure it is lower case:)
+  let $rel := fn:lower-case($rel)
+  
   (:Parent pos nocoord:)
   (:We have to check if there even is a parent or result, so we can return an empty string if not:)
   let $par-pos := let $pos := deh:return-parent-nocoord($tok)/deh:part-of-speech(.) return if (fn:string-length($pos) > 0) then ($pos) else (" ")
   
   (:parent lemma:)
   let $par-lemma := let $parent := deh:return-parent-nocoord($tok)/fn:string(@lemma) return if (fn:string-length($parent) > 0) then ($parent) else (" ")
+  
+  let $par-lemma := fn:replace($par-lemma, "1", "")
   
   (:subordinated tokens:)
   let $sub-tokens := fn:count(deh:return-descendants($tok))
@@ -2242,8 +2252,8 @@ declare function deh:var-info($sents as element(sentence)*)
   (:Full sentence:)
   let $full-sent := deh:print($tok/..)
   
-  (:subordinator lemma, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register (all three values which you added to the treebank data), and the full sentence:)
-  let $final-seq :=($lemma, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
+  (:subordinator lemma, subordinator pos, subordinator form, type (main, sub,), clause relation (whether from the head or within the clause if subordinate), POS of the parent node (nocoord), lemma of the parent node, number of descendant nodes, number of clauses among the descendants, the id of the HEAD node, the sentence ID, register (all three values which you added to the treebank data), and the full sentence:)
+  let $final-seq :=($lemma, $head-pos, $sub-form, $verb, $pair(2), $rel, $par-pos, $par-lemma, $sub-tokens, $sub-clauses, $id, $sen-id, $work-info, $uri, $register[1]/text(), $register[2]/text(), $register[3]/text(), $full-sent) 
   return fn:string-join($final-seq, " | ")
   
 };
@@ -2367,7 +2377,7 @@ declare function deh:vhcs-helper($tok as element()*)
 
 declare function deh:is-relative($tok as element()) as xs:boolean
 {
-   let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included:)
+   let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui', 'si', 'seu', 'sive', 'siue', 'qualiscumque') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included; 11/12/2023: added si, seu, sive siue because, when they are used to coordinate, they are usually not heads of the phrase; also added qualiscumque because it is rare and did not show up in PROIEL:)
    
    return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "n", "Pi", "Du", "Dq", "Pr", "Df")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis; 11/5/23, temporarily (maybe) added "n" because sometimes pronouns are mistagged as nouns...; same day, added "Df" to account for 'sicut' sometimes being tagged as such:)
 };
@@ -2467,6 +2477,38 @@ declare function deh:db-get-from-path($string as xs:string)
   return db:get($first, functx:substring-after-last($string, "/"))
 };
 
+(:
+11/12/2023
+deh:return-semfield()
+
+Returns all lemmas in a semfield who has less than $limit total semfields associated with it
+
+$semfield: string which is the number of the targeted semfield
+$limit: the greatest number of possible different semfields the lemma can have
+:)
+declare function deh:return-semfield($semfield as xs:string, $limit as xs:integer) as item()*
+{
+  let $json:= json:doc(fn:concat("https://latinwordnet.exeter.ac.uk/api/semfields/", $semfield, "/lemmas/"))
+  let $lemmas := $json//lemma/text()
+  for $lemma in $lemmas
+  let $semfields-doc := json:doc(fn:concat("https://latinwordnet.exeter.ac.uk/api/lemmas/", $lemma, "/synsets/"))
+  let $semfields := fn:distinct-values($semfields-doc//semfield//code/text())
+  return if (fn:count($semfields) <= $limit) then ($lemma) else ()
+};
+
+(:
+11/12/2023
+
+Got fed up looking up lemmas the hard way: this one takes care of accounting for numbers and such. It checks to see if any numeric characters are present to determine whether to search the lemma as it is in the tree or to remove all the non-alphabetic characters
+:)
+declare function deh:lemma($tok as element(), $search as xs:string) as xs:boolean
+{
+  let $lemma := 
+  if (fn:matches($search, "[0-9]")) then ($tok/fn:string(@lemma))
+  else (fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", ""))
+  
+  return $search = $lemma
+};
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
@@ -2529,4 +2571,40 @@ declare function deh:gen-prose()
 };
 
 (:-------------------------------------END of corpus division functions--------------------------------------------:)
+
+(:------------------------------------START of specific construction functions----------------------------------------:)
+(:
+deh:quamobrem()
+11/12/2023
+
+A function which identifies a relative as actually being in "quam ob rem"
+:)
+declare function deh:quamobrem($tok as element()) 
+{
+  let $form := fn:lower-case($tok/fn:string(@form))
+  (:"quamobrem" does not seem to be tokenized as one word in LDT or Harrington, but in PROIEL it is as "quamobrem", both in main clauses and as a subordinator. The "quam" is always considered a relative for lemmatization. Otherwise, the parent being 'rem' and grandparent being 'ob' should be consistent across all (PROIEL does have an example like this):)
+  return if (fn:contains($form, 'quam') = false()) then (false())
+  else if (fn:contains(fn:lower-case($tok/fn:string(@lemma)), 'quamobrem')) then (true())
+  else (
+    if ($form = 'quam') then (
+      let $parent := deh:return-parent($tok, 0)
+      let $g-parent := deh:return-parent($parent, 0)
+      let $string := fn:string-join(($tok/fn:string(@form), $parent/fn:string(@form), $g-parent/fn:string(@form)), "")
+      return if (fn:lower-case($string) = "quamremob") then (true())
+      else (false())
+    )
+    else (false())
+  )
+};
+
+(:
+deh:quemadmodum()
+11/12/2023
+
+Identifies quemadmodum in the trees
+:)
+declare function deh:quemadmodum($tok as element()) as xs:boolean
+{
+  (:In PROIEL, quemadmodum as a lemma is in use (see quamobrem above). :)
+};
 
