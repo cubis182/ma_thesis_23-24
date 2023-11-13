@@ -1,4 +1,4 @@
-xquery version "3.1";
+`xquery version "3.1";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
