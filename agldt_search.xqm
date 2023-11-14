@@ -1,4 +1,4 @@
-`xquery version "3.1";
+xquery version "3.1";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
@@ -2247,7 +2247,7 @@ declare function deh:var-info($sents as element(sentence)*)
   let $sen-id := $tok/../fn:string(@id)
   
   (:Work info:)
-  let $work-info := deh:remove-punct(fn:string-join(deh:token-info($tok)?*))
+  let $work-info := deh:get-short-name(deh:token-info($tok)(1))
   
   (:URI:)
   let $uri := fn:base-uri($tok)
@@ -2529,9 +2529,19 @@ declare function deh:lemma($tok as element(), $search as xs:string) as xs:boolea
 
 (:-------------------------------------START of corpus division functions--------------------------------------------:)
 
+declare function deh:get-short-name($title as xs:string) as xs:string*
+{
+  let $shorts := ("Elegi", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
+  for $short in $shorts
+  where fn:matches($title, $short)
+  return if (fn:string-length($short) > 1) then ($short)
+  else ("UNK")
+};
+
 (:In this section, each function returns a part of the corpus we want to study. The naming scheme has a prefix with the general type (pers for persona, aud for audience and gen for genre), and the suffix is the subtype:)
 
 (:This function just returns all the trees together as databases, so that we can use them here without relying on the variables like in the agldt_search:)
+
 declare %public function deh:get-trees()
 {
   (db:get('ldt2.1-treebanks'), db:get('harrington'), db:get('proiel'))
@@ -2583,6 +2593,17 @@ declare function deh:gen-prose()
 {
   let $all-trees := deh:get-trees()
   return $all-trees[functx:contains-any-of(deh:work-info(.)(1), ("In Cat", "Cael", "Att", "off", "agri", "Res", "Gall", "Vul", "Aug", "Ann", "Hist", "Pere", "Petr"))]
+};
+
+(:
+
+11/13/2023
+:)
+declare function deh:is-adverbial($tok as element())
+{
+  (:ADV
+$adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN") 10/15, STOPPED AT A-RESPECT! 11/1, WHICH I THINK IT ADVERBIAL, it is rare, but was never ATR; YES, note the sentence: hic primum nigrantis terga iuvencos constituit, the terga is an ADV; also note that things like Ablative or Orientation are likely with prepositions, although I haven't checked; 11/7/23, NOT SURE HOW PRICE WORKS! Same with AB-DEGDIF, don't really care about it; also note that an aux from PROIEL or AuxZ/AuxY:)
+
 };
 
 (:-------------------------------------END of corpus division functions--------------------------------------------:)

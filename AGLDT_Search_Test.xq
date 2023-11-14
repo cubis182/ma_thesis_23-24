@@ -115,8 +115,87 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-let $data := (deh:pers-ind()//sentence)
-return deh:var-info($data)
+let $csv := csv:doc("./Data-output/var-info/whole-corpus-clause-11.12.csv", map{'header':'yes'})
+let $records := $csv/csv/record
+let $targets := ("cum", "cumque", "ne", "neu", "neve","necubi", "nequando", "ut(i|)", "qui(cumque|)", "quia", "quod", "(ni|)si(n|)(ve|)", "ni", "si non", "ubi(que|)(nam|)", "ubicumque") (:Work on adding quin, depends if it is a comp clause:)
+
+let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
+let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
+(:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)
+let $quam := "quam"
+
+let $restricted-temp := ("ubi", "ubi(que|)(nam|)", "ubicumque")
+
+let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
+
+let $restricted-caus := ("quia", "quod")
+
+let $restricted-conditional := ("(ni|)si(n|)(ve|)", "ni", "si non")
+
+let $purpose :=
+for $target in $w-subj
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " s ") and fn:contains(fn:lower-case(./relation/text()), 'adv')]
+
+let $object :=
+for $target in $w-subj
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " s ") and functx:contains-any-of(fn:lower-case(./relation/text()), ("comp", "obj", "sbj"))]
+
+let $temporal-ind-final :=
+for $target in $w-indicative-temp
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " i ")]
+
+let $temporal-final :=
+for $target in $restricted-temp
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
+
+let $temporal-results := ($temporal-ind-final, $temporal-final)
+
+let $causal :=
+for $target in $restricted-caus
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
+
+let $conditional :=
+for $target in $restricted-conditional
+let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
+return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
+
+let $all := ($purpose, $object, $temporal-results, $causal, $conditional)
+
+let $works := fn:distinct-values($records/work-info)
+(:
+let $record-purpose := <record>{for $work in $works return <_>{fn:count($purpose[fn:contains(./work-info/text(), $work)]/fn:count($all[fn:contains(./work-info/text(), $work)]))}</_>}</record>
+
+let $record-object := <record>{for $work in $works return <_>{fn:count($object[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-temporal-results:= <record>{for $work in $works return <_>{fn:count($temporal-results[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-causal := <record>{for $work in $works return <_>{fn:count($causal[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-conditional := <record>{for $work in $works return <_>{fn:count($conditional[fn:contains(./work-info/text(), $work)])}</_>}</record>
+:)
+let $record-purpose := <record>{for $work in $works return <_>{fn:count($purpose[fn:contains(./work-info/text(), $work)]/fn:count($all[fn:contains(./work-info/text(), $work)]))}</_>}</record>
+
+let $record-object := <record>{for $work in $works return <_>{fn:count($object[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-temporal-results:= <record>{for $work in $works return <_>{fn:count($temporal-results[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-causal := <record>{for $work in $works return <_>{fn:count($causal[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-conditional := <record>{for $work in $works return <_>{fn:count($conditional[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $adverbials:= $records[fn:matches(fn:lower-case(./relation/text()), "adv")]
+let $non-adv-clauses := $records[fn:matches(fn:lower-case(./relation/text()), "adv") = false()]
+
+let $record-adverbial := <record>{for $work in $works return <_>{fn:count($adverbials[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+let $record-non-adv := <record>{for $work in $works return <_>{fn:count($non-adv-clauses[fn:contains(./work-info/text(), $work)])}</_>}</record>
+
+return csv:serialize(<csv>{($record-adverbial, $record-non-adv)}</csv>)
 
 
 (:
