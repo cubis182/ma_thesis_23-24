@@ -2265,6 +2265,22 @@ declare function deh:var-info($sents as element(sentence)*)
 };
 
 (:
+deh:relation-head()
+11/17/2023
+
+Takes the results from deh:finite-clause and returns the word which actually has the relation tag.
+
+Some notes:
+
+:)
+declare function deh:relation-head($toks as element()*) as element()*
+{
+  for $tok in $toks
+  return if (deh:is-subjunction-ldt($tok)) then (deh:get-auxc-verb($tok))
+  else ($tok)
+};
+
+(:
 deh:verb-headed-clause-sub()
 10/26/2023
 
@@ -2407,11 +2423,11 @@ declare function deh:vhcs-helper-b($pronoun as element()*, $target as element())
 (:
 10/26/2023
 :)
-declare function deh:part-of-speech($toks as element()*) as xs:string
+declare function deh:part-of-speech($tok as element()) as xs:string
 {
-  for $tok in $toks
-  return if ($tok/name() = 'word') then ($tok/fn:substring(fn:string(@postag), 1, 1))
-  else if ($tok/name() = 'token') then ($tok/fn:string(@part-of-speech))
+  if ($tok[boolean(@postag)]) then ($tok/fn:substring(fn:string(@postag), 1, 1))
+  else if ($tok[boolean(@part-of-speech)]) then ($tok/fn:string(@part-of-speech))
+  else ("")
 };
 
 (:
@@ -2599,10 +2615,20 @@ declare function deh:gen-prose()
 
 11/13/2023
 :)
-declare function deh:is-adverbial($tok as element())
+declare function deh:is-adverbial($tok as element()?) as xs:boolean
 {
   (:ADV
 $adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN") 10/15, STOPPED AT A-RESPECT! 11/1, WHICH I THINK IT ADVERBIAL, it is rare, but was never ATR; YES, note the sentence: hic primum nigrantis terga iuvencos constituit, the terga is an ADV; also note that things like Ablative or Orientation are likely with prepositions, although I haven't checked; 11/7/23, NOT SURE HOW PRICE WORKS! Same with AB-DEGDIF, don't really care about it; also note that an aux from PROIEL or AuxZ/AuxY:)
+  if (deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq'))
+  then (
+  let $finite-heads := deh:finite-clause-verb-head($tok/..)
+  (:We need to double check it is an adverb and not a subordinator. If there are no verb-headed clauses, do nothing; if so, see if the target matches any verb-headed clause subordinators:)
+  return if (fn:count($finite-heads) > 0) then (let $vhcs := $finite-heads/deh:verb-headed-clause-sub(.)  return functx:is-node-in-sequence($tok, $vhcs) = false())
+  else (true())
+)
+  (:If it is a noun or pronoun (or, for proiel tags, common noun, demonstrative pronoun, indefinite pronoun, or :)
+  else if (fn:contains(fn:lower-case($tok/fn:string(@relation)), "adv") and deh:part-of-speech = ("n", "p", "Nb", "Pd", "Px")) then ()
+  else (false())
 
 };
 
@@ -2642,5 +2668,50 @@ Identifies quemadmodum in the trees
 declare function deh:quemadmodum($tok as element()) as xs:boolean
 {
   (:In PROIEL, quemadmodum as a lemma is in use (see quamobrem above). :)
+};
+
+(:
+deh:causal-clause()
+11/17/2023
+
+Retrieve all the causal clauses under consideration. The easy ones:
+
+quod, quia, quoniam causal 
+:)
+declare function deh:causal-clause($nodes as node()*)
+{
+  (:Notes:
+  REDO THE BELOW. You need to use the functions you designed to get the clause's role: otherwise, quod/quia as complement clauses will also be included. 
+  :)
+  let $toks := deh:tokens-from-unk($nodes)
+  (:Get all the causal clauses; just quoniam, quod or quia. Luckily, the lemma quod is restricted to the causal construction (in PROIEL, quod#1 is only in 'quod si', quod#2 I don't totally understand but only occurs 5 times, and that is it. Neither of the other two subordinators have alternatives:)
+  let $clauses := deh:finite-clause($toks, false())[deh:lemma(., "quoniam") or deh:lemma(., "quod") or deh:lemma(., "quia")]
+  
+  for $clause in $clauses
+  let $rel-head := deh:relation-head($clause)[1]/fn:lower-case(fn:string(@relation))
+  (:We need to make sure they are causal, because both quod and quia can govern complement clauses. :)
+  return if ($rel-head => fn:contains("adv")) (:Added a '[1]' to deh:relation-head because it could potentially return multiple:) then ($clause)
+  (: It should only be apos after ideo, propterea, idcirco, ob eam causam (and quas ob causas) (you have to just check for a grandfather of "ob", because it may use an empty APOS token. That is the end of the list, because I checked:)
+  else if ($rel-head => functx:contains-any-of(("apos", "-ap"))) (:It is APOS in both trees, but there can also be the -AP suffix in Harrington, which I think sometimes occurs in the main LDT:) then (
+     let $parent := deh:return-parent($clause, 0)
+     (:Possibility one: the parent is ideo, propterea or idcirco:)
+     return if (deh:lemma($parent, 'ideo') or deh:lemma($parent, 'propterea') or deh:lemma($parent, 'idcirco'))
+       then ($clause)
+     (:possibility two: the grandparent is the preposition 'ob'; I cannot imagine this would ever not work:)
+     else if (($parent => deh:return-parent(0))/deh:lemma(., 'ob')) then ($clause)
+     else ()
+  )
+  else ()
+  
+};
+
+(:
+deh:causal-adverb()
+11/20/2023
+
+:)
+declare function deh:causal-adverb($nodes as node()*)
+{
+  
 };
 
