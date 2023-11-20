@@ -1339,7 +1339,7 @@ Currently private, as deh:return-descendants relies on it alone for its depth va
 Depends on:
 deh:return-parent
 :)
-declare function deh:return-depth($node, $iter as xs:integer)
+declare function deh:return-depth($node as element(), $iter as xs:integer)
 {
   if (fn:count(deh:return-parent-cheap($node)) eq 0) then
     ($iter)
@@ -2299,7 +2299,7 @@ declare function deh:vhcs-main($tok as element())
   let $desc := (deh:return-descendants(($tok)), $sib-desc)
   
   (:If there are no relatives at all in the tree, then we need another explanation: either the ut had been deleted, which is tested for here, in which case we still return the verb as the head, or the function was not able to identify it:)
-  return if ((fn:count(($desc)[deh:is-relative(.)]) = 0)) then (
+  return if ((fn:count(($desc)[deh:is-relative-no-ne(.)]) = 0)) then (
        if (deh:is-comp-clause($tok)) then ($tok) else ()
   ) (:If it has none of those parts of speech, just get rid of it before it ruins our loop:)
  
@@ -2324,24 +2324,19 @@ Deals with all the recursive functions
 :)
 declare %public function deh:vhcs-recursion($tok as element()*)
 {
-  let $nodes := deh:vhcs-helper-shell(($tok)) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators;:)
+  let $nodes := deh:return-descendants($tok) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators;:)
   
   
-  let $subs := ($nodes[deh:is-relative(.)]) (:Since there can be more than one at the same level, we retrieve all of them:)
+  let $subs := ($nodes[deh:is-relative-no-ne(.)]) (:Since there can be more than one at the same level, we retrieve all of them:)
 
   (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
     for $sub in $subs
-    let $thread := deh:vhcs-helper-b($sub, $tok => deh:return-depth(1)) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well, in case it is first among the siblings:)
+    let $thread := deh:vhcs-helper-b($sub, $tok[1] => deh:return-depth(1)) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well. Since return-depth only works on one node, I pick the first in the sequence arbitrarily: all are siblings and will therefore be the same depth.:)
   
   (:This is the last point of failure: if a finite verb comes in the tree between our target verb and the head, then it must not be the head of the clause. This is the reason we return the results of the previous loop as 'final-subs'; we need to know that there are ZERO possible subordinators before testing for the clause missing an 'ut'; if we did this at each point in the loop, we wouldn't be able to know this. :)
   return if (fn:count($thread[deh:is-finite(.)]) > 1) then (
   )
   else ($sub)
-};
-
-declare %public function deh:vhcs-helper-shell($tok as element())
-{
-  deh:vhcs-helper($tok)
 };
 
 (:
@@ -2351,7 +2346,7 @@ declare function deh:vhcs-helper($tok as element()*)
 {
   (:10/30/2023, $pos refers to lemmas now:)
   (:If there are any tokens:)
-  if (fn:count($tok[deh:is-relative(.)]) > 0) then (
+  if (fn:count($tok[deh:is-relative-no-ne(.)]) > 0) then (
     $tok
   )
   else if (fn:count($tok) = fn:count(functx:distinct-nodes(($tok, deh:return-children($tok))))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
@@ -2378,10 +2373,10 @@ declare function deh:vhcs-coord-helper($tok as element()) as item()*
   (:We combine all the possibilities together: the relative must be in either the descendants or the siblings' descendants, and if there is no relative in there, we return nothing:)
   let $sib-desc := functx:distinct-nodes((deh:return-descendants($sib), $sib)) (:This is so we can check the descendants of the siblings in the condition below:)
   
-  let $sib-rels := $sib-desc[deh:is-relative(.)] (:the siblings (or children of siblings) which are relatives:)
+  let $sib-rels := $sib-desc[deh:is-relative-no-ne(.)] (:the siblings (or children of siblings) which are relatives:)
   return if (fn:count($sib-rels) > 0) then (
-    let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative(.)], ./deh:return-depth(., 1)) (:Go through each sibling:)
-    let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) = 0 return $thread[deh:is-relative(.)]
+    let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative-no-ne(.)], ./deh:return-depth(., 1)) (:Go through each sibling:)
+    let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) = 0 return $thread[deh:is-relative-no-ne(.)]
     return $subs
   )
   else ()  
@@ -2412,6 +2407,13 @@ declare function deh:is-relative($tok as element()) as xs:boolean
    let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui', 'si', 'seu', 'sive', 'siue', 'qualiscumque') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included; 11/12/2023: added si, seu, sive siue because, when they are used to coordinate, they are usually not heads of the phrase; also added qualiscumque because it is rare and did not show up in PROIEL:)
    
    return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "n", "Pi", "Du", "Dq", "Pr", "Df")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis; 11/5/23, temporarily (maybe) added "n" because sometimes pronouns are mistagged as nouns...; same day, added "Df" to account for 'sicut' sometimes being tagged as such:)
+};
+
+
+(:This function removes 'ne's' attached to neques and such; I only do this here because 'ne' still appears in main clauses, and I want to use deh:is-relative for that:)
+declare function deh:is-relative-no-ne($tok as element()) as xs:boolean
+{
+  deh:is-relative($tok) and (($tok/fn:string(@form) = 'ne' and $tok/fn:string(@part-of-speech) = 'Df') = false())
 };
 
 (:
@@ -2465,8 +2467,17 @@ declare function deh:verb-headed-clause-sub($tok as element())
   let $subs := deh:vhcs-main($tok)
   return if (fn:count($subs) = 1) then ($subs)
     else (
+      if (fn:count(fn:distinct-values($subs/deh:return-depth(., 1))) = fn:count($subs)) then (
+        (:If the depths of each are different, we will pick the one with the lowest depth:)
+        let $depths := $subs/deh:return-depth(., 1)
+        for $depth at $n in $depths
+        where $depth = fn:min($depths) (:pick the sub with the minimum depth in the tree, which must be closest to the verb:)
+        return $subs[$n]
+      )
+      else (
         let $left-subs := $subs[functx:is-node-in-sequence(., $tok/preceding-sibling::*)]
        return $left-subs[fn:number(@id) = fn:max($left-subs/fn:number(@id))]
+     )
    )
       
      (:First, we go through the process of finding the options highest in the tree:)
