@@ -1,4 +1,4 @@
-xquery version "3.1";
+xquery version "4.0";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
@@ -2306,9 +2306,9 @@ declare function deh:vhcs-main($tok as element())
   
   else (  
    
-  let $final-subs := deh:vhcs-recursion($tok)
+  let $final-subs := deh:vhcs-recursion(($tok, $sib))
   
-  let $final-subs := ($final-subs, deh:vhcs-coord-helper($tok)) (:finally, add any potential siblings:)
+  (:let $final-subs := ($final-subs, deh:vhcs-coord-helper($tok)):) (:finally, add any potential siblings:)
   return if (fn:count($final-subs) = 0) then (
      if (deh:is-comp-clause($tok)) then ($tok) else ()
   )
@@ -2322,7 +2322,7 @@ deh:vhcs-recursion()
 
 Deals with all the recursive functions
 :)
-declare %public function deh:vhcs-recursion($tok as element())
+declare %public function deh:vhcs-recursion($tok as element()*)
 {
   let $nodes := deh:vhcs-helper-shell(($tok)) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators;:)
   
@@ -2331,7 +2331,7 @@ declare %public function deh:vhcs-recursion($tok as element())
 
   (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
     for $sub in $subs
-    let $thread := deh:vhcs-helper-b-shell($sub, $tok) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well, in case it is first among the siblings:)
+    let $thread := deh:vhcs-helper-b($sub, $tok => deh:return-depth(1)) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well, in case it is first among the siblings:)
   
   (:This is the last point of failure: if a finite verb comes in the tree between our target verb and the head, then it must not be the head of the clause. This is the reason we return the results of the previous loop as 'final-subs'; we need to know that there are ZERO possible subordinators before testing for the clause missing an 'ut'; if we did this at each point in the loop, we wouldn't be able to know this. :)
   return if (fn:count($thread[deh:is-finite(.)]) > 1) then (
@@ -2343,6 +2343,29 @@ declare %public function deh:vhcs-helper-shell($tok as element())
 {
   deh:vhcs-helper($tok)
 };
+
+(:
+A recursive function which takes a target (a verb which is in a 'relative' clause) and finds the earliest relative in the tree. The second condition is, if it has reached the end of the tree, we don't want to get stuck in a loop, so we return nothing. Technically, this should be impossible, since the very first process in verb-headed-clause-sub() eliminates ones which do not have one of these. The final part, if we have still not reached a relative but are not terminal, simply walks down the tree one more step, adds those results to the previous results, and passes it all back through.
+:)
+declare function deh:vhcs-helper($tok as element()*)
+{
+  (:10/30/2023, $pos refers to lemmas now:)
+  (:If there are any tokens:)
+  if (fn:count($tok[deh:is-relative(.)]) > 0) then (
+    $tok
+  )
+  else if (fn:count($tok) = fn:count(functx:distinct-nodes(($tok, deh:return-children($tok))))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
+  else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper())
+};
+
+declare function deh:vhcs-helper-b($pronoun as element()*, $target-depth as xs:integer) as element()*
+{
+  (:A few conditions: either we have already reached the target depth and it is a sibling, we have yet to reach the target depth, or a depth of one has been reached and we need to exit:)
+  if (fn:count($pronoun[deh:return-depth(., 1) = $target-depth])) then ($pronoun) (:return to the results once we get back to the depth of the targeted verb:)
+  else if (fn:count($pronoun[deh:return-depth(., 1) = 1]) > 0) then () (:if we get back to base, depth is 1; we cannot go any further back, so just return nothing here, because it clearly didn't work:)
+  else (functx:distinct-nodes((deh:return-parent($pronoun, 0), $pronoun)) => deh:vhcs-helper-b($target-depth)) (:11/20/23: mostly unchanged here, just loops through:)
+};
+
 
 (:
 deh:coord-helper()
@@ -2357,7 +2380,7 @@ declare function deh:vhcs-coord-helper($tok as element()) as item()*
   
   let $sib-rels := $sib-desc[deh:is-relative(.)] (:the siblings (or children of siblings) which are relatives:)
   return if (fn:count($sib-rels) > 0) then (
-    let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative(.)], .) (:Go through each sibling:)
+    let $threads := $sib ! deh:vhcs-helper-b(deh:return-descendants($sib)[deh:is-relative(.)], ./deh:return-depth(., 1)) (:Go through each sibling:)
     let $subs := for $thread in $threads where fn:count($thread[deh:is-finite(.)]) = 0 return $thread[deh:is-relative(.)]
     return $subs
   )
@@ -2383,19 +2406,6 @@ declare function deh:is-subjunctive($tok as element()) as xs:boolean
 {
   fn:matches(fn:string($tok/@postag), "v[1-3]..s....") or fn:matches(fn:string($tok/@morphology), "...s......")
 };
-(:
-A recursive function which takes a target (a verb which is in a 'relative' clause) and finds the earliest relative in the tree. The second condition is, if it has reached the end of the tree, we don't want to get stuck in a loop, so we return nothing. Technically, this should be impossible, since the very first process in verb-headed-clause-sub() eliminates ones which do not have one of these. The final part, if we have still not reached a relative but are not terminal, simply walks down the tree one more step, adds those results to the previous results, and passes it all back through.
-:)
-declare function deh:vhcs-helper($tok as element()*)
-{
-  (:10/30/2023, $pos refers to lemmas now:)
-  (:If there are any tokens:)
-  if (fn:count($tok[deh:is-relative(.)]) > 0) then (
-    $tok
-  )
-  else if (fn:count($tok) = fn:count(functx:distinct-nodes(($tok, deh:return-children($tok))))) then () (:If there is no subordinator, and the loop has reached the terminal nodes, for now, let's return nothing:)
-  else (functx:distinct-nodes(($tok, deh:return-children($tok))) => deh:vhcs-helper())
-};
 
 declare function deh:is-relative($tok as element()) as xs:boolean
 {
@@ -2408,17 +2418,7 @@ declare function deh:is-relative($tok as element()) as xs:boolean
 Another issue is that we need to make sure no verb comes between the target and pronoun: to do this, though, we first need to retrieve the nodes between the two. We walk the tree back up from the pronoun, and stop once we have the target, the verb.
 :)
 
-declare %public function deh:vhcs-helper-b-shell($pronoun as element(), $target as element()) as element()*
-{
-  deh:vhcs-helper-b($pronoun, $target)
-};
 
-declare function deh:vhcs-helper-b($pronoun as element()*, $target as element()) as element()*
-{
-  if (functx:is-node-in-sequence($target, $pronoun)) then ($pronoun)
-  else if (fn:count($pronoun) = fn:count(functx:distinct-nodes(($pronoun, deh:return-parent($pronoun, 0))))) then ()
-  else (functx:distinct-nodes((deh:return-parent($pronoun, 0), $pronoun)) => deh:vhcs-helper-b($target))
-};
 
 (:
 10/26/2023
@@ -2532,13 +2532,28 @@ declare function deh:return-semfield($semfield as xs:string, $limit as xs:intege
 
 Got fed up looking up lemmas the hard way: this one takes care of accounting for numbers and such. It checks to see if any numeric characters are present to determine whether to search the lemma as it is in the tree or to remove all the non-alphabetic characters
 :)
-declare function deh:lemma($tok as element(), $search as xs:string) as xs:boolean
+declare %public function deh:single-lemma($tok as element(), $search as xs:string) as xs:boolean
 {
   let $lemma := 
   if (fn:matches($search, "[0-9]")) then ($tok/fn:string(@lemma))
   else (fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", ""))
   
   return $search = $lemma
+};
+
+(:
+deh:lemma()
+11/20/2023
+
+Got fed up looking up lemmas the hard way: this one takes care of accounting for numbers and such. It checks to see if any numeric characters are present to determine whether to search the lemma as it is in the tree or to remove all the non-alphabetic characters. (11/20 note: this description is copied over from deh:single-lemma, which was the original deh:lemma function) This function will now return true if the lemma matches any of the provided strings.
+
+Depends on:
+deh:single-lemma()
+:)
+declare function deh:lemma($tok as element(), $search-seq as item()*) as xs:boolean
+{
+  (:Get whether each is :)
+  fn:count(for $string in $search-seq where deh:single-lemma($tok, $string) return $string) > 0
 };
 
 (:-------------------------------------END of utility functions-----------------------------------------------:)
@@ -2684,8 +2699,8 @@ declare function deh:causal-clause($nodes as node()*)
   REDO THE BELOW. You need to use the functions you designed to get the clause's role: otherwise, quod/quia as complement clauses will also be included. 
   :)
   let $toks := deh:tokens-from-unk($nodes)
-  (:Get all the causal clauses; just quoniam, quod or quia. Luckily, the lemma quod is restricted to the causal construction (in PROIEL, quod#1 is only in 'quod si', quod#2 I don't totally understand but only occurs 5 times, and that is it. Neither of the other two subordinators have alternatives:)
-  let $clauses := deh:finite-clause($toks, false())[deh:lemma(., "quoniam") or deh:lemma(., "quod") or deh:lemma(., "quia")]
+  (:Get all the causal clauses; just quoniam, quod or quia. Luckily, the lemma quod is restricted to the causal construction (in PROIEL, quod#1 is only in 'quod si', quod#2 I don't totally understand but only occurs 5 times, and that is it. Neither of the other two subordinators have alternatives. Also note Pinkster's OLS v.1 p. 912: 'cum' can be causal with some of the particples like propterea, but only in Later Latin, and a search of the corpus revealed no instances here:)
+  let $clauses := deh:finite-clause($toks, false())[deh:lemma(., ("quoniam", "quod", "quia"))]
   
   for $clause in $clauses
   let $rel-head := deh:relation-head($clause)[1]/fn:lower-case(fn:string(@relation))
@@ -2695,7 +2710,7 @@ declare function deh:causal-clause($nodes as node()*)
   else if ($rel-head => functx:contains-any-of(("apos", "-ap"))) (:It is APOS in both trees, but there can also be the -AP suffix in Harrington, which I think sometimes occurs in the main LDT:) then (
      let $parent := deh:return-parent($clause, 0)
      (:Possibility one: the parent is ideo, propterea or idcirco:)
-     return if (deh:lemma($parent, 'ideo') or deh:lemma($parent, 'propterea') or deh:lemma($parent, 'idcirco'))
+     return if (deh:lemma($parent, ('ideo', 'propterea', 'idcirco')))
        then ($clause)
      (:possibility two: the grandparent is the preposition 'ob'; I cannot imagine this would ever not work:)
      else if (($parent => deh:return-parent(0))/deh:lemma(., 'ob')) then ($clause)
@@ -2712,6 +2727,50 @@ deh:causal-adverb()
 :)
 declare function deh:causal-adverb($nodes as node()*)
 {
+  let $adverbs := ('enim', 'ergo', 'ideo', 'igitur' )
+  return ()
+};
+
+(:
+deh:is-in-question()
+11/20/2023
+
+Says if the targeted word has a question mark among its descendants
+:)
+declare function deh:is-in-question($tok as element()) as xs:boolean
+{
+  let $desc := deh:return-descendants($tok)
+  return fn:count($desc[deh:has-question-mark(.)]) > 0
+};
+
+(:
+deh:is-question-sentence()
+11/20/2023
+
+Looks for a question mark at the end of a sentence: in PROIEL, the last tag without @empty-token-sort's @presentation-after. We want to see if the WHOLE sentence ends in a question mark, and since PROIEL has a tendency to pile empty tokens at the end, we have to look to the last non-empty token in the sentence in that case; in the LDT, we have to look for the last without @insertion_id
+:)
+declare function deh:is-question-sentence($sent as element(sentence)) as xs:boolean
+{
+  (:Separate if LDT:)
+  let $tokens :=
+  if (boolean($sent/word)) then ($sent/word[boolean(./@insertion_id) = false() and (fn:contains(./fn:string(@relation), 'AuxG')) = false()])  (:Like PROIEL, I forgot the LDT likes to case empty tokens to the end, so let us do this. Let us also exclude punctuation: if the question mark makes it to the end of the sentence, then it is likely not just inset:)
   
+  (:Separate if PROIEL:)
+  else if (boolean($sent/token)) then ($sent/token[boolean(./@empty-token-sort) = false()]) (:First, tokens are only non-empty ones, so we can find the true last word in the sentence.  :)
+  
+  return $tokens[fn:count($tokens)] => deh:has-question-mark() (:Finally, see if the last token is or has a question mark:)
+};
+
+
+(:
+deh:has-question-mark()
+11/20/2023
+
+Checks if a token is/has a question mark individually. So, if LDT, the form has a question mark, or if PROIEL, @presentation-after does
+:)
+declare function deh:has-question-mark($tok as element()?) as xs:boolean
+{
+  (:If LDT, we just see if there is a question-mark in the @form field, and if PROIEL, if there is a ? in @presentation after:)
+  fn:contains($tok/fn:string(@form), "?") or fn:contains($tok/fn:string(@presentation-after), "?")
 };
 
