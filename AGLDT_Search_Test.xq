@@ -116,7 +116,7 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
 
-$proiel//token[fn:string(@lemma) = 'ne' and fn:string(@part-of-speech) = "Df" and ./following-sibling::token[1]/fn:string(@lemma) != 'que']/..
+let $json := json:parse("C:/Users/T470s/Documents/2023-Fall-Semester/")
 
 
 

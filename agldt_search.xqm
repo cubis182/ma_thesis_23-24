@@ -2001,7 +2001,7 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
     for $verb in $sub-verbs
     let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head (or quam as a comparative), we want the conjunction, not the verb, so we need to test it:)
-    return if (($parent/deh:is-subjunction(.) or $parent/fn:matches(fn:string(@lemma), "^quam[^a-z^A-Z]*$") ) and $verb-only = false()) then ($parent)
+    return if (($parent/deh:is-subjunction(.)) and $verb-only = false()) then ($parent)
      else ($verb) (:10/13/2023: added more conditions to the PROIEL string check, because it turns out that non-"subjunctions" can also head clauses. However, I also removed some that I added after testing: 'Pr' only appears as a head in certain circumstances, but never as a subordinator; removed "Du" because it never seems to actually head a phrase; I'm not sure why I included Px (indefinite pronoun), but it's gone; 'Dq' is also never used at the head of its clause; finally, removed "Df", ultimately because it was silly to think such a broad category could be helpful. My main issue was that compounds with "quam" are sometimes marked this way, but, ultimately, the verb is still annotated with the relation info, so it remains that case that we have the info we need with just 'G-' as the exception. :)
   return functx:distinct-nodes($final)
 };
@@ -2127,7 +2127,7 @@ Determiners if the given is a subordinating conjunction (called subjunction for 
 :)
 declare function deh:is-subjunction($tok as element()) as xs:boolean
 {
-  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-"))
+  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-")) or deh:lemma($tok, 'quam')
 };
 
 (:
@@ -2157,10 +2157,10 @@ Punctuation dependent on AuxC only seems to separate the verb from the AuxC once
 
 Only instances of non-finite verbs was with quam! A few other odd instances, but one was a mistag with quoniam, and there were others where "et" was mistagged as AuxC. However, this does open my eyes that finiteness is only so good a criterion. 
 :)
-declare function deh:get-auxc-verb($toks as element(word)*) as element(word)*
+declare function deh:get-auxc-verb($toks as element()*) as element()*
 {
   for $tok in $toks
-  where fn:contains($tok/fn:string(@relation), "AuxC")
+  where deh:is-subjunction($tok) (:Updated to be able to work with either tree:)
   let $children := deh:return-children-nocoord($tok)
   return $children[deh:is-verb(.)]
 };
@@ -2402,6 +2402,8 @@ declare function deh:is-subjunctive($tok as element()) as xs:boolean
   fn:matches(fn:string($tok/@postag), "v[1-3]..s....") or fn:matches(fn:string($tok/@morphology), "...s......")
 };
 
+
+
 declare function deh:is-relative($tok as element()) as xs:boolean
 {
    let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui', 'si', 'seu', 'sive', 'siue', 'qualiscumque') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included; 11/12/2023: added si, seu, sive siue because, when they are used to coordinate, they are usually not heads of the phrase; also added qualiscumque because it is rare and did not show up in PROIEL:)
@@ -2549,7 +2551,7 @@ declare %public function deh:single-lemma($tok as element(), $search as xs:strin
   if (fn:matches($search, "[0-9]")) then ($tok/fn:string(@lemma))
   else (fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", ""))
   
-  return $search = $lemma
+  return fn:matches($lemma, fn:concat("^", $search, "$"))
 };
 
 (:
@@ -2697,6 +2699,24 @@ declare function deh:quemadmodum($tok as element()) as xs:boolean
 };
 
 (:
+deh:get-subordinators()
+11/21/2023
+
+Retrieves the results from deh:finite-clause and returns the subordinators for the verb-headed clauses together with the subordinator-headed clauses
+:)
+declare function deh:get-subordinators($nodes as node()*) as element()*
+{
+  (:Get all the finite clauses:)
+  let $clauses := deh:finite-clause($nodes, false())
+  
+  (:Separate into the ones with a subordinator as a head and those without, which we need to pass to verb-headed-clause-sub to retrieve the subordinator:)
+  let $sub-head := $clauses[deh:is-subjunction(.)]
+  let $verb-head := $clauses[deh:is-subjunction(.) = false()] => deh:verb-headed-clause-sub()
+  
+  return ($sub-head, $verb-head)
+};
+
+(:
 deh:causal-clause()
 11/17/2023
 
@@ -2732,14 +2752,137 @@ declare function deh:causal-clause($nodes as node()*)
 };
 
 (:
+deh:test-vectors-11-23()
+11/21/2023
+
+This is a function to test some of the statistical manipulation I would like to do.
+@param $nodes: a set of treebank documents
+:)
+declare function deh:test-vectors-11-23($nodes as node()*) as item()*
+{
+  for $doc in $nodes
+  (:Work info:)
+  let $work-info := deh:get-short-name(deh:work-info($doc)(1))
+  
+  (:URI:)
+  let $uri := fn:base-uri($doc)
+  
+  (:Main clauses:)
+  (:Subordinate clauses:)
+  return()
+  
+};
+
+(:
+deh:get-clause-pairs()
+11/22/2023
+
+Takes a series of nodes (could be sentence or document level as well) and returns uses deh:finite-clause on it, returning each result as a series of arrays where the first item is the subordinator and the second the verb
+:)
+declare function deh:get-clause-pairs($nodes as node()*) as item()*
+{
+  let $clauses := deh:finite-clause($nodes, false())
+  
+  (:Get the verb-subordinator pairs; first item in each array is the subordinator, the second the verb:)
+  for $clause in $clauses
+  return if (deh:is-subjunction($clause)) then (array{$clause, deh:get-auxc-verb($clause)})
+  else (array{deh:verb-headed-clause-sub($clause)[1], $clause}) (:Added the '[1]' to make sure there are not multiple results:)
+  
+};
+
+(:
+deh:clause-pair-rel()
+11/22/2023
+
+Takes results from deh:get-clause-pairs 
+:)
+declare function deh:clause-pair-rel($clause-pair as array(*)) as xs:string
+{
+  if ($clause-pair(1)/deh:is-subjunction-pr(.)) then ($clause-pair(1)/fn:string(@relation))
+  else ($clause-pair(2)/fn:string(@relation))
+};
+
+(:
+deh:temporal-clause()
+11/21/2023
+
+Retrieves all the temporal clauses in the corpus
+
+:)
+declare function deh:temporal-clause($nodes as node()*)
+{
+  let $clause-pairs := deh:get-clause-pairs($nodes)
+  
+  let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
+  let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
+  (:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)	
+  let $separable := ('ante', 'prius', 'postea', 'postmodum', 'post')
+  
+  let $temporal-ind-final :=
+  for $target in $w-indicative-temp
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 'i']
+  
+  let $temporal-final :=
+  for $target in $temporal
+  return $clause-pairs[.(1) => deh:lemma($target)]
+  
+  let $separable-temporal :=
+  for $target in $separable
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable]
+  
+  let $temporal-results := ($temporal-ind-final, $temporal-final, $separable-temporal)
+  
+  return $temporal-results
+};
+
+
+(:
 deh:causal-adverb()
 11/20/2023
 
 :)
 declare function deh:causal-adverb($nodes as node()*)
 {
-  let $adverbs := ('enim', 'ergo', 'ideo', 'igitur' )
+  let $adverbs := ('enim', 'ergo', 'ideo', 'igitur', 'idcirco', 'propterea') (:I'm avoiding autem here for its varied uses:)
+  let $inter-adverbs := ('quare',  'quamobrem', 'unde', 'quapropter') (:all but unde and quapropter can be separate tokens in this corpus:)
+  (:then account for ob eam rem or quamobrem:)
+  
   return ()
+};
+
+(:
+deh:purpose-clause()
+11/22/2023
+:)
+declare function deh:purpose-clause($nodes as node()*)
+{
+  let $clause-pairs := deh:get-clause-pairs($nodes)
+  
+  let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
+  
+  for $target in $w-subj
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 's' and fn:contains(deh:clause-pair-rel(.), 'adv')]
+};
+
+(:
+deh:object-clause()
+11/22/2023
+
+
+:)
+declare function deh:object-clause($nodes as node()*)
+{
+  let $clause-pairs := deh:get-clause-pairs($nodes)
+  
+  let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
+  
+  for $target in $w-subj
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 's' and functx:contains-any-of(deh:clause-pair-rel(.), ("comp", "obj", "sbj"))]
+};
+
+declare function deh:conditional-clause($nodes as node()*)
+{
+  
 };
 
 (:
