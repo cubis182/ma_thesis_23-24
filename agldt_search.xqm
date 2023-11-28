@@ -2575,11 +2575,19 @@ declare function deh:lemma($tok as element(), $search-seq as item()*) as xs:bool
 
 declare function deh:get-short-name($title as xs:string) as xs:string*
 {
-  let $shorts := ("Elegi", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
+  let $shorts := deh:short-names()
   for $short in $shorts
   where fn:matches($title, $short)
   return if (fn:string-length($short) > 1) then ($short)
   else ("UNK")
+};
+
+(:
+Note these short names are set up to work in a regex, which means the fn:matches function is most called for
+:)
+declare function deh:short-names() as xs:string*
+{
+  ("Elegi", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
 };
 
 (:In this section, each function returns a part of the corpus we want to study. The naming scheme has a prefix with the general type (pers for persona, aud for audience and gen for genre), and the suffix is the subtype:)
@@ -2835,6 +2843,31 @@ declare function deh:temporal-clause($nodes as node()*)
   return $temporal-results
 };
 
+(:
+deh:spatio-temporal-adverb()
+11/27/2023
+:)
+declare function deh:spatio-temporal-adverb()
+{
+  (:From Allen & Greenough's, p. 122-123 has spatial and temporal adverbs; I included even ones which are just an ablative form, you need to check if the lemmatization is correct:)
+  (:spatial; DID NOT INCLUDE ultro FOR ITS COMMON NON-SPATIAL MEANING:)('hic', 'huc', 'hinc', 'hac', 'ibi', 'eo', 'inde', 'ea', 'istic', 'istuc', 'istinc', 'ista', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'aliqua', 'ibidem', 'eodem', 'indidem', 'eadem', 'alibi', 'alio', 'aliunde', 'alia', 'usque', 'usquam', 'nusquam', 'citro', 'intro', 'ultra', 'porro', 'horsum', 'prorsum', 'introrsum', 'retrorsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum'),
+  (:time; REMEMBER YOU NEED TO CHECK THE PART OF SPEECH, since mox can be a conjunction in the corpus; left off denique because it is not consistently temporal; ones which express habitual or repeated time like cotidie, saepe, crebro or iam non were left off for now:) ('nunc', 'tunc', 'mox', 'iam', 'dum', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremum', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum'),
+  (:Pinkster volume 1, which distinguishes between position, goal/direction, locative case, source, path, extent; pp. 807-808, 812-13, 881-819, 829, 832. The below spatial adverbs are generally in order:)
+  (:spatial:)('contra', 'procul', 'ibi', 'intus', 'prope', 'longe', 'utrimque', 'foras', 'eo', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus', 'longe', 'recta'),
+  
+  (:PInkster volume 1, which distinguishes between position, extent, time within which, frequency, attendant circumstances, connection between one time and another; pp. 841-842, where he mentions how nunc and deinde have discourse functions, 847-848, :)
+  (:temporal; IS SAEPIUS A DIFFERENT LEMMA FROM SAEPE? also the numeral adverbs, 'bis', 'ter', 'quater', quinquiens, sexiens, septiens, octiens, noviens, deciens, etc.; also, what about ordinals used adverbially? :)('luci', 'temperi', 'vesperi', 'noctu', 'ante', 'antea', 'ilico', 'primo', 'statim', 'nuper', 'abhinc', 'breviter', 'perpetuo', 'usqui', 'sempiternum', 'aeternum', 'perpetuum', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
+  
+  (:Prepositions: 'adversum', 'ante', 'circiter', 'cis', 'citra', 'infra', 'contra', 'intra', 'pone', 'prope', 'tenus', 'ultra', 'post':)
+  
+  (:locative:)
+};
+
+declare function deh:spatial-clause()
+{
+  ('quatenus', 'quo', 'quorsum', 'utroque')
+};
+
 
 (:
 deh:causal-adverb()
@@ -2882,7 +2915,12 @@ declare function deh:object-clause($nodes as node()*)
 
 declare function deh:conditional-clause($nodes as node()*)
 {
+  let $clause-pairs := deh:get-clause-pairs($nodes)
   
+  let $conditional := ("(ni|)si(n|)(ve|)", "ni", "si non")
+  
+  for $target in $conditional
+  return $clause-pairs[.(1) => deh:lemma($target)]
 };
 
 (:
