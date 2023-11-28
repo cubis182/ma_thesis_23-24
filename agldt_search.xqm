@@ -2127,7 +2127,7 @@ Determiners if the given is a subordinating conjunction (called subjunction for 
 :)
 declare function deh:is-subjunction($tok as element()) as xs:boolean
 {
-  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-")) or deh:lemma($tok, 'quam')
+  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-")) or deh:lemma($tok, ('quam', 'si', 'seu', 'sive', 'siue'))
 };
 
 (:
