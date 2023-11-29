@@ -123,13 +123,14 @@ let $trees := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 let $main := fn:count(deh:main-verbs($trees))
 let $sub := fn:count(deh:finite-clause($trees, true()))
 
+(:Change the functions so they only accept a sequence of arrays!:)
 let $object-clause := fn:count(deh:object-clause($trees))
 let $purpose-clause := fn:count(deh:purpose-clause($trees))
 let $causal-clause := fn:count(deh:causal-clause($trees))
 let $temporal-clause := fn:count(deh:temporal-clause($trees))
 let $conditional-clause := fn:count(deh:conditional-clause($trees))
 
-return ($work, $main, $sub, $object-clause, $purpose-clause, $causal-clause, $temporal-clause, $conditional-clause)
+return concat(string($work), ",", string($main),",", string($sub), ",",string($object-clause), ",",string($purpose-clause), ",",string($causal-clause), ",",string($temporal-clause), ",",string($conditional-clause))
 
 
 (:
