@@ -1650,6 +1650,36 @@ declare function deh:get-ldt-conj-relations($all-ldt)
 :)
 
 (:
+deh:count-clause-pairs
+11/30/2023
+
+I am getting tired of redoing this every time, so if I want to count, in a sequence of tokens, how many of each lemma in the corpus there is, this function will do it. If we return from clause-pairs, if it is necessary, a third item in the sequence will be included if necessary (i.e., antequam or quam with ante as its head will receive a third tag to keep them together), which will be included as one category
+:)
+declare function deh:count-clause-pairs($toks as array(*)*) as item()*
+{
+    
+    ($toks[array:size(.) > 2]?(3), $toks[array:size(.) < 3]?(1))/deh:process-lemma(.) => deh:count-each()
+};
+
+(:
+deh:count-by-lemma()
+11/30/2023
+:)
+declare function deh:count-by-lemma($toks as element()*) as array(*)*
+{
+  deh:count-each($toks/deh:process-lemma(.))
+};
+
+declare function deh:count-each($strings as xs:string*)
+{
+  for $string in fn:distinct-values($strings)
+  where $string != ""
+  order by fn:count($strings[. = $string])
+  return array{$string, fn:count($strings[. = $string])}
+};
+
+
+(:
 deh:extract-nonfinite()
 9/20/2023
 
@@ -2268,16 +2298,17 @@ declare function deh:var-info($sents as element(sentence)*)
 deh:relation-head()
 11/17/2023
 
-Takes the results from deh:finite-clause and returns the word which actually has the relation tag.
+Takes the results from deh:get-clause-pairs and returns the word which actually has the relation tag.
 
 Some notes:
 
 :)
-declare function deh:relation-head($toks as element()*) as element()*
+declare function deh:relation-head($toks as array(*)*)
 {
   for $tok in $toks
-  return if (deh:is-subjunction-ldt($tok)) then (deh:get-auxc-verb($tok))
-  else ($tok)
+  return if (deh:is-subjunction-ldt($tok(1))) then ($tok(2))
+  else if (deh:is-subjunction-pr($tok(1))) then ($tok(1))
+  else ($tok(2))
 };
 
 (:
@@ -2289,7 +2320,7 @@ This function returns the subordinators in clauses where the verb is the head. I
 If you want this function to consistently retrieve the subordinator, it will have to account for the fact that, in the LDT, if two verbs are coordinated within a clause, the verbs are siblings of the relative
 The argument MUST be a verb which we already know is the head of a clause
 :)
-declare function deh:vhcs-main($tok as element())
+declare function deh:vhcs-main($tok as element()?)
 {
   (:We don't want to get lost navigating the siblings and other parts of the tree if we don't have to: since the only reason the target subordinator would be among siblings is if coordination is involved, we :)
   let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.) and functx:contains-any-of($tok/fn:string(@relation), ("comp")) = false()) then (deh:return-siblings($tok, false())) else () 
@@ -2388,7 +2419,7 @@ deh:is-comp-clause()
 
 This function is used in the verb-headed-clause-sub() function; it tests whether a verb is subjunctive and has the following tags: "SBJ", "OBJ", "NOM-SUBST", or "comp", which can include indirect questions and such, but that is why we test for this after ensuring the other possibilities don't match
 :)
-declare %public function deh:is-comp-clause($tok as element()) as xs:boolean
+declare %public function deh:is-comp-clause($tok as element()?) as xs:boolean
 {
   deh:is-subjunctive($tok) and functx:contains-any-of(fn:string($tok/@relation), ("SBJ", "OBJ", "NOM-SUBST", "comp"))
 };
@@ -2397,7 +2428,7 @@ declare %public function deh:is-comp-clause($tok as element()) as xs:boolean
 deh:is-subjunctive()
 11/3/2023
 :)
-declare function deh:is-subjunctive($tok as element()) as xs:boolean
+declare function deh:is-subjunctive($tok as element()?) as xs:boolean
 {
   fn:matches(fn:string($tok/@postag), "v[1-3]..s....") or fn:matches(fn:string($tok/@morphology), "...s......")
 };
@@ -2464,7 +2495,7 @@ declare function deh:is-coordinating($tok as element()) as xs:boolean
  )
 };
 
-declare function deh:verb-headed-clause-sub($tok as element())
+declare function deh:verb-headed-clause-sub($tok as element()?)
 {
   let $subs := deh:vhcs-main($tok)
   return if (fn:count($subs) = 1) then ($subs)
@@ -2543,15 +2574,20 @@ declare function deh:return-semfield($semfield as xs:string, $limit as xs:intege
 (:
 11/12/2023
 
-Got fed up looking up lemmas the hard way: this one takes care of accounting for numbers and such. It checks to see if any numeric characters are present to determine whether to search the lemma as it is in the tree or to remove all the non-alphabetic characters
+Got fed up looking up lemmas the hard way: this one takes care of accounting for numbers and such. It checks to see if any numeric characters are present to determine whether to search the lemma as it is in the tree or to remove all the non-alphabetic characters. Remember that this removes spaces too! You don't have to account for ante quam vs. antequam
 :)
 declare %public function deh:single-lemma($tok as element(), $search as xs:string) as xs:boolean
 {
   let $lemma := 
   if (fn:matches($search, "[0-9]")) then ($tok/fn:string(@lemma))
-  else (fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", ""))
+  else (deh:process-lemma($tok))
   
   return fn:matches($lemma, fn:concat("^", $search, "$"))
+};
+
+declare function deh:process-lemma($tok as element())
+{
+  fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", "")
 };
 
 (:
@@ -2569,6 +2605,21 @@ declare function deh:lemma($tok as element(), $search-seq as item()*) as xs:bool
   fn:count(for $string in $search-seq where deh:single-lemma($tok, $string) return $string) > 0
 };
 
+declare function deh:lemma-or-form($tok as element(), $search-seq as item()*) as xs:boolean
+{
+  deh:lemma($tok, $search-seq) or fn:count(for $search in $search-seq where fn:matches(fn:lower-case($tok/fn:string(@form)), fn:concat('^', $search, '$')) return $search) > 0
+};
+
+(:
+deh:word-count()
+11/30/2023
+
+Gives the word count for a work, which excludes empty tokens and punctuation
+:)
+declare function deh:word-count($node as node()*) as xs:integer
+{
+  deh:tokens-from-unk($node)[deh:is-punc(.) = false() and deh:is-empty(.) = false()] => fn:count()  
+};
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 
 (:-------------------------------------START of corpus division functions--------------------------------------------:)
@@ -2732,14 +2783,14 @@ Retrieve all the causal clauses under consideration. The easy ones:
 
 quod, quia, quoniam causal 
 :)
-declare function deh:causal-clause($nodes as node()*)
+declare function deh:causal-clause($nodes as array(*)*)
 {
   (:Notes:
   REDO THE BELOW. You need to use the functions you designed to get the clause's role: otherwise, quod/quia as complement clauses will also be included. 
   :)
-  let $toks := deh:tokens-from-unk($nodes)
+  
   (:Get all the causal clauses; just quoniam, quod or quia. Luckily, the lemma quod is restricted to the causal construction (in PROIEL, quod#1 is only in 'quod si', quod#2 I don't totally understand but only occurs 5 times, and that is it. Neither of the other two subordinators have alternatives. Also note Pinkster's OLS v.1 p. 912: 'cum' can be causal with some of the particples like propterea, but only in Later Latin, and a search of the corpus revealed no instances here:)
-  let $clauses := deh:finite-clause($toks, false())[deh:lemma(., ("quoniam", "quod", "quia"))]
+  let $clauses := $nodes[deh:lemma(.(1), ("quoniam", "quod", "quia"))]
   
   for $clause in $clauses
   let $rel-head := deh:relation-head($clause)[1]/fn:lower-case(fn:string(@relation))
@@ -2747,7 +2798,7 @@ declare function deh:causal-clause($nodes as node()*)
   return if ($rel-head => fn:contains("adv")) (:Added a '[1]' to deh:relation-head because it could potentially return multiple:) then ($clause)
   (: It should only be apos after ideo, propterea, idcirco, ob eam causam (and quas ob causas) (you have to just check for a grandfather of "ob", because it may use an empty APOS token. That is the end of the list, because I checked:)
   else if ($rel-head => functx:contains-any-of(("apos", "-ap"))) (:It is APOS in both trees, but there can also be the -AP suffix in Harrington, which I think sometimes occurs in the main LDT:) then (
-     let $parent := deh:return-parent($clause, 0)
+     let $parent := deh:return-parent(deh:phrase-head($clause), 0)
      (:Possibility one: the parent is ideo, propterea or idcirco:)
      return if (deh:lemma($parent, ('ideo', 'propterea', 'idcirco')))
        then ($clause)
@@ -2757,6 +2808,16 @@ declare function deh:causal-clause($nodes as node()*)
   )
   else ()
   
+};
+
+(:
+works with deh:get-clause-pairs results
+:)
+declare function deh:phrase-head($pairs as array(*)*)
+{
+  for $pair in $pairs
+  return if (deh:is-subjunction($pair(1))) then ($pair(1))
+  else ($pair(2))
 };
 
 (:
@@ -2793,7 +2854,7 @@ declare function deh:get-clause-pairs($nodes as node()*) as item()*
   
   (:Get the verb-subordinator pairs; first item in each array is the subordinator, the second the verb:)
   for $clause in $clauses
-  return if (deh:is-subjunction($clause)) then (array{$clause, deh:get-auxc-verb($clause)})
+  return if (deh:is-subjunction($clause)) then ([$clause, (deh:get-auxc-verb($clause))]) (:Used the square array constructor, since this allows whole sequences to be members:)
   else (array{deh:verb-headed-clause-sub($clause)[1], $clause}) (:Added the '[1]' to make sure there are not multiple results:)
   
 };
@@ -2817,9 +2878,9 @@ deh:temporal-clause()
 Retrieves all the temporal clauses in the corpus
 
 :)
-declare function deh:temporal-clause($nodes as node()*)
+declare function deh:temporal-clause($clause-pairs as array(*)*)
 {
-  let $clause-pairs := deh:get-clause-pairs($nodes)
+  (:let $clause-pairs := deh:get-clause-pairs($nodes)eliminated 11/29 because this now only accepts an array:)
   
   let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
   let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
@@ -2874,22 +2935,38 @@ deh:causal-adverb()
 11/20/2023
 
 :)
-declare function deh:causal-adverb($nodes as node()*)
+declare function deh:causal-adverb($nodes as node()*) as item()*
 {
   let $adverbs := ('enim', 'ergo', 'ideo', 'igitur', 'idcirco', 'propterea') (:I'm avoiding autem here for its varied uses:)
   let $inter-adverbs := ('quare',  'quamobrem', 'unde', 'quapropter') (:all but unde and quapropter can be separate tokens in this corpus:)
   (:then account for ob eam rem or quamobrem:)
   
-  return ()
+  let $toks := deh:tokens-from-unk($nodes)
+  
+  let $non-subordinators := $toks[deh:lemma-or-form(., ($adverbs))]
+  let $subordinators := $toks[deh:lemma-or-form(., $inter-adverbs)] => deh:is-not-interrogative()
+  
+  return ($non-subordinators, $subordinators)
+};
+
+(:
+This function accepts a token which we suspect could be interrogative or just an adverb (like quare), and returns it only if it is not an interrogative. This removes ones which are the heads of subordinate clauses or in questions
+:)
+declare function deh:is-not-interrogative($toks as element()*)
+{
+  for $adv in $toks
+  where deh:is-question-sentence($adv/..) = false()
+  let $clause-pairs := deh:get-clause-pairs($adv/..)
+  return if (fn:count($clause-pairs) > 0) then ($adv[functx:is-node-in-sequence($adv, $clause-pairs?(1)) = false]/..)
+  else ($adv/..)
 };
 
 (:
 deh:purpose-clause()
 11/22/2023
 :)
-declare function deh:purpose-clause($nodes as node()*)
+declare function deh:purpose-clause($clause-pairs as array(*)*)
 {
-  let $clause-pairs := deh:get-clause-pairs($nodes)
   
   let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
   
@@ -2903,9 +2980,8 @@ deh:object-clause()
 
 
 :)
-declare function deh:object-clause($nodes as node()*)
+declare function deh:object-clause($clause-pairs as array(*)*)
 {
-  let $clause-pairs := deh:get-clause-pairs($nodes)
   
   let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
   
@@ -2913,9 +2989,8 @@ declare function deh:object-clause($nodes as node()*)
   return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 's' and functx:contains-any-of(deh:clause-pair-rel(.), ("comp", "obj", "sbj"))]
 };
 
-declare function deh:conditional-clause($nodes as node()*)
+declare function deh:conditional-clause($clause-pairs as array(*)*)
 {
-  let $clause-pairs := deh:get-clause-pairs($nodes)
   
   let $conditional := ("(ni|)si(n|)(ve|)", "ni", "si non")
   
@@ -2965,4 +3040,6 @@ declare function deh:has-question-mark($tok as element()?) as xs:boolean
   (:If LDT, we just see if there is a question-mark in the @form field, and if PROIEL, if there is a ? in @presentation after:)
   fn:contains($tok/fn:string(@form), "?") or fn:contains($tok/fn:string(@presentation-after), "?")
 };
+
+
 

@@ -2,6 +2,8 @@ xquery version "4.0";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
+import module namespace stats = "ma-thesis-23-24" at "stats.xqm";
+
 import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
@@ -115,23 +117,31 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:@form s to look up: "Ulixes dixit", :)
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
-('work-id,main,sub,obj,purp,caus,temp,condition'),
+(:('work-id,main,sub,obj,purp,caus,temp,condition'),:)
 let $works := deh:short-names()
-for $work in $works
+let $poetry := ('Met', 'Elegie', 'Elegia', 'Aen', 'Fab', 'Sati', 'Carm', 'Amor')
+let $prose := ("In Cat", "Cael", "Att", "off", "agri", "Res", "Gall", "Vul", "Aug", "Ann", "Hist", "Pere", "Petr")
+for $work in $prose
 let $trees := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
+(:
 let $main := fn:count(deh:main-verbs($trees))
-let $sub := fn:count(deh:finite-clause($trees, true()))
+let $sub := fn:count(deh:finite-clause($trees, true())):)
+
+let $work-length := deh:word-count($trees)
 
 (:Change the functions so they only accept a sequence of arrays!:)
-let $object-clause := fn:count(deh:object-clause($trees))
-let $purpose-clause := fn:count(deh:purpose-clause($trees))
-let $causal-clause := fn:count(deh:causal-clause($trees))
-let $temporal-clause := fn:count(deh:temporal-clause($trees))
-let $conditional-clause := fn:count(deh:conditional-clause($trees))
+(:let $object-clause := fn:count(deh:object-clause($trees))
+let $purpose-clause := fn:count(deh:purpose-clause($trees)):)
+let $causal-clause := (deh:get-clause-pairs($trees//sentence[boolean(./*[deh:lemma(., ('quod', 'quia', 'quoniam'))])]) => deh:causal-clause()) => deh:count-clause-pairs()
 
-return concat(string($work), ",", string($main),",", string($sub), ",",string($object-clause), ",",string($purpose-clause), ",",string($causal-clause), ",",string($temporal-clause), ",",string($conditional-clause))
-
+(:let $temporal-clause := fn:count(deh:temporal-clause($trees))
+let $conditional-clause := fn:count(deh:conditional-clause($trees)):)
+(:
+return concat(string($work), ",", string($main),",", string($sub), ",",string($object-clause), ",",string($purpose-clause), ",",string($causal-clause), ",",string($temporal-clause), ",",string($conditional-clause)):)
+let $causal-adverb := deh:count-by-lemma(deh:causal-adverb($trees))
+for $item in ($causal-clause, $causal-adverb)
+return string-join(($work, $item?*, $work-length), ",")
 
 (:
 let $si := deh:pick-random($all-trees//sentence[boolean(./*[deh:lemma(., ('si', 'sin', 'sive'))])], 10)
