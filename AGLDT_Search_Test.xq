@@ -118,30 +118,72 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")]:)
 
 (:('work-id,main,sub,obj,purp,caus,temp,condition'),:)
+
+(:So, corpus, lemma, count, type, total work count, para/hypotaxis value:)
 let $works := deh:short-names()
 let $poetry := ('Met', 'Elegie', 'Elegia', 'Aen', 'Fab', 'Sati', 'Carm', 'Amor')
 let $prose := ("In Cat", "Cael", "Att", "off", "agri", "Res", "Gall", "Vul", "Aug", "Ann", "Hist", "Pere", "Petr")
-for $work in $prose
-let $trees := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+
+let $prose-trees := for $work in $prose return $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $poetry-trees := for $work in $poetry return $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+
+let $map := map{'poetry':$poetry-trees, 'prose':$prose-trees}
+let $work-name := 'Gall'(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
+for $work in $work-name
+let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+
+let $causal-adv := (deh:causal-adverb($tree) => deh:count-by-form()) ! array:append(., 'causal')
+
+let $sp-temp-adv := deh:spatio-temporal-adverb($tree)
+let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return $item(1)) => deh:count-by-form()) ! array:append(., 'mixed')
+let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., 'spatial')
+let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., 'temporal')
+
+(:
+let $temporal-clause := ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., 'temporal')
+let $spatial-clause := ($clause-pairs => deh:spatial-clause() => deh:count-clause-pairs()) ! array:append(., 'spatial')
+
+let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., 'causal')
+:)
+
+let $results := ($mixed-adv, $temporal-adv, $spatial-adv, $causal-adv)
+
+let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
+
+let $types := ('mixed', 'spatial', 'temporal', 'causal')
+
+let $organized :=
+for $type in $types
+return array{$results[.(3) = $type]}
+
+(:work,mixed,temporal,spatial,causal,work-length:)
+let $mixed-para := $organized[1] => deh:process-count-results($work-length)
+let $spatial-para := $organized[2] => deh:process-count-results($work-length)
+let $temp-para := $organized[3] => deh:process-count-results($work-length)
+let $causal-para := $organized[4] => deh:process-count-results($work-length)
+
+(:work,mixed-para, mixed-num, spatial-para, spatial-num, temp-para, temp-num, causal-para, causal-num, work-length:)
+return string-join(($work, $mixed-para?*, $spatial-para?*, $temp-para?*, $causal-para?*, $work-length), ",")
+  
+
+
+
+
+(:
+let $clause-pairs := deh:get-clause-pairs($work) (: 
+let $causal-clause := $clause-pairs => deh:causal-clause() => deh:count-clause-pairs()
+let $spatio-temporal-clause := ($clause-pairs => deh:spatial-clause(), $clause-pairs => deh:temporal-clause()) => deh:count-clause-pairs()
+:)
+
 
 (:
 let $main := fn:count(deh:main-verbs($trees))
 let $sub := fn:count(deh:finite-clause($trees, true())):)
 
-let $work-length := deh:word-count($trees)
 
-(:Change the functions so they only accept a sequence of arrays!:)
-(:let $object-clause := fn:count(deh:object-clause($trees))
-let $purpose-clause := fn:count(deh:purpose-clause($trees)):)
-let $causal-clause := (deh:get-clause-pairs($trees//sentence[boolean(./*[deh:lemma(., ('quod', 'quia', 'quoniam'))])]) => deh:causal-clause()) => deh:count-clause-pairs()
 
-(:let $temporal-clause := fn:count(deh:temporal-clause($trees))
-let $conditional-clause := fn:count(deh:conditional-clause($trees)):)
-(:
-return concat(string($work), ",", string($main),",", string($sub), ",",string($object-clause), ",",string($purpose-clause), ",",string($causal-clause), ",",string($temporal-clause), ",",string($conditional-clause)):)
-let $causal-adverb := deh:count-by-lemma(deh:causal-adverb($trees))
-for $item in ($causal-clause, $causal-adverb)
-return string-join(($work, $item?*, $work-length), ",")
+
+
 
 (:
 let $si := deh:pick-random($all-trees//sentence[boolean(./*[deh:lemma(., ('si', 'sin', 'sive'))])], 10)

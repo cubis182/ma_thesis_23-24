@@ -4,6 +4,8 @@ xquery version "4.0";
 
 module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A";
 
+import module namespace stats = "ma-thesis-23-24" at "stats.xqm";
+
 import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
@@ -1658,7 +1660,7 @@ I am getting tired of redoing this every time, so if I want to count, in a seque
 declare function deh:count-clause-pairs($toks as array(*)*) as item()*
 {
     
-    ($toks[array:size(.) > 2]?(3), $toks[array:size(.) < 3]?(1))/deh:process-lemma(.) => deh:count-each()
+    ($toks[array:size(.) > 2]?(3), $toks[array:size(.) < 3]?(1)/fn:lower-case(fn:string(@form))) => deh:count-each()
 };
 
 (:
@@ -1667,7 +1669,16 @@ deh:count-by-lemma()
 :)
 declare function deh:count-by-lemma($toks as element()*) as array(*)*
 {
-  deh:count-each($toks/deh:process-lemma(.))
+  deh:count-each($toks/deh:process-lemma(./fn:string(@lemma)))
+};
+
+(:
+deh:count-by-form()
+11/30/2023
+:)
+declare function deh:count-by-form($toks as element()*) as array(*)*
+{
+  deh:count-each($toks/fn:lower-case(fn:string(@form)))
 };
 
 declare function deh:count-each($strings as xs:string*)
@@ -2475,6 +2486,16 @@ declare function deh:mood($tok as element()) as xs:string
 };
 
 (:
+11/30/2023
+deh:case()
+:)
+declare function deh:case($tok as element()) as xs:string
+{
+  if ($tok/name() = 'word') then (fn:substring(fn:string($tok/@postag), 8, 1))
+  else (fn:substring(fn:string($tok/@morphology), 7, 1))
+};
+
+(:
 10/31/2023 (spooky)
 deh:is-subordinate()
 :)
@@ -2580,14 +2601,15 @@ declare %public function deh:single-lemma($tok as element(), $search as xs:strin
 {
   let $lemma := 
   if (fn:matches($search, "[0-9]")) then ($tok/fn:string(@lemma))
-  else (deh:process-lemma($tok))
+  else (deh:process-lemma($tok/fn:string(@lemma)))
   
   return fn:matches($lemma, fn:concat("^", $search, "$"))
 };
 
-declare function deh:process-lemma($tok as element())
+declare function deh:process-lemma($lemmas as xs:string*)
 {
-  fn:replace($tok/fn:string(@lemma), "[^a-z^A-Z]", "")
+  for $lemma in $lemmas
+  return fn:replace($lemma, "[^a-z^A-Z0-9]", "")
 };
 
 (:
@@ -2702,22 +2724,27 @@ declare function deh:gen-prose()
 
 11/13/2023
 :)
-declare function deh:is-adverbial($tok as element()?) as xs:boolean
+declare function deh:is-adverbial($tok as element()) as xs:boolean
 {
   (:ADV
 $adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN") 10/15, STOPPED AT A-RESPECT! 11/1, WHICH I THINK IT ADVERBIAL, it is rare, but was never ATR; YES, note the sentence: hic primum nigrantis terga iuvencos constituit, the terga is an ADV; also note that things like Ablative or Orientation are likely with prepositions, although I haven't checked; 11/7/23, NOT SURE HOW PRICE WORKS! Same with AB-DEGDIF, don't really care about it; also note that an aux from PROIEL or AuxZ/AuxY:)
-  if (deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq'))
-  then (
-  let $finite-heads := deh:finite-clause-verb-head($tok/..)
-  (:We need to double check it is an adverb and not a subordinator. If there are no verb-headed clauses, do nothing; if so, see if the target matches any verb-headed clause subordinators:)
-  return if (fn:count($finite-heads) > 0) then (let $vhcs := $finite-heads/deh:verb-headed-clause-sub(.)  return functx:is-node-in-sequence($tok, $vhcs) = false())
-  else (true())
-)
-  (:If it is a noun or pronoun (or, for proiel tags, common noun, demonstrative pronoun, indefinite pronoun, or :)
-  else if (fn:contains(fn:lower-case($tok/fn:string(@relation)), "adv") and deh:part-of-speech = ("n", "p", "Nb", "Pd", "Px")) then ()
-  else (false())
+ 
+    (deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq') or functx:contains-any-of($tok/fn:string(@relation), ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN", 'adv', 'ADV', 'aux', 'AuxY', 'AuxZ'))) and deh:is-verb($tok) = false() and deh:is-subjunction($tok) = false() and deh:is-coordinating($tok) = false()
 
 };
+
+(:
+Tells whether an adverb is actually a subordinating conjunction
+:)
+declare function deh:is-subordinating-relative($tok as element()) as xs:boolean
+{
+  let $finite-heads := deh:finite-clause-verb-head($tok/..)
+  (:We need to double check it is an adverb and not a subordinator. If there are no verb-headed clauses, do nothing; if so, see if the target matches any verb-headed clause subordinators:)
+  return if (fn:count($finite-heads) > 0) then (let $vhcs := $finite-heads/deh:verb-headed-clause-sub(.)  return functx:is-node-in-sequence($tok, $vhcs))
+  else (false())
+};
+
+
 
 (:-------------------------------------END of corpus division functions--------------------------------------------:)
 
@@ -2779,7 +2806,7 @@ declare function deh:get-subordinators($nodes as node()*) as element()*
 deh:causal-clause()
 11/17/2023
 
-Retrieve all the causal clauses under consideration. The easy ones:
+Retrieve all the causal clauses under consideration, based on get-clause-pairs. The easy ones:
 
 quod, quia, quoniam causal 
 :)
@@ -2790,7 +2817,7 @@ declare function deh:causal-clause($nodes as array(*)*)
   :)
   
   (:Get all the causal clauses; just quoniam, quod or quia. Luckily, the lemma quod is restricted to the causal construction (in PROIEL, quod#1 is only in 'quod si', quod#2 I don't totally understand but only occurs 5 times, and that is it. Neither of the other two subordinators have alternatives. Also note Pinkster's OLS v.1 p. 912: 'cum' can be causal with some of the particples like propterea, but only in Later Latin, and a search of the corpus revealed no instances here:)
-  let $clauses := $nodes[deh:lemma(.(1), ("quoniam", "quod", "quia"))]
+  let $clauses := $nodes[deh:lemma-or-form(.(1), ("quoniam", "quod", "quia"))]
   
   for $clause in $clauses
   let $rel-head := deh:relation-head($clause)[1]/fn:lower-case(fn:string(@relation))
@@ -2893,11 +2920,14 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $temporal-final :=
   for $target in $temporal
-  return $clause-pairs[.(1) => deh:lemma($target)]
+  let $pairs := $clause-pairs[.(1) => deh:lemma($target)]
+  for $pair in $pairs
+  return array:append($pair, $pair(1)/fn:string(@lemma)) (:This was added so the lemma for the combined ones (antequam, etc.) is included; I'm just doing it to all of them for simplicity:)
+  
   
   let $separable-temporal :=
   for $target in $separable
-  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable]
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable] => array:append(($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
   let $temporal-results := ($temporal-ind-final, $temporal-final, $separable-temporal)
   
@@ -2908,25 +2938,55 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
 deh:spatio-temporal-adverb()
 11/27/2023
 :)
-declare function deh:spatio-temporal-adverb()
+declare function deh:spatio-temporal-adverb($nodes as node()*)
 {
-  (:From Allen & Greenough's, p. 122-123 has spatial and temporal adverbs; I included even ones which are just an ablative form, you need to check if the lemmatization is correct:)
-  (:spatial; DID NOT INCLUDE ultro FOR ITS COMMON NON-SPATIAL MEANING:)('hic', 'huc', 'hinc', 'hac', 'ibi', 'eo', 'inde', 'ea', 'istic', 'istuc', 'istinc', 'ista', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'aliqua', 'ibidem', 'eodem', 'indidem', 'eadem', 'alibi', 'alio', 'aliunde', 'alia', 'usque', 'usquam', 'nusquam', 'citro', 'intro', 'ultra', 'porro', 'horsum', 'prorsum', 'introrsum', 'retrorsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum'),
-  (:time; REMEMBER YOU NEED TO CHECK THE PART OF SPEECH, since mox can be a conjunction in the corpus; left off denique because it is not consistently temporal; ones which express habitual or repeated time like cotidie, saepe, crebro or iam non were left off for now:) ('nunc', 'tunc', 'mox', 'iam', 'dum', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremum', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum'),
-  (:Pinkster volume 1, which distinguishes between position, goal/direction, locative case, source, path, extent; pp. 807-808, 812-13, 881-819, 829, 832. The below spatial adverbs are generally in order:)
-  (:spatial:)('contra', 'procul', 'ibi', 'intus', 'prope', 'longe', 'utrimque', 'foras', 'eo', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus', 'longe', 'recta'),
+  let $toks := deh:tokens-from-unk($nodes)
+  (:Explanation of the below: there are temporal, spatial and mixed, the mixed being those which have both a spatial and temporal meaning. That is not to say all the $temporal and $spatial are totally unambiguous, but if they are, it is not between space and time. The -unamb are those who can be distinguished unambiguously simply by their lemma; for any others, we will need to look to the relation tags for disambiguation:)
+  let $temporal-unamb :=('nunc', 'tunc', 'mox', 'iam', 'dum', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum', 'temperi', 'vesperi', 'noctu', 'antea', 'statim', 'nuper', 'abhinc', 'breviter', 'usqui', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
+  let $temporal-amb := ('perpetuo', 'perpetuum', 'aeternum', 'postremo', 'postremum')
+  let $mixed := ('hinc', 'ibi', 'eo2','eo#2', 'inde', 'usque', 'ultra', 'porro', 'retrorsum', 'ibidem', 'prope', 'ilico')
+  let $mixed-clause := ('ubi', 'unde')
+  let $spatial-unamb := ('hic', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'intro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'eo', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
+  let $spatial-clause := ('ubiubi', 'quoquo', 'undecumque', 'quaqua') (:provided on Allen & Greenough p. 123:)
+  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta')
   
-  (:PInkster volume 1, which distinguishes between position, extent, time within which, frequency, attendant circumstances, connection between one time and another; pp. 841-842, where he mentions how nunc and deinde have discourse functions, 847-848, :)
-  (:temporal; IS SAEPIUS A DIFFERENT LEMMA FROM SAEPE? also the numeral adverbs, 'bis', 'ter', 'quater', quinquiens, sexiens, septiens, octiens, noviens, deciens, etc.; also, what about ordinals used adverbially? :)('luci', 'temperi', 'vesperi', 'noctu', 'ante', 'antea', 'ilico', 'primo', 'statim', 'nuper', 'abhinc', 'breviter', 'perpetuo', 'usqui', 'sempiternum', 'aeternum', 'perpetuum', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
+  (:Both the unambiguous ones, and the ambiguous, where we check if it may have the right tags:)
+  let $temporal := (
+    $toks[deh:lemma(., $temporal-unamb)], 
+    $toks[deh:is-adverbial(.) and deh:lemma-or-form(., $temporal-amb)]
+  )
+  
+  
+  let $mixed := (
+    $toks[deh:lemma(., $mixed)],
+    for $tok in $toks where deh:lemma($tok, $mixed-clause) return $tok[deh:is-subordinating-relative(.) = false()] (:make sure the potentially subordinating ones are not:)
+  )
+  
+  let $spatial := (
+    $toks[deh:lemma(., $spatial-unamb)],
+    for $tok in $toks where deh:lemma($tok, $spatial-clause) return $tok[deh:is-subordinating-relative(.) = false()],
+    $toks[deh:is-adverbial(.) and deh:lemma-or-form(., $spatial-amb)],
+    $toks[deh:case(.) = 'l'] (:Accounts for the locative:)
+  )
+  
+  (:Make sure each is properly labeled:)
+  let $temporal-final := for $item in $temporal return array{$item, 'temporal'}
+  let $spatial-final := for $item in $spatial return array{$item, 'spatial'}
+  let $mixed-final := for $item in $mixed return array{$item, 'mixed-spatial-temporal'}
+  
+  
+  return ($temporal-final, $spatial-final, $mixed-final)
+    
   
   (:Prepositions: 'adversum', 'ante', 'circiter', 'cis', 'citra', 'infra', 'contra', 'intra', 'pone', 'prope', 'tenus', 'ultra', 'post':)
-  
-  (:locative:)
 };
 
-declare function deh:spatial-clause()
+declare function deh:spatial-clause($clause-pairs as array(*)*)
 {
-  ('quatenus', 'quo', 'quorsum', 'utroque')
+  let $lemmas := ('quatenus', 'quo', 'quorsum', 'utroque', 'ubiubi', 'quoquo', 'undecumque', 'quaqua', 'sicubi', 'siquo', 'sicunde', 'siqua')
+  
+   
+    return $clause-pairs[.(1) => deh:lemma($lemmas)]
 };
 
 
@@ -2992,7 +3052,7 @@ declare function deh:object-clause($clause-pairs as array(*)*)
 declare function deh:conditional-clause($clause-pairs as array(*)*)
 {
   
-  let $conditional := ("(ni|)si(n|)(ve|)", "ni", "si non")
+  let $conditional := ("(ni|)si(n|)(ve|)", "ni", "si non", 'siqua')
   
   for $target in $conditional
   return $clause-pairs[.(1) => deh:lemma($target)]
@@ -3039,6 +3099,15 @@ declare function deh:has-question-mark($tok as element()?) as xs:boolean
 {
   (:If LDT, we just see if there is a question-mark in the @form field, and if PROIEL, if there is a ? in @presentation after:)
   fn:contains($tok/fn:string(@form), "?") or fn:contains($tok/fn:string(@presentation-after), "?")
+};
+
+declare function deh:process-count-results($arrays as array(*)*, $work-length as xs:double)  
+{
+  let $distinct := fn:count($arrays)
+  let $occurences := for $array in $arrays?* return ($array(2) div $work-length) * 10000
+  let $parataxis-val := $distinct div stats:stdev($occurences)
+  let $total-occurence := fn:fold-left($arrays?*?2, 0, function($a, $b){$a + $b})
+  return array{$parataxis-val, $total-occurence}
 };
 
 

@@ -17,5 +17,7 @@ declare function stats:stdev($seq as xs:double*) as xs:double
 
 declare function stats:mean($seq as xs:double*) as xs:double
 {
-  fn:fold-left($seq, 0, function($a, $b){$a + $b}) div fn:count($seq)
+  if (fn:count($seq) > 0) then (
+  fn:fold-left($seq, 0, function($a, $b){$a + $b}) div fn:count($seq))
+  else (0)
 };
