@@ -2916,7 +2916,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $temporal-ind-final :=
   for $target in $w-indicative-temp
-  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 'i']
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2)[1] => deh:mood() = 'i']
   
   let $temporal-final :=
   for $target in $temporal
@@ -2927,7 +2927,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $separable-temporal :=
   for $target in $separable
-  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable] => array:append(($target || 'quam')) (:Added this little thing at the end so there is a way of :)
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
   let $temporal-results := ($temporal-ind-final, $temporal-final, $separable-temporal)
   
@@ -3031,7 +3031,7 @@ declare function deh:purpose-clause($clause-pairs as array(*)*)
   let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
   
   for $target in $w-subj
-  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 's' and fn:contains(deh:clause-pair-rel(.), 'adv')]
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2)[1] => deh:mood() = 's' and fn:contains(deh:clause-pair-rel(.), 'adv')]
 };
 
 (:
@@ -3046,7 +3046,7 @@ declare function deh:object-clause($clause-pairs as array(*)*)
   let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
   
   for $target in $w-subj
-  return $clause-pairs[.(1) => deh:lemma($target) and .(2) => deh:mood() = 's' and functx:contains-any-of(deh:clause-pair-rel(.), ("comp", "obj", "sbj"))]
+  return $clause-pairs[.(1) => deh:lemma($target) and .(2)[1] => deh:mood() = 's' and functx:contains-any-of(deh:clause-pair-rel(.), ("comp", "obj", "sbj"))]
 };
 
 declare function deh:conditional-clause($clause-pairs as array(*)*)

@@ -128,16 +128,22 @@ let $prose-trees := for $work in $prose return $all-trees[fn:matches(deh:work-in
 let $poetry-trees := for $work in $poetry return $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
 let $map := map{'poetry':$poetry-trees, 'prose':$prose-trees}
-let $work-name := 'Gall'(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
-for $work in $work-name
+let $work-name := ''(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
+for $work in $poetry
 let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
-let $causal-adv := (deh:causal-adverb($tree) => deh:count-by-form()) ! array:append(., 'causal')
+let $causal-adv := (deh:causal-adverb($tree) => deh:count-by-form()) ! array:append(., ('causal', 'para'))
 
 let $sp-temp-adv := deh:spatio-temporal-adverb($tree)
-let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return $item(1)) => deh:count-by-form()) ! array:append(., 'mixed')
-let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., 'spatial')
-let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., 'temporal')
+let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return $item(1)) => deh:count-by-form()) ! array:append(., ('mixed', 'para'))
+let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., ('spatial', 'para'))
+let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., ('temporal', 'para'))
+
+(:clause:)
+let $clause-pairs := deh:get-clause-pairs($tree) 
+let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., ('causal', 'hypo'))
+let $spatial-clause := (($clause-pairs => deh:spatial-clause()) => deh:count-clause-pairs()) ! array:append(., ('spatial', 'hypo'))
+let $temporal-clause :=  ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., ('temporal', 'hypo'))
 
 (:
 let $temporal-clause := ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., 'temporal')
@@ -146,233 +152,39 @@ let $spatial-clause := ($clause-pairs => deh:spatial-clause() => deh:count-claus
 let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., 'causal')
 :)
 
-let $results := ($mixed-adv, $temporal-adv, $spatial-adv, $causal-adv)
+let $results-para := ($mixed-adv, $temporal-adv, $spatial-adv, $causal-adv)
+let $results-hypo := ($causal-clause, $spatial-clause, $temporal-clause)
 
+return ($results-para, $results-hypo) ! array:append(., 'poetry')
+
+(:
 let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
 
 let $types := ('mixed', 'spatial', 'temporal', 'causal')
 
-let $organized :=
+let $organized-para :=
 for $type in $types
-return array{$results[.(3) = $type]}
+return array{$results-para[.(3) = $type]}
 
-(:work,mixed,temporal,spatial,causal,work-length:)
-let $mixed-para := $organized[1] => deh:process-count-results($work-length)
-let $spatial-para := $organized[2] => deh:process-count-results($work-length)
-let $temp-para := $organized[3] => deh:process-count-results($work-length)
-let $causal-para := $organized[4] => deh:process-count-results($work-length)
+let $organized-hypo :=
+for $type in $types
+return array{$results-hypo[.(3) = $type]}
 
-(:work,mixed-para, mixed-num, spatial-para, spatial-num, temp-para, temp-num, causal-para, causal-num, work-length:)
-return string-join(($work, $mixed-para?*, $spatial-para?*, $temp-para?*, $causal-para?*, $work-length), ",")
+
+let $mixed-para := $organized-para[1] => deh:process-count-results($work-length)
+let $spatial-para := $organized-para[2] => deh:process-count-results($work-length)
+let $temp-para := $organized-para[3] => deh:process-count-results($work-length)
+let $causal-para := $organized-para[4] => deh:process-count-results($work-length)
+
+let $spatial-hypo := $organized-hypo[2] => deh:process-count-results($work-length)
+let $temp-hypo := $organized-hypo[3] => deh:process-count-results($work-length)
+let $causal-hypo := $organized-hypo[4] => deh:process-count-results($work-length)
+
+
+
+
+work,mixed-para, mixed-num, spatial-para, spatial-num, temp-para, temp-num, causal-para, causal-num, work-length
+return string-join(($work, $mixed-para?*, $spatial-para?*, $temp-para?*, $causal-para?*, $spatial-hypo?*, $temp-hypo?*, $causal-hypo?*, $work-length), ","):)
   
 
 
-
-
-(:
-let $clause-pairs := deh:get-clause-pairs($work) (: 
-let $causal-clause := $clause-pairs => deh:causal-clause() => deh:count-clause-pairs()
-let $spatio-temporal-clause := ($clause-pairs => deh:spatial-clause(), $clause-pairs => deh:temporal-clause()) => deh:count-clause-pairs()
-:)
-
-
-(:
-let $main := fn:count(deh:main-verbs($trees))
-let $sub := fn:count(deh:finite-clause($trees, true())):)
-
-
-
-
-
-
-(:
-let $si := deh:pick-random($all-trees//sentence[boolean(./*[deh:lemma(., ('si', 'sin', 'sive'))])], 10)
-for $sent in $si
-let $clauses := deh:finite-clause($sent, false())
-let $final :=
-for $clause in $clauses
-return ($clause, $clause[deh:is-verb(.)]/deh:verb-headed-clause-sub(.), $clause[deh:is-verb(.) = false()]/deh:get-auxc-verb(.))
-return ($final, $sent)
-:)
-
-
-
-
-
-(:
-let $csv := csv:doc("./Data-output/var-info/whole-corpus-clause-11.12.csv", map{'header':'yes'})
-let $records := $csv/csv/record
-let $targets := ("cum", "cumque", "ne", "neu", "neve","necubi", "nequando", "ut(i|)", "qui(cumque|)", "quia", "quod", "(ni|)si(n|)(ve|)", "ni", "si non", "ubi(que|)(nam|)", "ubicumque") :)(:Work on adding quin, depends if it is a comp clause:)
-
-(:
-let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
-let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que"):)
-(:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)
-(:
-let $quam := "quam"
-
-let $restricted-temp := ("ubi", "ubi(que|)(nam|)", "ubicumque")
-
-let $w-subj := ("ne", "neu", "neve", "necubi", "nequando", "ut(i|)")
-
-let $restricted-caus := ("quia", "quod")
-
-let $restricted-conditional := ("(ni|)si(n|)(ve|)", "ni", "si non")
-
-let $purpose :=
-for $target in $w-subj
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " s ") and fn:contains(fn:lower-case(./relation/text()), 'adv')]
-
-let $object :=
-for $target in $w-subj
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " s ") and functx:contains-any-of(fn:lower-case(./relation/text()), ("comp", "obj", "sbj"))]
-
-let $temporal-ind-final :=
-for $target in $w-indicative-temp
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex) and fn:contains(./mood/text(), " i ")]
-
-let $temporal-final :=
-for $target in $restricted-temp
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
-
-let $temporal-results := ($temporal-ind-final, $temporal-final)
-
-let $causal :=
-for $target in $restricted-caus
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
-
-let $conditional :=
-for $target in $restricted-conditional
-let $regex := fn:concat("^", $target, "(#|)[^a-z]* ")
-return $records[fn:matches(fn:lower-case(./subordinator_lemma/text()), $regex)]
-
-let $all := ($purpose, $object, $temporal-results, $causal, $conditional)
-
-let $works := fn:distinct-values($records/work-info)
-:)
-(:
-let $record-purpose := <record>{for $work in $works return <_>{fn:count($purpose[fn:contains(./work-info/text(), $work)]/fn:count($all[fn:contains(./work-info/text(), $work)]))}</_>}</record>
-
-let $record-object := <record>{for $work in $works return <_>{fn:count($object[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-temporal-results:= <record>{for $work in $works return <_>{fn:count($temporal-results[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-causal := <record>{for $work in $works return <_>{fn:count($causal[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-conditional := <record>{for $work in $works return <_>{fn:count($conditional[fn:contains(./work-info/text(), $work)])}</_>}</record>
-:)
-(:
-let $record-purpose := <record>{for $work in $works return <_>{fn:count($purpose[fn:contains(./work-info/text(), $work)]/fn:count($all[fn:contains(./work-info/text(), $work)]))}</_>}</record>
-
-let $record-object := <record>{for $work in $works return <_>{fn:count($object[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-temporal-results:= <record>{for $work in $works return <_>{fn:count($temporal-results[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-causal := <record>{for $work in $works return <_>{fn:count($causal[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-conditional := <record>{for $work in $works return <_>{fn:count($conditional[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $adverbials:= $records[fn:matches(fn:lower-case(./relation/text()), "adv")]
-let $non-adv-clauses := $records[fn:matches(fn:lower-case(./relation/text()), "adv") = false()]
-
-let $record-adverbial := <record>{for $work in $works return <_>{fn:count($adverbials[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-let $record-non-adv := <record>{for $work in $works return <_>{fn:count($non-adv-clauses[fn:contains(./work-info/text(), $work)])}</_>}</record>
-
-return csv:serialize(<csv>{($record-adverbial, $record-non-adv)}</csv>)
-:)
-
-(:
-qua re  velim ut  scribis... because ut was not considered a subordinator directly
-in primis que versutum et callidum factum Solonis... is quo later in the sentence a 'G-'?
-omnis autem et animadversio et castigatio contumelia... is castigat really subordinate?
-itaque ut eandem nos modestiam... Is a result clause considered relative? maybe so
-magis quid se dignum foret  quam quid in illos iure fieri posset... why is only the foret and not the posset considered subordinate? Because of the quam?
-
-
-
-
-:)
-
-(:
-let $preds := deh:search((), "pred", (), $all-trees)
-let $children := deh:return-children($preds)
-let $proi-child := $children[name() = 'token']
-let $ldt-child := $children[name() = 'word']
-let $parts-of-speech := (for $item in $proi-child/fn:string(@part-of-speech) return deh:get-proiel-pos-map()($item), deh:get-postags($ldt-child, deh:postags("ldt")))
-return $parts-of-speech
-:)
-
-
-
-(:
-Comparatives:
-1 magis plus, 
-Phases:
-Nouns with quantifiers with ex
-Nouns with quantifiers with de
-
-Bare quantifiers with ex
-Bare quantifiers with de
-
-
-:)
-
-
-
-(:3,639 sum, 5 illecebra1, 
-
-:)
-
-(:
-Saved 6/30/2023:
-let $auxiliaries :=
-  let $postags := deh:postags()
-  for $treebank in $treebanks
-  let $nom-participles := (deh:search(("verb", "gerundive"), "", "", $treebank, $postags), deh:search(("verb", "gerund"), "", "", $treebank, $postags))
-  let $dependents := deh:return-children($nom-participles)
-  let $search_2 := deh:search((), "AuxV", "", $dependents, $postags)
-  return $search_2
-for $treebank in $treebanks
-return $treebank/fn:document-uri(.)
-:)
-(:
-EXAMPLE: uSE OF THE DEH:FIND-HIGHEST FUNC
-let $doc := $treebanks[2]
-let $search := deh:find-highest("verb", $doc, deh:postags())
-let $search := deh:mark-node($search)
-for $word in $search
-where fn:contains($word/fn:string(@relation), "PRED") ne true()
-return $word
-FIRST FEW RESULTS:
-<word deh-sen-id="38" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="7" form="crede" lemma="credo1" postag="v2spma---" relation="ExD" head="8"/>
-<word deh-sen-id="127" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="6" form="opprimar" lemma="opprimo1" postag="v1spsp---" relation="ADV_CO" head="5"/>
-<word deh-sen-id="127" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="15" form="desinam" lemma="desino1" postag="v1spsa---" relation="ADV_CO" head="11"/>
-<word deh-sen-id="147" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="5" form="frangat" lemma="frango1" postag="v3spsa---" relation="ADV_CO" head="2"/>
-<word deh-sen-id="147" deh-docpath="file:///C:/Users/T470s/Documents/2023 Spring Semester/Latin Dependency Treebank (AGLDT)/Cic Catil.xml" id="11" form="corrigas" lemma="corrigo1" postag="v2spsa---" relation="ADV_CO" head="8"/>
-:)
-
-
-(: EXAMPLE OF LOOKING FOR COMPARATIVE ADVERBS (6/25/2023, more recent than anything below)
-for $treebank in $treebanks
-return deh:search(("comparative"), "ADV", "", $treebank, deh:postags())
-:)
-(:
-HOW TO SEARCH FOR PERFECT PASSIVE FORMS:
-for $treebank in $treebanks
-let $auxiliaries := $treebank//word[(fn:string(@lemma) eq "sum1") and (fn:string(@relation) eq "AuxV")]
-let $participles := deh:postag-andSearch(("participle", "passive", "nominative"), $treebank, $postags)
-let $results := deh:parent-return-pairs($auxiliaries, $participles)
-for $item in $results
-return fn:concat($item/*[1]/fn:string(@form), ", ", $item/word[2]/fn:string(@form))
-
-How to get the length of the longest sentence in a text
-let $treebank := $treebanks[2]
-let $seq := deh:sentence-lengths($treebank)/fn:number(text())
-return functx:sort($seq)
-:)
