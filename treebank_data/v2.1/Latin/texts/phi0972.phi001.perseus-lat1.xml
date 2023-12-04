@@ -12493,21 +12493,21 @@
       <word id="15" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="854" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="67">
-      <word id="1" form="Nec" lemma="ne1" postag="c--------" relation="AuxZ_ExD_PRED" head="1"/>
+      <word id="1" form="Nec" lemma="ne1" postag="c--------" relation="AuxZ_ExD_PRED" head="0"/>
       <word id="2" form="melior" lemma="bonus1" postag="a-s---fnc" relation="PNOM_ExD_PRED" head="1"/>
       <word id="3" form="Scintilla" lemma="scintilla1" postag="n-s---fn-" relation="SBJ_ExD_PRED" head="1"/>
       <word id="4" form="," lemma="comma1" postag="u--------" relation="AuxX" head="11"/>
-      <word id="5" form="quae" lemma="qui1" postag="p-s---fn-" relation="SBJ" head="11"/>
-      <word id="6" form="de" lemma="de1" postag="r--------" relation="AuxP" head="11"/>
-      <word id="7" form="cervice" lemma="cervix1" postag="n-s---fb-" relation="OBJ" head="7"/>
-      <word id="8" form="sua" lemma="suus1" postag="a-s---fb-" relation="ATR" head="8"/>
-      <word id="9" form="capsellam" lemma="capsella1" postag="n-s---fa-" relation="OBJ" head="11"/>
-      <word id="10" form="detraxit" lemma="detraho1" postag="v3sria---" relation="ATR" head="4"/>
-      <word id="11" form="aureolam" lemma="aureolus1" postag="a-s---fa-" relation="ATR" head="10"/>
+      <word id="5" form="quae" lemma="qui1" postag="p-s---fn-" relation="SBJ" head="10"/>
+      <word id="6" form="de" lemma="de1" postag="r--------" relation="AuxP" head="10"/>
+      <word id="7" form="cervice" lemma="cervix1" postag="n-s---fb-" relation="OBJ" head="6"/>
+      <word id="8" form="sua" lemma="suus1" postag="a-s---fb-" relation="ATR" head="7"/>
+      <word id="9" form="capsellam" lemma="capsella1" postag="n-s---fa-" relation="OBJ" head="10"/>
+      <word id="10" form="detraxit" lemma="detraho1" postag="v3sria---" relation="ATR" head="3"/>
+      <word id="11" form="aureolam" lemma="aureolus1" postag="a-s---fa-" relation="ATR" head="9"/>
       <word id="12" form="," lemma="comma1" postag="u--------" relation="AuxX" head="16"/>
-      <word id="13" form="quam" lemma="qui1" postag="p-s---fa-" relation="OBJ" head="16"/>
-      <word id="14" form="Felicionem" lemma="Felicio" postag="n-s---fa-" relation="OBJ" head="16"/>
-      <word id="15" form="appellabat" lemma="appello1" postag="v3siia---" relation="ATR" head="10"/>
+      <word id="13" form="quam" lemma="qui1" postag="p-s---fa-" relation="OBJ" head="15"/>
+      <word id="14" form="Felicionem" lemma="Felicio" postag="n-s---fa-" relation="OBJ" head="15"/>
+      <word id="15" form="appellabat" lemma="appello1" postag="v3siia---" relation="ATR" head="9"/>
       <word id="16" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="855" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="67">

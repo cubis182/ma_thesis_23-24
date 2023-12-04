@@ -1652,6 +1652,17 @@ declare function deh:get-ldt-conj-relations($all-ldt)
 :)
 
 (:
+12/3/2023
+deh:get-tok-address
+
+Returns a string with the concatenated filename, sentence and word id, in that order, separated by |
+:)
+declare function deh:get-tok-address($tok as element())
+{
+  ($tok/fn:base-uri(.) || "|" || $tok/../fn:string(@id) || "|" || $tok/fn:string(@id))
+};
+
+(:
 deh:count-clause-pairs
 11/30/2023
 
@@ -1659,8 +1670,14 @@ I am getting tired of redoing this every time, so if I want to count, in a seque
 :)
 declare function deh:count-clause-pairs($toks as array(*)*) as item()*
 {
-    
-    ($toks[array:size(.) > 2]?(3), $toks[array:size(.) < 3]?(1)/fn:lower-case(fn:string(@form))) => deh:count-each()
+    (:Get only the appropriate string: if there is a third item in an array, that means we selected it as the lemma which should represent the whole phrase, so we must check for that:)
+    deh:format-clause-pairs($toks) => deh:count-each()
+};
+
+declare function deh:format-clause-pairs($toks as array(*)*) as xs:string*
+{
+  (:This function outputs the clause pairs in a friendly format:)
+  ($toks[array:size(.) > 2]?(3), $toks[array:size(.) < 3]?(1)/fn:lower-case(fn:string(@form)))
 };
 
 (:
@@ -2331,7 +2348,7 @@ This function returns the subordinators in clauses where the verb is the head. I
 If you want this function to consistently retrieve the subordinator, it will have to account for the fact that, in the LDT, if two verbs are coordinated within a clause, the verbs are siblings of the relative
 The argument MUST be a verb which we already know is the head of a clause
 :)
-declare function deh:vhcs-main($tok as element()?)
+declare function deh:vhcs-main($tok as element())
 {
   (:We don't want to get lost navigating the siblings and other parts of the tree if we don't have to: since the only reason the target subordinator would be among siblings is if coordination is involved, we :)
   let $sib := if (deh:return-parent($tok, 0)/deh:is-coordinating(.) and functx:contains-any-of($tok/fn:string(@relation), ("comp")) = false()) then (deh:return-siblings($tok, false())) else () 
@@ -2398,7 +2415,7 @@ declare function deh:vhcs-helper($tok as element()*)
 declare function deh:vhcs-helper-b($pronoun as element()*, $target-depth as xs:integer) as element()*
 {
   (:A few conditions: either we have already reached the target depth and it is a sibling, we have yet to reach the target depth, or a depth of one has been reached and we need to exit:)
-  if (fn:count($pronoun[deh:return-depth(., 1) = $target-depth])) then ($pronoun) (:return to the results once we get back to the depth of the targeted verb:)
+  if (boolean($pronoun[deh:return-depth(., 1) = $target-depth])) then ($pronoun) (:return to the results once we get back to the depth of the targeted verb:)
   else if (fn:count($pronoun[deh:return-depth(., 1) = 1]) > 0) then () (:if we get back to base, depth is 1; we cannot go any further back, so just return nothing here, because it clearly didn't work:)
   else (functx:distinct-nodes((deh:return-parent($pronoun, 0), $pronoun)) => deh:vhcs-helper-b($target-depth)) (:11/20/23: mostly unchanged here, just loops through:)
 };
@@ -2516,7 +2533,7 @@ declare function deh:is-coordinating($tok as element()) as xs:boolean
  )
 };
 
-declare function deh:verb-headed-clause-sub($tok as element()?)
+declare function deh:verb-headed-clause-sub($tok as element())
 {
   let $subs := deh:vhcs-main($tok)
   return if (fn:count($subs) = 1) then ($subs)
@@ -2940,15 +2957,16 @@ deh:spatio-temporal-adverb()
 :)
 declare function deh:spatio-temporal-adverb($nodes as node()*)
 {
+  (:12/3/2023: removed the "clause" ones:)
   let $toks := deh:tokens-from-unk($nodes)
   (:Explanation of the below: there are temporal, spatial and mixed, the mixed being those which have both a spatial and temporal meaning. That is not to say all the $temporal and $spatial are totally unambiguous, but if they are, it is not between space and time. The -unamb are those who can be distinguished unambiguously simply by their lemma; for any others, we will need to look to the relation tags for disambiguation:)
   let $temporal-unamb :=('nunc', 'tunc', 'mox', 'iam', 'dum', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum', 'temperi', 'vesperi', 'noctu', 'antea', 'statim', 'nuper', 'abhinc', 'breviter', 'usqui', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
   let $temporal-amb := ('perpetuo', 'perpetuum', 'aeternum', 'postremo', 'postremum')
   let $mixed := ('hinc', 'ibi', 'eo2','eo#2', 'inde', 'usque', 'ultra', 'porro', 'retrorsum', 'ibidem', 'prope', 'ilico')
-  let $mixed-clause := ('ubi', 'unde')
-  let $spatial-unamb := ('hic', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'intro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'eo', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
+  (:Removing for now, causing too much trouble let $mixed-clause := ('ubi', 'unde'):)
+  let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'intro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
   let $spatial-clause := ('ubiubi', 'quoquo', 'undecumque', 'quaqua') (:provided on Allen & Greenough p. 123:)
-  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta')
+  let $spatial-amb := ('hic', 'hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta')
   
   (:Both the unambiguous ones, and the ambiguous, where we check if it may have the right tags:)
   let $temporal := (
@@ -2958,13 +2976,13 @@ declare function deh:spatio-temporal-adverb($nodes as node()*)
   
   
   let $mixed := (
-    $toks[deh:lemma(., $mixed)],
-    for $tok in $toks where deh:lemma($tok, $mixed-clause) return $tok[deh:is-subordinating-relative(.) = false()] (:make sure the potentially subordinating ones are not:)
+    $toks[deh:lemma(., $mixed)]
+    (:for $tok in $toks where deh:lemma($tok, $mixed-clause) return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()] make sure the potentially subordinating ones are not actually subordinating; this means eliminating whether it is the head of a clause as an AuxC/G- or as a relative adverb, and eliminating it if it is a question. Is-subordinating-relative covers the first of those potentials, and the last boolean covers whether it is an AuxC/G-:)
   )
   
   let $spatial := (
-    $toks[deh:lemma(., $spatial-unamb)],
-    for $tok in $toks where deh:lemma($tok, $spatial-clause) return $tok[deh:is-subordinating-relative(.) = false()],
+    $toks[deh:lemma(., $spatial-unamb)], 
+    for $tok in $toks where deh:lemma($tok, $spatial-clause) return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()],
     $toks[deh:is-adverbial(.) and deh:lemma-or-form(., $spatial-amb)],
     $toks[deh:case(.) = 'l'] (:Accounts for the locative:)
   )

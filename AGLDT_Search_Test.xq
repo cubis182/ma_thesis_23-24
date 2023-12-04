@@ -128,34 +128,33 @@ let $prose-trees := for $work in $prose return $all-trees[fn:matches(deh:work-in
 let $poetry-trees := for $work in $poetry return $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
 let $map := map{'poetry':$poetry-trees, 'prose':$prose-trees}
-let $work-name := ''(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
-for $work in $poetry
+let $work-name := '(Petr|Saty)'(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
+for $work in $works
 let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
-let $causal-adv := (deh:causal-adverb($tree) => deh:count-by-form()) ! array:append(., ('causal', 'para'))
+let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
+
+let $causal-adv := (deh:causal-adverb($tree) => deh:count-by-form()) ! array:append(., ('causal', 'para', $work-length))
 
 let $sp-temp-adv := deh:spatio-temporal-adverb($tree)
-let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return $item(1)) => deh:count-by-form()) ! array:append(., ('mixed', 'para'))
-let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., ('spatial', 'para'))
-let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., ('temporal', 'para'))
+let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return $item(1)) => deh:count-by-form()) ! array:append(., ('mixed', 'para', $work-length))
+let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., ('spatial', 'para', $work-length))
+let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., ('temporal', 'para', $work-length))
 
 (:clause:)
 let $clause-pairs := deh:get-clause-pairs($tree) 
-let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., ('causal', 'hypo'))
-let $spatial-clause := (($clause-pairs => deh:spatial-clause()) => deh:count-clause-pairs()) ! array:append(., ('spatial', 'hypo'))
-let $temporal-clause :=  ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., ('temporal', 'hypo'))
+let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., ('causal', 'hypo', $work-length))
+let $spatial-clause := (($clause-pairs => deh:spatial-clause()) => deh:count-clause-pairs()) ! array:append(., ('spatial', 'hypo', $work-length))
+let $temporal-clause :=  ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., ('temporal', 'hypo', $work-length))
 
-(:
-let $temporal-clause := ($clause-pairs => deh:temporal-clause() => deh:count-clause-pairs()) ! array:append(., 'temporal')
-let $spatial-clause := ($clause-pairs => deh:spatial-clause() => deh:count-clause-pairs()) ! array:append(., 'spatial')
-
-let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., 'causal')
-:)
 
 let $results-para := ($mixed-adv, $temporal-adv, $spatial-adv, $causal-adv)
 let $results-hypo := ($causal-clause, $spatial-clause, $temporal-clause)
 
-return ($results-para, $results-hypo) ! array:append(., 'poetry')
+for $item in ($results-para, $results-hypo)
+
+return fn:string-join(($work, $item?*), ",")
+(:capuam, romam, HANC, HAEC, :)
 
 (:
 let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
