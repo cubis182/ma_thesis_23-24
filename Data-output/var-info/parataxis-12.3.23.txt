@@ -1,3 +1,4 @@
+WORK,WORD,TYPEA,TYPEB,WORDCOUNT,EXTRA
 Elegi,ergo1,causal,para,4654,4654
 Elegi,igitur,causal,para,4654,4654
 Elegi,igitur1,causal,para,4654,4654

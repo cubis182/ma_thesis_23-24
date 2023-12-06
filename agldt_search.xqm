@@ -187,7 +187,7 @@ declare %public function deh:info-from-urn($urn as xs:string) as array(*)
 
 (:
 7/3/2023:
-This function returns, for each of the supplied documents (whether one or more) one or more arrays with the title (plus possibly other additional info) and then the author. If either cannot be found, the array will have a size of one and will only have the base uri, so you can use array:size() to check this.
+This function returns, for each of the supplied documents (whether one or more) one or more arrays with the TITLE (plus possibly other additional info) and then the AUTHOR. If either cannot be found, the array will have a size of one and will only have the base uri, so you can use array:size() to check this.
 
 $doc: One or more treebank documents (not nodes)
 :)
@@ -1254,7 +1254,7 @@ deh:check-head
 7/21/2023:
 Returns the head id, whether it is an LDT or PROIEL tree
 :)
-declare %public function deh:check-head($word as element())
+declare %public function deh:check-head($word as element()) as node()
 {
   let $head :=
   if ($word/name() = 'word') then ($word/@head)
@@ -1317,6 +1317,7 @@ $depth: CURRENTLY VESTIGIAL, I'LL FIX IT LATERThe depth within the 'descendants'
 Depends on:
 deh:return-children()
 deh:return-depth()
+deh:descendants-aux
 
 :)
 declare %public function deh:return-descendants($node as element()*)
@@ -1718,27 +1719,6 @@ $
 Depends on:
 deh:get-preds() (indirectly, I am currently testing it to put it in a higher function)
 :)
-
-(:
-deh:get-preds()
-9/20/2023
-
-This function should return the "main verbs" of every sentence in both PROIEL and LDT. I include some notes here. First, this should be able to return elliptical verbs. 
-
-
-Depends on:
-deh:lowest-numbers()
-:)
-declare function deh:get-preds($sents as element(sentence)*)
-{
-  for $sent in $sents
-  let $verbs := $sent/*[fn:matches(fn:string(@postag), "v[^-].......") or ($sent/*[@part-of-speech="V-" and fn:matches(fn:string(@morphology), "[^-].........")])] (:For both LDT and PROIEL; checks for finite verbs (hence the [^-] regex, which makes sure there is a "person" value:)
-  let $depth := fn:for-each($verbs, deh:return-depth(?, 0))
-  return if (fn:count($depth) > 0) then (
-  let $indices := fn:index-of($depth, fn:min($depth)) (:get the location of the lowest ones:)
-  return $verbs[fn:position() = $indices])
-  else ()
-};
 
 (:
 deh:lowest-numbers()
