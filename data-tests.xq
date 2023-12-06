@@ -48,5 +48,5 @@ let $causal-clause := for $item in ($clause-pairs => deh:causal-clause() => deh:
 let $spatial-clause := for $item in (($clause-pairs => deh:spatial-clause()) => deh:format-clause-pairs()) return array{$item, ('spatial', 'hypo', $work-length)}
 let $temporal-clause :=  for $item in ($clause-pairs => deh:temporal-clause() => deh:format-clause-pairs()) return array{$item, ('temporal', 'hypo', $work-length)}
 
-for $item in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause)
-return fn:string-join(($work, fn:lower-case(fn:replace($item?1, "[^a-z^A-Z0-9]", "")), $item?2, $item?3, $work-length), ",")
+for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause)
+return fn:string-join(($n, $work, fn:lower-case(fn:replace($item?1, "[#0-9]", "")), $item?2, $item?3, $work-length), ",")
