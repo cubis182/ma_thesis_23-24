@@ -120,6 +120,7 @@ urn:cts:latinLit:phi0690.phi003.perseus-lat1
 (:('work-id,main,sub,obj,purp,caus,temp,condition'),:)
 
 (:So, corpus, lemma, count, type, total work count, para/hypotaxis value:)
+(:
 let $works := deh:short-names()
 let $poetry := ('Met', 'Elegie', 'Elegia', 'Aen', 'Fab', 'Sati', 'Carm', 'Amor')
 let $prose := ("In Cat", "Cael", "Att", "off", "agri", "Res", "Gall", "Vul", "Aug", "Ann", "Hist", "Pere", "Petr")
@@ -128,7 +129,7 @@ let $prose-trees := for $work in $prose return $all-trees[fn:matches(deh:work-in
 let $poetry-trees := for $work in $poetry return $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
 let $map := map{'poetry':$poetry-trees, 'prose':$prose-trees}
-let $work-name := '(Petr|Saty)'(:fn:distinct-values(doc('./Full-PROIEL/latin-nt.xml')//token/fn:substring-before(fn:string(@citation-part), " "))[. != ""]:)
+let $work-name := '(Petr|Saty)'
 for $work in $works
 let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
@@ -141,7 +142,6 @@ let $mixed-adv := ((for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] r
 let $spatial-adv := ((for $item in $sp-temp-adv[.(2) = 'spatial'] return $item(1)) => deh:count-by-form()) ! array:append(., ('spatial', 'para', $work-length))
 let $temporal-adv := ((for $item in $sp-temp-adv[.(2) = 'temporal'] return $item(1)) => deh:count-by-lemma()) ! array:append(., ('temporal', 'para', $work-length))
 
-(:clause:)
 let $clause-pairs := deh:get-clause-pairs($tree) 
 let $causal-clause := ($clause-pairs => deh:causal-clause() => deh:count-clause-pairs()) ! array:append(., ('causal', 'hypo', $work-length))
 let $spatial-clause := (($clause-pairs => deh:spatial-clause()) => deh:count-clause-pairs()) ! array:append(., ('spatial', 'hypo', $work-length))
@@ -154,7 +154,22 @@ let $results-hypo := ($causal-clause, $spatial-clause, $temporal-clause)
 for $item in ($results-para, $results-hypo)
 
 return fn:string-join(($work, $item?*), ",")
+:)
 (:capuam, romam, HANC, HAEC, :)
+
+deh:search-text("quo minus", $all-ldt//sentence)
+
+
+
+
+
+
+
+
+
+
+
+
 
 (:
 let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])

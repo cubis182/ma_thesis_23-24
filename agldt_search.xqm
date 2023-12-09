@@ -1254,7 +1254,7 @@ deh:check-head
 7/21/2023:
 Returns the head id, whether it is an LDT or PROIEL tree
 :)
-declare %public function deh:check-head($word as element()) as node()
+declare %public function deh:check-head($word as element())
 {
   let $head :=
   if ($word/name() = 'word') then ($word/@head)
@@ -1860,7 +1860,7 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Get all verbs which are in scope:)
   let $l-verbs := $ldt[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
-  let $preds := $ldt[deh:is-verb(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTHq")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
+  let $preds := $ldt[deh:is-verb(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTH")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
   
   (:Now deal with direct speech:)
   let $dirstats := $l-verbs[functx:contains-any-of(fn:string(@relation), ("DIRSTAT", "-DS-"))] (:This will be returned directly at the end:)
@@ -1887,11 +1887,15 @@ declare %public function deh:pr-main-verbs($toks as element()*) as element(token
   return $preds[(deh:return-parent-nocoord(.)/fn:string(@part-of-speech) = "G-") = false()]  (:10/3/2023, made it deh:return-parent-nocoord, it may break it, but I'm trying it:)
 };
 
-(:USED FOR THE LDT ONLY:)
+(:Used for both LDT and PROIEL:)
 declare function deh:is-periphrastic-p($tok as element()) as xs:boolean
 {
+  (:12/6/2023: if it is not a participle, we don't deal with it, so we check; it is 'p' in both treebanks:)
+  if (deh:mood($tok) = 'p') then (
   let $children := deh:return-children($tok)
-  return fn:count($children[fn:contains(fn:lower-case(fn:string(@relation)), "aux") and fn:matches(fn:string(@lemma), "^sum([^a-z]*|)$")]) > 0
+  return (fn:count($children[fn:contains(fn:lower-case(fn:string(@relation)), "aux") and fn:matches(fn:string(@lemma), "^sum([^a-z]*|)$")]) > 0) or (fn:lower-case(fn:string($tok/@relation)) = 'pred') (:12/6/23: added the 'pred' test because it cannot be a participle, have the pred tag and not be a periphrastic participle:)
+)
+  else (false())
 };
 
 
@@ -1920,12 +1924,7 @@ declare function deh:direct-speech-pr($nodes as node()*) as element(token)*
   return $final-ds
 };
 
-(:
-deh:non-pred()
-9/27/2023
 
-Get every verb which is not a main verb
-:)
 
 (:
 deh:is-conjunction()
@@ -2088,13 +2087,7 @@ declare function deh:non-finite-clause($nodes as node()*) as element()*
   return $final
 };
 
-(:
-  Gets predicates from either treebank, excluding conjunctions for PROIEL
-:)
-declare function deh:is-predicate($tok as element()) as xs:boolean
-{
-  fn:contains(fn:lower-case(fn:string($tok/@relation)), 'pred') and (deh:is-conjunction($tok) = false())
-};
+
 
 (:
 deh:is-verb()
@@ -2165,7 +2158,7 @@ Determiners if the given is a subordinating conjunction (called subjunction for 
 :)
 declare function deh:is-subjunction($tok as element()) as xs:boolean
 {
-  (fn:contains($tok/fn:string(@relation), "AuxC") or fn:contains($tok/fn:string(@part-of-speech), "G-")) or deh:lemma($tok, ('quam', 'si', 'seu', 'sive', 'siue'))
+  (fn:contains($tok/fn:string(@relation), "AuxC") or deh:is-subjunction-pr($tok)) or deh:lemma($tok, ('quam', 'si', 'seu', 'sive', 'siue'))
 };
 
 (:
@@ -2606,7 +2599,7 @@ declare %public function deh:single-lemma($tok as element(), $search as xs:strin
 declare function deh:process-lemma($lemmas as xs:string*)
 {
   for $lemma in $lemmas
-  return fn:replace($lemma, "[^a-z^A-Z0-9]", "")
+  return fn:replace($lemma, "[#0-9]", "")
 };
 
 (:
@@ -2827,7 +2820,7 @@ declare function deh:causal-clause($nodes as array(*)*)
      return if (deh:lemma($parent, ('ideo', 'propterea', 'idcirco')))
        then ($clause)
      (:possibility two: the grandparent is the preposition 'ob'; I cannot imagine this would ever not work:)
-     else if (($parent => deh:return-parent(0))/deh:lemma(., 'ob')) then ($clause)
+     else if (($parent => deh:return-parent-nocoord())/deh:lemma(., 'ob')) then ($clause)
      else ()
   )
   else ()
