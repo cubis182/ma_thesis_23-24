@@ -21,5 +21,17 @@ let $names := deh:short-names()
 for $work in $names
 for $sent in $all-trees[fn:contains(deh:work-info(.)(1), $work)]//sentence
 let $addr := deh:get-sent-address($sent)
-let $main := fn:count(deh:main-verbs($sent))
-let $pred := fn:count(deh:)
+
+let $split-mainverbs := deh:split-main-verbs($sent)
+let $main := fn:count($split-mainverbs?*)
+let $pred := fn:count($split-mainverbs?1)
+let $parenth := fn:count($split-mainverbs?2)
+let $or := fn:count($split-mainverbs?3)
+
+let $clauses := deh:get-clause-pairs($sent)
+let $adv := fn:count(deh:adverbial-clause($clauses))
+let $comp := fn:count(deh:complement-clause($clauses))
+let $atr := fn:count(deh:adjectival-clause($clauses))
+let $sub := fn:count($clauses)
+let $len := deh:word-count($sent)
+return fn:string-join(($work, $addr, $main, $pred, $parenth, $or, $adv, $comp, $atr, $sub, $len), ",")
