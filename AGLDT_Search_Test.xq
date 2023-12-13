@@ -161,8 +161,13 @@ return fn:string-join(($work, $item?*), ",")
 :)
 (:capuam, romam, HANC, HAEC, :)
 
-deh:read-tok-address('/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|192|3', $all-trees) => deh:get-clause-pairs()
+(:
+let $singles := ($all-trees => deh:get-clause-pairs())[array:size(.) < 2]
+for $item in $singles
+return deh:get-tok-address($item(1))
+:)
 
+deh:split-main-verbs($ldt2.1-treebanks)(3)
 
 
 

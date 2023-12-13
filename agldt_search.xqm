@@ -1216,12 +1216,14 @@ This is a variant of deh:return-parent which skips coordinating constructions. T
 
 Note from deh:get-auxc-verb:
 Punctuation dependent on AuxC only seems to separate the verb from the AuxC once, in Harrington. Nonetheless, all the others will be cancelled out by the fact they are not verbs, so I will continue with the no punctuation rule for -nocoord
+
+12/13/23 Notes: this is not technically strictly 'nocoord' anymore: it also checks to see if there is an AuxZ, because sometimes the prius intrudes between the subordinated verb and its quam
 :)
 declare function deh:return-parent-nocoord($nodes as element()*)
 {
   let $parents := deh:return-parent($nodes, 0)
   for $parent in $parents
-  return if (deh:is-coordinating($parent)) then (deh:return-parent-nocoord($parent))
+  return if (deh:is-coordinating($parent) or fn:contains($parent/fn:string(@relation), 'AuxZ')) then (deh:return-parent-nocoord($parent))
   else ($parent)
 };
 
@@ -1244,7 +1246,7 @@ declare function deh:return-children-nocoord($nodes as element()*)
   (:Then return each which isn't a coordinating conjunction, and pass the others right back into the function (just in case we have a coordinating conjunction coordinating other coordinating conjunctions):)
   let $final :=
     for $child in $children
-    return if (deh:is-coordinating($child)) then (deh:return-children-nocoord($child)) else ($child)
+    return if (deh:is-coordinating($child) or fn:contains($child/fn:string(@relation), 'AuxZ')) then (deh:return-children-nocoord($child)) else ($child)
     
   return ($final)
 };
@@ -1788,7 +1790,7 @@ else (false())
 
 declare function deh:is-auxiliary($tok as element())
 {
-  fn:matches($tok/fn:string(@lemma), "^sum([^a-z]*|)$") and fn:contains(fn:lower-case($tok/fn:string(@relation)), "aux")
+  $tok/deh:lemma(., ('sum', 'foro', 'edo', 'habeo')) and fn:contains(fn:lower-case($tok/fn:string(@relation)), "aux")
 };
 
 
@@ -1885,11 +1887,22 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Get direct speech from main LDT:)
   let $l-stage-c := $l-verbs[fn:contains(fn:string(@relation), "OBJ")]
   
-  let $l-stage-d := ($l-stage-c[(fn:count(deh:return-siblings(., false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0],  $l-stage-c[(functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))])
+  let $l-stage-d := ($l-stage-c[(fn:count(deh:return-siblings(., false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxG")]) > 0],  $l-stage-c[(functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))], $l-stage-c[boolean(deh:return-parent-nocoord(.)) = false()])(:Added this third one checking the parent because, if the whole sentence is in direct speech, and the head of the sentence is an OBJ, then is must be a "main" verb:)
   (:let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] :)(:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
   let $proiel-main := deh:pr-main-verbs($proiel)
   
   return (functx:distinct-nodes(($preds, $dirstats, $l-stage-d)), $proiel-main)
+};
+
+(:The same as deh:main-verbs, but returns a sequence of three arrays. the FIRST is proper main verbs, the SECOND parentheticals, and the THIRD reported speech:)
+declare function deh:split-main-verbs($nodes as node()*)
+{
+  let $verbs := deh:main-verbs($nodes)
+  let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
+  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ")) = false() and (deh:lemma(., ("aio", "inquam"))) = false()]
+  let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
+  
+  return [$main, $parenth, $reported]
 };
 
 (:
@@ -1910,7 +1923,8 @@ declare function deh:is-periphrastic-p($tok as element()) as xs:boolean
   (:12/6/2023: if it is not a participle, we don't deal with it, so we check; it is 'p' in both treebanks:)
   if (deh:mood($tok) = 'p') then (
   let $children := deh:return-children($tok)
-  return (fn:count($children[fn:contains(fn:lower-case(fn:string(@relation)), "aux") and fn:matches(fn:string(@lemma), "^sum([^a-z]*|)$")]) > 0) or (fn:lower-case(fn:string($tok/@relation)) = 'pred') (:12/6/23: added the 'pred' test because it cannot be a participle, have the pred tag and not be a periphrastic participle:)
+  (:12/13/2023: added 'foro' because 'foret' was mistagged as foro so often in Sallust that this should account for it; same with edo for est. Sometimes in Egeria the perfect passive with habeo is used, so we also need to account for that:)
+  return (fn:count($children[fn:contains(fn:lower-case(fn:string(@relation)), "aux") and deh:lemma(., ('sum', 'foro', 'edo', 'habeo'))]) > 0) or (fn:lower-case(fn:string($tok/@relation)) = 'pred') (:12/6/23: added the 'pred' test because it cannot be a participle, have the pred tag and not be a periphrastic participle:)
 )
   else (false())
 };
@@ -2045,7 +2059,7 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   (:First, we need to get only the finite verbs:)
   let $finite-verbs := $toks[deh:is-finite(.)]
   (:However, we have an issue: this list includes auxiliaries, which the deh:main-verbs function will never return, so they will not be removed, even if they are from main clauses. Therefore, we will replace them with their participle heads (well, heads in PROIEL, not LDT, but, either way, the participle holds the relation info) :)
-  let $finite-verbs := for $tok in $finite-verbs return if (fn:contains(fn:lower-case(fn:string($tok/fn:string(@relation))), "aux") and fn:matches(fn:string($tok/@lemma), "^sum([^a-z]*|)$")) then (deh:return-parent($tok, 0)) 
+  let $finite-verbs := for $tok in $finite-verbs return if (deh:is-auxiliary($tok)) then (deh:return-parent($tok, 0)) 
   else ($tok)
     
   let $main-verbs := (deh:main-verbs($toks)) (:10/9/2023:)
@@ -2055,7 +2069,7 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   let $final := (:Decided to pass the final filter between verbs in proper "subordinate" clauses and those where the verb acts as the head to a variable, because, if one conjunction has two verbs, it may get returned twice:)
     for $verb in $sub-verbs
     let $parent := deh:return-parent-nocoord($verb) (:If it has a conjunction as its head (or quam as a comparative), we want the conjunction, not the verb, so we need to test it:)
-    return if (($parent/deh:is-subjunction(.)) and $verb-only = false()) then ($parent)
+    return if ((($parent/deh:is-subjunction(.)) or $parent/deh:lemma(., ("quod"))) and $verb-only = false()) then ($parent) (:Added a lemma check here because of inconsistent tagging, and because this particular algorithm has no place in the deh:is-subjunction function. 'Quod', when it is the head of a verb in a finite clause, is always a subordinator, I checked, even when tagged as something other than AuxC. However, in main clauses it can be the head of a verb in the collocation 'quod si', which means that we need to check for this here, where we already know every verb is subordinate:)
      else ($verb) (:10/13/2023: added more conditions to the PROIEL string check, because it turns out that non-"subjunctions" can also head clauses. However, I also removed some that I added after testing: 'Pr' only appears as a head in certain circumstances, but never as a subordinator; removed "Du" because it never seems to actually head a phrase; I'm not sure why I included Px (indefinite pronoun), but it's gone; 'Dq' is also never used at the head of its clause; finally, removed "Df", ultimately because it was silly to think such a broad category could be helpful. My main issue was that compounds with "quam" are sometimes marked this way, but, ultimately, the verb is still annotated with the relation info, so it remains that case that we have the info we need with just 'G-' as the exception. :)
   return functx:distinct-nodes($final)
 };
@@ -2175,7 +2189,7 @@ Determiners if the given is a subordinating conjunction (called subjunction for 
 :)
 declare function deh:is-subjunction($tok as element()) as xs:boolean
 {
-  (fn:contains($tok/fn:string(@relation), "AuxC") or deh:is-subjunction-pr($tok)) or deh:lemma($tok, ('quam', 'si', 'seu', 'sive', 'siue'))
+  (fn:contains($tok/fn:string(@relation), "AuxC") or deh:is-subjunction-pr($tok)) or deh:lemma($tok, ('quam', 'si', 'seu', 'sive', 'siue')) and boolean(deh:return-children-nocoord($tok)[deh:is-finite(.)]) 
 };
 
 (:
@@ -2321,12 +2335,13 @@ Takes the results from deh:get-clause-pairs and returns the word which actually 
 Some notes:
 
 :)
-declare function deh:relation-head($toks as array(*)*)
+declare function deh:relation-head($toks as array(*)*) as element()*
 {
   for $tok in $toks
-  return if (deh:is-subjunction-ldt($tok(1))) then ($tok(2))
-  else if (deh:is-subjunction-pr($tok(1))) then ($tok(1))
-  else ($tok(2))
+  where array:size($tok) > 1 
+  return if (deh:is-subjunction-ldt($tok(1))) then ($tok(2)[1]) (:12/13/23 This may be temporary, but added the index for cases where multiple are posited:)
+  else if (deh:is-subjunction-pr($tok(1))) then ($tok(1)[1])
+  else ($tok(2)[1])
 };
 
 (:
@@ -2926,6 +2941,42 @@ declare function deh:clause-pair-rel($clause-pair as array(*)) as xs:string
   else ($clause-pair(2)/fn:string(@relation))
 };
 
+(:The following three functions separate suborindate clauses:)
+(:
+deh:adverbial-clause()
+:)
+declare function deh:adverbial-clause($pairs as array(*)*) as array(*)*
+{
+  for $pair in $pairs
+  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("adv"))
+  return $pair
+};
+
+(:
+12/13/2023
+deh:complement-clause()
+
+Really includes any argument clause/clause used as a noun, so it can also include relative clauses with no antecedent
+
+:)
+declare function deh:complement-clause($pairs as array(*)*) as array(*)*
+{
+  for $pair in $pairs
+  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("comp", 'obj', 'sbj', 'sub', 'subj', 'pnom', 'xobj', 'n-pred', 'a-pred', 'voc')) (:voc must stand in for a noun, narg is rare but actl:)
+  return $pair
+};
+
+(:
+12/13/2023
+deh:adjectival-clause()
+:)
+declare function deh:adjectival-clause($pairs as array(*)*) as array(*)*
+{
+   for $pair in $pairs
+  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ('atr', 'apos', 'adj', 'rel', 'narg'))
+  return $pair
+};
+
 (:
 deh:temporal-clause()
 11/21/2023
@@ -2955,7 +3006,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $separable-temporal :=
   for $target in $separable
-  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable or deh:return-children(.)[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
   let $temporal-results := ($temporal-ind-final, $temporal-final, $separable-temporal)
   
@@ -3138,6 +3189,7 @@ declare function deh:process-count-results($arrays as array(*)*, $work-length as
   let $total-occurence := fn:fold-left($arrays?*?2, 0, function($a, $b){$a + $b})
   return array{$parataxis-val, $total-occurence}
 };
+
 
 
 
