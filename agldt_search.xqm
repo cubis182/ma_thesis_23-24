@@ -1665,7 +1665,7 @@ declare function deh:get-tok-address($tok as element())
 
 declare function deh:read-tok-address($address as xs:string, $corpus as node()*)
 {
-   let $seq := fn:tokenize($address, '|')
+   let $seq := fn:tokenize($address, '\|')
    return $corpus[fn:base-uri(.) = $seq[1]]//sentence[fn:string(@id)=$seq[2]]/*[fn:string(@id) = $seq[3]]
 };
 
@@ -2518,7 +2518,10 @@ declare function deh:is-coordinating($tok as element()) as xs:boolean
   (:This first condition excludes ones containing AuxC, because 'ne' or 'neu' are also marked as COORD, but, when AuxC, do have the properties of 'ne' + the subjunctive:)
   if (fn:contains($tok/fn:string(@relation), "AuxC")) then (false())
   else (
-    if (fn:matches($tok/fn:string(@lemma), "^ne[^a-z^A-Z]*$")) then (fn:count(deh:return-children($tok)[deh:is-conjunction(.)]) > 0) else (
+    if (deh:lemma($tok, "ne")) then (fn:count(deh:return-children($tok)[deh:is-conjunction(.)]) > 0)
+    (:seu/sive is a tricky situation: it can coordinate ordinary constituents, or whole conditional clauses. It is also commonly tagged as a :)
+    else if (boolean(deh:return-children($tok)[deh:is-verb(.)]) and deh:lemma($tok, ("si", "seu", "sive", "siue"))) then (false())
+     else (
     $tok/deh:is-conjunction(.) or $tok/deh:is-punc(.)) or ($tok/deh:is-empty(.) and $tok/fn:contains(fn:lower-case(fn:string(@relation)), 'apos')) (:11/5/23: testing this out, this recognizes the empty APOS token :)
  )
 };
@@ -2745,6 +2748,17 @@ $adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RE
  
     (deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq') or functx:contains-any-of($tok/fn:string(@relation), ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN", 'adv', 'ADV', 'aux', 'AuxY', 'AuxZ'))) and deh:is-verb($tok) = false() and deh:is-subjunction($tok) = false() and deh:is-coordinating($tok) = false()
 
+};
+
+(:
+deh:is-particle
+12/13/23:
+
+Retrieves all "aux"'s which are not sum. Also remember that 'non' is included as well
+:)
+declare function deh:is-particle($tok as element()) as xs:boolean
+{
+  $tok/fn:string(@relation) = ('aux', 'AuxY', 'AuxZ') and deh:lemma($tok, 'sum') = false()
 };
 
 (:

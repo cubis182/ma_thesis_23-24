@@ -161,15 +161,7 @@ return fn:string-join(($work, $item?*), ",")
 :)
 (:capuam, romam, HANC, HAEC, :)
 
-for $work in deh:short-names()
-let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
-
-let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
-
-let $causal-adv := for $item in deh:causal-adverb($tree) where $item/deh:lemma(., ('quare',  'quamobrem', 'unde', 'quapropter')) return array{$item/deh:process-lemma(fn:string(@lemma)), 'causal', 'para', $work-length}
-
-for $item at $n in $causal-adv
-return fn:string-join(($n, $work, $item?*), ",")
+deh:read-tok-address('/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|192|3', $all-trees) => deh:get-clause-pairs()
 
 
 
