@@ -2,7 +2,11 @@ xquery version "4.0";
 
 (:NOTE THAT, FOR THE BASEX IMPLEMENTATION, SET WRITEBACK true IS NECESSARY FOR THIS TO WORK:)
 
+declare namespace tei="http://www.tei-c.org/ns/1.0";
+
 import module namespace stats = "ma-thesis-23-24" at "stats.xqm";
+
+
 
 import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
 (:In case it is being weird, get functx from:
@@ -157,10 +161,15 @@ return fn:string-join(($work, $item?*), ",")
 :)
 (:capuam, romam, HANC, HAEC, :)
 
-deh:search-text("quo minus", $all-ldt//sentence)
+for $work in deh:short-names()
+let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 
+let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
 
+let $causal-adv := for $item in deh:causal-adverb($tree) where $item/deh:lemma(., ('quare',  'quamobrem', 'unde', 'quapropter')) return array{$item/deh:process-lemma(fn:string(@lemma)), 'causal', 'para', $work-length}
 
+for $item at $n in $causal-adv
+return fn:string-join(($n, $work, $item?*), ",")
 
 
 

@@ -1663,6 +1663,23 @@ declare function deh:get-tok-address($tok as element())
   ($tok/fn:base-uri(.) || "|" || $tok/../fn:string(@id) || "|" || $tok/fn:string(@id))
 };
 
+declare function deh:read-tok-address($address as xs:string, $corpus as node()*)
+{
+   let $seq := fn:tokenize($address, '|')
+   return $corpus[fn:base-uri(.) = $seq[1]]//sentence[fn:string(@id)=$seq[2]]/*[fn:string(@id) = $seq[3]]
+};
+
+declare function deh:get-sent-address($sent as element(sentence))
+{
+  ($sent/fn:base-uri(.) || '|' || $sent/fn:string(@id))
+};
+
+declare function deh:read-sent-address($address as xs:string, $corpus as node()*)
+{
+  let $seq := fn:tokenize($address)
+  return $corpus[fn:base-uri(.) = $seq[1]]//sentence[fn:string(@id) = $seq[2]]
+};
+
 (:
 deh:count-clause-pairs
 11/30/2023
@@ -2710,6 +2727,13 @@ declare function deh:gen-prose()
   return $all-trees[functx:contains-any-of(deh:work-info(.)(1), ("In Cat", "Cael", "Att", "off", "agri", "Res", "Gall", "Vul", "Aug", "Ann", "Hist", "Pere", "Petr"))]
 };
 
+declare function deh:get-genre($corpus as node()) as xs:string
+{
+  let $work-info := deh:work-info($corpus)(1)
+  return if (functx:contains-any-of($work-info, ("Fab", "Elegi", "Sati", "Aen", "Met", "Carm", "Amor"))) then ('poetry')
+  else ('prose')
+};
+
 (:
 
 11/13/2023
@@ -3009,7 +3033,7 @@ declare function deh:is-not-interrogative($toks as element()*)
   where deh:is-question-sentence($adv/..) = false()
   let $clause-pairs := deh:get-clause-pairs($adv/..)
   return if (fn:count($clause-pairs) > 0) then ($adv[functx:is-node-in-sequence($adv, $clause-pairs?(1)) = false]/..)
-  else ($adv/..)
+  else ($adv)
 };
 
 (:
