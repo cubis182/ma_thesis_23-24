@@ -19,7 +19,7 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 ('WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.,ADV,COMP,ATR,SUB,SENTLEN'),
 let $names := deh:short-names()
 for $work in $names
-for $sent in $all-trees[fn:contains(deh:work-info(.)(1), $work)]//sentence
+for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
 let $addr := deh:get-sent-address($sent)
 
 let $split-mainverbs := deh:split-main-verbs($sent)
