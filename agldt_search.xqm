@@ -1678,7 +1678,7 @@ declare function deh:get-sent-address($sent as element(sentence))
 
 declare function deh:read-sent-address($address as xs:string, $corpus as node()*)
 {
-  let $seq := fn:tokenize($address)
+  let $seq := fn:tokenize($address, '\|')
   return $corpus[fn:base-uri(.) = $seq[1]]//sentence[fn:string(@id) = $seq[2]]
 };
 
@@ -2634,7 +2634,7 @@ declare %public function deh:single-lemma($tok as element(), $search as xs:strin
 declare function deh:process-lemma($lemmas as xs:string*)
 {
   for $lemma in $lemmas
-  return fn:replace($lemma, "[#0-9]", "")
+  return fn:replace($lemma, "[#0-9,]", "")
 };
 
 (:
@@ -2916,7 +2916,7 @@ declare function deh:test-vectors-11-23($nodes as node()*) as item()*
 deh:get-clause-pairs()
 11/22/2023
 
-Takes a series of nodes (could be sentence or document level as well) and returns uses deh:finite-clause on it, returning each result as a series of arrays where the first item is the subordinator and the second the verb
+Takes a series of nodes (could be sentence or document level as well) and returns uses deh:finite-clause on it, returning each result as a series of arrays where the first item is the subordinator and the second the verb. KEEP IN MIND THAT THIS CAN RETURN EMPTY SEQUENCES IN THE SECOND SLOT, so array:size is not enough to process the results
 :)
 declare function deh:get-clause-pairs($nodes as node()*) as item()*
 {
@@ -3006,7 +3006,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $separable-temporal :=
   for $target in $separable
-  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable or deh:return-children(.)[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable or deh:return-children(.(1))[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
   let $temporal-results := ($temporal-ind-final, $temporal-final, $separable-temporal)
   

@@ -167,10 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:split-main-verbs($ldt2.1-treebanks)(3)
-
-
-
+deh:process-lemma("eo,")
 
 
 

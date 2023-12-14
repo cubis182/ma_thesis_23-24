@@ -28,25 +28,33 @@ declare variable $ola := db:get('ola');(:fn:collection("./../latinnlp/texts/ola"
 
 declare variable $full-proiel := db:get("Full-PROIEL"); (:This is PROIEL with the full Vulgate back, not absolutely every PROIEL treebank:)
 
+('CASE,WORK,SENT-ADDR,TOK-ADDR,LEM,TYPEA,TYPEB,SENTLEN'),
 let $works := deh:short-names()
 
 for $work in $works
-let $tree := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+for $tree in ($treebank//sentence)
 
-let $work-length := fn:count($tree//sentence/*[deh:is-punc(.) = false() and deh:is-empty(.) = false()])
+let $work-length := deh:word-count($tree)
 
-let $causal-adv := for $item in (deh:causal-adverb($tree)) return array{$item/fn:string(@lemma), ('causal', 'para', $work-length)}
+let $causal-adv := for $item in (deh:causal-adverb($tree)) return array{$item, ('causal', 'para', $work-length)}
 
 let $sp-temp-adv := deh:spatio-temporal-adverb($tree)
-let $mixed-adv := for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return array{$item(1)/fn:string(@lemma), ('mixed', 'para', $work-length)}
-let $spatial-adv := for $item in $sp-temp-adv[.(2) = 'spatial'] return array{$item(1)/fn:string(@lemma), ('spatial', 'para', $work-length)}
-let $temporal-adv := for $item in $sp-temp-adv[.(2) = 'temporal'] return array{$item(1)/fn:string(@lemma), ('temporal', 'para', $work-length)}
+let $mixed-adv := for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return array{$item(1), ('mixed', 'para', $work-length)}
+let $spatial-adv := for $item in $sp-temp-adv[.(2) = 'spatial'] return array{$item(1), ('spatial', 'para', $work-length)}
+let $temporal-adv := for $item in $sp-temp-adv[.(2) = 'temporal'] return array{$item(1), ('temporal', 'para', $work-length)}
 
 (:clause:)
-let $clause-pairs := deh:get-clause-pairs($tree) 
-let $causal-clause := for $item in ($clause-pairs => deh:causal-clause() => deh:format-clause-pairs()) return array{$item, ('causal', 'hypo', $work-length)}
-let $spatial-clause := for $item in (($clause-pairs => deh:spatial-clause()) => deh:format-clause-pairs()) return array{$item, ('spatial', 'hypo', $work-length)}
-let $temporal-clause :=  for $item in ($clause-pairs => deh:temporal-clause() => deh:format-clause-pairs()) return array{$item, ('temporal', 'hypo', $work-length)}
+let $clause-pairs := deh:get-clause-pairs($tree) [fn:count(.?*) > 1] (:Use fn:count here, not array:size, because deh:get-clause-pairs can put empty arrays in:)
+let $causal-clause := for $item in ($clause-pairs => deh:causal-clause()) return array{$item(1), ('causal', 'hypo', $work-length)}
+let $spatial-clause := for $item in (($clause-pairs => deh:spatial-clause())) return array{$item(1), ('spatial', 'hypo', $work-length)}
+let $temporal-clause :=  for $item in ($clause-pairs => deh:temporal-clause()) return array{$item(1), ('temporal', 'hypo', $work-length)}
 
-for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause)
-return fn:string-join(($n, $work, fn:lower-case(fn:replace($item?1, "[#0-9]", "")), $item?2, $item?3, $work-length), ",")
+let $main-verbs := deh:split-main-verbs($tree)
+let $main := $main-verbs(1) ! array{., 'main', 'main'}
+let $parenth := $main-verbs(2) ! array{., 'parenth', 'main'}
+let $or := $main-verbs(3) ! array{., 'directsp', 'main'}
+
+for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause, $main, $parenth, $or)
+where $item?1/fn:string(@lemma) != ""
+return fn:string-join(($n, $work, deh:get-sent-address($tree), deh:get-tok-address($item?1), $item?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", ""), $item?2, $item?3, $work-length), ",")
