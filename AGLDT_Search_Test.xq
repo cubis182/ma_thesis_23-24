@@ -167,7 +167,9 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:process-lemma("eo,")
+for $work in deh:short-names()
+return fn:string-join(($work, deh:word-count($all-trees[fn:matches(deh:work-info(.)(1), $work)])), ",")
+
 
 
 

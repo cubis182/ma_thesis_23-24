@@ -2634,7 +2634,7 @@ declare %public function deh:single-lemma($tok as element(), $search as xs:strin
 declare function deh:process-lemma($lemmas as xs:string*)
 {
   for $lemma in $lemmas
-  return fn:replace($lemma, "[#0-9,]", "")
+  return fn:lower-case(fn:replace($lemma, "[#0-9,]", ""))
 };
 
 (:
@@ -2685,7 +2685,7 @@ Note these short names are set up to work in a regex, which means the fn:matches
 :)
 declare function deh:short-names() as xs:string*
 {
-  ("Elegi", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
+  ("Elegie", "Elegia", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
 };
 
 (:In this section, each function returns a part of the corpus we want to study. The naming scheme has a prefix with the general type (pers for persona, aud for audience and gen for genre), and the suffix is the subtype:)

@@ -1,0 +1,21 @@
+WORK,LEN
+Elegi,4654
+Sati,13223
+Att,45580
+Pere,17554
+Carm,1772
+Amor,1803
+Res,2652
+Cael,7139
+(In Cat|Against C),6622
+off,11610
+(Petr|Satyr),12991
+Fab,5395
+Gall,33846
+Vul,10337
+Aen,8579
+Met,14963
+Aug,7161
+Ann,2911
+agri,11979
+Hist,10923
