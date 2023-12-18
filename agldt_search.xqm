@@ -2057,7 +2057,7 @@ declare function deh:finite-clause($nodes as node()*, $verb-only as xs:boolean :
   let $remove := function($a as element(), $seq as element()*) {if (functx:is-node-in-sequence($a, $seq)) then () else ($a)} (:This function removes any element not in the @param $seq, we'll use a map on the finite verbs with the main verbs as the $seq:)
   
   (:First, we need to get only the finite verbs:)
-  let $finite-verbs := $toks[deh:is-finite(.)]
+  let $finite-verbs := $toks[deh:is-finite(.) and deh:is-subjunction(.) = false()] (:Added the subjunction stipulation because of LICET:)
   (:However, we have an issue: this list includes auxiliaries, which the deh:main-verbs function will never return, so they will not be removed, even if they are from main clauses. Therefore, we will replace them with their participle heads (well, heads in PROIEL, not LDT, but, either way, the participle holds the relation info) :)
   let $finite-verbs := for $tok in $finite-verbs return if (deh:is-auxiliary($tok)) then (deh:return-parent($tok, 0)) 
   else ($tok)
