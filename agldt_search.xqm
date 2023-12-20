@@ -192,7 +192,6 @@ This function returns, for each of the supplied documents (whether one or more) 
 $doc: One or more treebank documents (not nodes)
 :)
 declare function deh:work-info($doc as node()*) as array(*)
-declare function deh:work-info($doc as node()*) as array(*)
 {
   let $tok := (deh:tokens-from-unk($doc))[1]
   return if ($tok/name() eq "word") then (
@@ -1678,7 +1677,7 @@ declare function deh:get-sent-address($sent as element(sentence))
 declare function deh:read-sent-address($address as xs:string, $corpus as node()*)
 {
   let $seq := fn:tokenize($address, '\|')
-  return $corpus[fn:base-uri(.) = $seq[1]]//sentence[fn:string(@id) = $seq[2]]
+  return $corpus[fn:contains(fn:base-uri(.), $seq[1])]//sentence[fn:string(@id) = $seq[2]]
 };
 
 (:
