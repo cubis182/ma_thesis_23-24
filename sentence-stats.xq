@@ -19,7 +19,7 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 declare variable $clause-text := ("cum", "cumque", "ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que", 'quatenus', 'quo', 'quorsum', 'utroque', 'ubiubi', 'quoquo', 'undecumque', 'quaqua', 'sicubi', 'siquo', 'sicunde', 'siqua', "quoniam", "quod", "quia");
 "#From sentence-stats.xq",
 fn:string-join(('WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.', $clause-text ! fn:upper-case(.), 'ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND'), ","),
-let $names := "Res"
+let $names := deh:short-names()
 
 for $work in $names
 for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
