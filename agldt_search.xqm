@@ -192,17 +192,16 @@ This function returns, for each of the supplied documents (whether one or more) 
 $doc: One or more treebank documents (not nodes)
 :)
 declare function deh:work-info($doc as node()*) as array(*)
+declare function deh:work-info($doc as node()*) as array(*)
 {
-  let $xml := $doc (:May remove this redundant step later; originally, this accepted nodes as well as documents:)
-  return if ($xml/*/name() eq "treebank") then ( (:Updated 9/14/2023: now tests for "treebank" as the root, not version, since this operation will now work with Harrington and LDT trees:)
-    let $words := $xml//sentence[1]//word (:Get some example words: perhaps an intermediate step, but I want to be call this with a whole document in the args:)
-    return deh:ldt2.1-work-info($words[1]) 
+  let $tok := (deh:tokens-from-unk($doc))[1]
+  return if ($tok/name() eq "word") then (
+    deh:ldt2.1-work-info($tok) 
   )  
-  else if ($xml/*/name() = "proiel" and $xml/*/fn:string(@schema-version) = "2.1") then (
-    let $tokens := $xml//div[1]/sentence[1]//token
-    return deh:proiel-work-info($tokens[1])
+  else if ($tok/name() = "token") then (
+    deh:proiel-work-info($tok)
   )
-  else (array{fn:base-uri($xml)}) (:Added 10/18, because we want to make sure this never returns an empty sequence, but an array data type, because that is what we expect. Therefore, one way to test whether the results were successful or not is with the size; if it failed, the array will have a size of one and will only have the base uri:)
+  else (array{fn:base-uri($tok)}) (:Added 10/18, because we want to make sure this never returns an empty sequence, but an array data type, because that is what we expect. Therefore, one way to test whether the results were successful or not is with the size; if it failed, the array will have a size of one and will only have the base uri:)
 };
 
 (:

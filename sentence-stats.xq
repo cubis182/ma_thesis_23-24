@@ -15,8 +15,8 @@ declare variable $harrington := db:get("harrington");(:10/4/2023, see above fn:c
 declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));:)
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
-
-('WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.,ADV,COMP,ATR,SUB,SENTLEN'),
+"#From sentence-stats.xq",
+('WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.,ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM'),
 let $names := deh:short-names()
 for $work in $names
 for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
@@ -34,4 +34,8 @@ let $comp := fn:count(deh:complement-clause($clauses))
 let $atr := fn:count(deh:adjectival-clause($clauses))
 let $sub := fn:count($clauses)
 let $len := deh:word-count($sent)
+let $worklen := deh:word-count($all-trees[fn:base-uri(.) = fn:base-uri($sent)])
+let $genre := if (deh:get-short-name(deh:work-info($sent)) = ("Fab", "Elegi", "Sati", "Aen", "Met", "Carm", "Amor")) then ("poetry") else ("prose")
+let $sum := fn:string-join(($adv, $comp, $atr), ",")
+let $coord := fn:count($sent/*[deh:lemma(., ("que", "ac", "atque", "et", "nec", "neque", "aut", "vel", "ve", "sed"))])
 return fn:string-join(($work, $addr, $main, $pred, $parenth, $or, $adv, $comp, $atr, $sub, $len), ",")
