@@ -3188,6 +3188,15 @@ declare function deh:process-count-results($arrays as array(*)*, $work-length as
   return array{$parataxis-val, $total-occurence}
 };
 
+(:
+12/20/2023
 
+Retrieves coordinating conjunctions which coordinate clauses
+:)
+declare function deh:clause-coordination($sent as element(sentence)) as element()*
+{
+  let $toks := $sent/*[deh:lemma(., ("que", "ac", "atque", "et", "nec", "neque", "sed", "at"))]
+  return $toks[boolean(deh:return-children-nocoord(.)[deh:is-finite(.) or deh:is-subjunction(.)])]
+};
 
 
