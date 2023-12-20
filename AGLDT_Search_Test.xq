@@ -167,9 +167,10 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-for $work in deh:short-names()
-return fn:string-join(($work, deh:word-count($all-trees[fn:matches(deh:work-info(.)(1), $work)])), ",")
-
+let $sents := $all-trees//sentence[boolean(./*[deh:lemma(., ("que", "ac", "atque", "et", "nec", "neque", "sed", "at"))])]
+let $sents := deh:pick-random($sents, 10)
+for $sent in $sents
+return (deh:clause-coordination($sent), $sent)
 
 
 
