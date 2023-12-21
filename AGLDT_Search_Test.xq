@@ -167,10 +167,15 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-let $sents := $all-trees//sentence[boolean(./*[deh:lemma(., ("que", "ac", "atque", "et", "nec", "neque", "sed", "at"))])]
-let $sents := deh:pick-random($sents, 10)
-for $sent in $sents
-return (deh:clause-coordination($sent), $sent)
+let $sents := deh:print($all-ldt//sentence) ! fn:replace(., "[^a-z^A-Z]", "")
+for $sent at $n in $sents
+where fn:count(fn:index-of($sents, $sent)) > 1
+let $index := fn:index-of($sents, $sent)
+let $trees := ($all-ldt//sentence)[position() = $index]
+let $uri := $trees ! fn:base-uri(.)
+let $main-uri := fn:base-uri(($all-ldt//sentence)[$n])
+return if (($main-uri != $uri)) then ($trees, $trees ! fn:base-uri(.)) else()
+
 
 
 
