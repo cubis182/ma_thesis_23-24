@@ -7985,7 +7985,7 @@
       <word id="17" form="fractas" lemma="frango1" postag="v-prppfa-" relation="OBJ" head="20"/>
       <word id="18" form="libenter" lemma="libet1" postag="d--------" relation="ADV" head="20"/>
       <word id="19" form="vidissent" lemma="video1" postag="v3plsa---" relation="ATR" head="11"/>
-      <word id="20" form="," lemma="comma1" postag="u--------" relation="AuxX" head="20"/>
+      <word id="20" form="," lemma="comma1" postag="u--------" relation="AuxX" head="0"/>
       <word id="21" form="sed" lemma="sed1" postag="c--------" relation="COORD" head="1"/>
       <word id="22" form="propter" lemma="propter1" postag="r--------" relation="AuxP" head="22"/>
       <word id="23" form="malum" lemma="malus1" postag="a-s---ma-" relation="ATR" head="25"/>
