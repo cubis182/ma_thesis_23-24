@@ -2275,7 +2275,7 @@
       <word id="6" form="methodio" lemma="methodium1" postag="n-s---nb-" relation="OBJ" head="7"/>
       <word id="7" form="laetus" lemma="laetus1" postag="a-s---mn-" relation="ATV" head="4"/>
       <word id="8" form="'" lemma="QUOTE1" postag="u--------" relation="AuxG" head=""/>
-      <word id="9" form="Carpe" lemma="Carpus1" postag="n-s---mv-" relation="OBJ" head="11"/>
+      <word id="9" form="Carpe" lemma="carpo1" postag="v2spma---" relation="OBJ" head="11"/>
       <word id="10" form="'" lemma="QUOTE1" postag="u--------" relation="AuxG" head=""/>
       <word id="11" form="inquit" lemma="inquam1" postag="v3spia---" relation="PRED_CO" head="3"/>
       <word id="12" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
@@ -2373,7 +2373,7 @@
       <word id="2" form="quotiescunque" lemma="quotienscunque1" postag="d--------" relation="AuxC" head="13"/>
       <word id="3" form="dicit" lemma="dico2" postag="v3spia---" relation="ADV" head="3"/>
       <word id="4" form="'" lemma="quote1" postag="u--------" relation="AuxG" head="6"/>
-      <word id="5" form="Carpe" lemma="Carpus1" postag="n-s---mv-" relation="OBJ" head="4"/>
+      <word id="5" form="Carpe" lemma="carpo1" postag="v2spma---" relation="OBJ" head="4"/>
       <word id="6" form="," lemma="comma1" postag="u--------" relation="AuxX" head="3"/>
       <word id="7" form="'" lemma="quote1" postag="u--------" relation="AuxG" head="6"/>
       <word id="8" form="eodem" lemma="idem1" postag="p-s---nb-" relation="ATR" head="10"/>

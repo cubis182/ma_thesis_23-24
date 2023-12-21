@@ -61,7 +61,7 @@
       <word id="3" form="sidera" lemma="sidus" postag="n-p---nn-" relation="N-SUBJ" head="12"/>
       <word id="4" form="multa" lemma="multus" postag="a-p---nn-" relation="ATR" head="3"/>
       <word id="5" form="," lemma="punc1" postag="u--------" relation="AuxX" head="7"/>
-      <word id="6" form="cum" lemma="cum" postag="c--------" relation="AuxP" head="12"/>
+      <word id="6" form="cum" lemma="cum" postag="c--------" relation="AuxC" head="12"/>
       <word id="7" form="tacet" lemma="taceo" postag="v3spia---" relation="ADV-TEMPOR" head="6"/>
       <word id="8" form="nox" lemma="nox" postag="n-s---fn-" relation="N-SUBJ" head="7"/>
       <word id="9" form="," lemma="punc1" postag="u--------" relation="AuxX" head="7"/>

@@ -2532,7 +2532,7 @@
       <word id="23" form="exhalasset" lemma="exhalo" postag="v3slsa---" relation="ADV-PROTAS" head="14"/>
       <word id="24" form="opimam" lemma="opimus" postag="a-s---fa-" relation="ATR" head="22"/>
       <word id="25" form="," lemma="punc1" postag="u--------" relation="AuxX" head="29"/>
-      <word id="26" form="cum" lemma="cum" postag="c--------" relation="AuxP" head="23"/>
+      <word id="26" form="cum" lemma="cum" postag="c--------" relation="AuxC" head="23"/>
       <word id="27" form="de" lemma="de" postag="r--------" relation="AuxP" head="30"/>
       <word id="28" form="Teutonico" lemma="Teutonicus" postag="a-s---mbp" relation="ATR" head="31"/>
       <word id="29" form="uellet" lemma="volo1" postag="v3sisa---" relation="ADV-CIRCUMS" head="26"/>

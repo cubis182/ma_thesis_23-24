@@ -2323,7 +2323,7 @@
       <word id="10" form="tunc" lemma="tunc" postag="d--------" relation="ADV" head="11"/>
       <word id="11" form="vici" lemma="vinco" postag="v1sria---" relation="PRED_CO" head="8"/>
       <word id="12" form="," lemma="punc1" postag="u--------" relation="AuxX" head="16"/>
-      <word id="13" form="cum" lemma="cum" postag="c--------" relation="AuxP" head="10"/>
+      <word id="13" form="cum" lemma="cum" postag="c--------" relation="AuxC" head="10"/>
       <word id="14" form="vinci" lemma="vinco" postag="v--pnp---" relation="INF-COMP" head="15"/>
       <word id="15" form="posse" lemma="possum" postag="v--pna---" relation="A-INTOBJ" head="16"/>
       <word id="16" form="coegi" lemma="cogo" postag="v1sria---" relation="ADV-TEMPOR" head="13"/>
