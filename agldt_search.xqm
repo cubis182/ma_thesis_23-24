@@ -1047,6 +1047,23 @@ declare function deh:extract-quotes($doc-or-tok) as item()*
   return ($ldt, $pr-results)
 };
 
+declare function deh:is-quote($tok as element()) as xs:boolean
+{
+  let $quotes := ("'", "&quot;", "”", "“")
+  let $ldt-lemmas := ("QUOTE1", "double", "quote1", "QUOTE'", "'", "quote", "punc1", "unknown", "punc", "question", " ") (:Based on blue notebook notes:)
+  return functx:contains-any-of($tok/fn:string(@form), $quotes) and functx:contains-any-of($tok/fn:string(@lemma), $ldt-lemmas)
+};
+
+(:Returns an sequence of arrays where each array begins with a quote and ends just before the next quote. This means the first part before the first quote in the tree is left out.:)
+declare function deh:div-by-quotes($tree as node()*)
+{
+  let $windows :=
+  for tumbling window $w in $tree//word
+  start $s at $n when $s/deh:is-quote(.)
+  return array{$w}
+  return $windows[position() mod 2 = 1]
+};
+
 
 
 
