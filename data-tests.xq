@@ -28,11 +28,12 @@ declare variable $ola := db:get('ola');(:fn:collection("./../latinnlp/texts/ola"
 
 declare variable $full-proiel := db:get("Full-PROIEL"); (:This is PROIEL with the full Vulgate back, not absolutely every PROIEL treebank:)
 
-('CASE,WORK,SENT-ADDR,TOK-ADDR,LEM,TYPEA,TYPEB,SENTLEN'),
+('CASE,WORK,SENT-ADDR,TOK-ADDR,LEM,TYPEA,TYPEB,SENTLEN,WORKLEN'),
 let $works := deh:short-names()
 
 for $work in $works
 let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $total-length := deh:word-count($treebank)
 for $tree in ($treebank//sentence)
 
 let $work-length := deh:word-count($tree)
@@ -57,4 +58,4 @@ let $or := $main-verbs(3) ! array{., 'directsp', 'main'}
 
 for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause, $main, $parenth, $or)
 where $item?1/fn:string(@lemma) != ""
-return fn:string-join(($n, $work, deh:get-sent-address($tree), deh:get-tok-address($item?1), $item?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", ""), $item?2, $item?3, $work-length), ",")
+return fn:string-join(($n, $work, deh:get-sent-address($tree), deh:get-tok-address($item?1), $item?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", ""), $item?2, $item?3, $work-length, $total-length), ",")
