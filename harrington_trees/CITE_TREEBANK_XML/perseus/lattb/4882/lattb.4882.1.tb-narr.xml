@@ -1,0 +1,45 @@
+<treebank xmlns:saxon="http://saxon.sf.net/" xml:lang="lat" version="1.5" direction="ltr" format="harrington">
+   <date>2016-11-09 15:51:46 +0000</date><biblStruct><monogr><author>Petronius Arbiter</author><title>Satyricon, Petr Narrative</title></monogr></biblStruct>
+   <annotator>
+      <short/>
+      <name/>
+      <address/>
+      <uri>http://github.com/latin-language-toolkit/arethusa</uri>
+  </annotator>
+   <annotator>
+      <short/>
+      <name/>
+      <address/>
+      <uri>http://services2.perseids.org/llt/segtok</uri>
+  </annotator>
+   <annotator>
+      <short/>
+      <name/>
+      <address/>
+      <uri>http://github.com/latin-language-toolkit/arethusa</uri>
+  </annotator>
+   <annotator>
+      <short>jmharrington</short>
+      <name>J Matthew Harrington</name>
+      <address>matthew.harrington@tufts.edu</address>
+      <uri>http://data.perseus.org/sosol/users/jmharrington</uri>
+  </annotator>
+   <sentence id="7" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="141" span="">
+      <word id="1" form="Excaecabat" lemma="excaeco" postag="v3siia---" relation="PRED" head="0"/>
+      <word id="2" form="pecuniae" lemma="pecunia" postag="n-s---fg-" relation="G-POSS" head="4"/>
+      <word id="3" form="ingens" lemma="ingens" postag="a-s---fn-" relation="ATR" head="4"/>
+      <word id="4" form="fama" lemma="fama" postag="n-s---fn-" relation="N-SUBJ" head="1"/>
+      <word id="5" form="oculos" lemma="oculus" postag="n-p---ma-" relation="A-DO_CO" head="7"/>
+      <word id="6" form="animos" lemma="animus" postag="n-p---ma-" relation="A-DO_CO" head="7"/>
+      <word id="7" form="-que" lemma="-que" postag="c--------" relation="COORD" head="1"/>
+      <word id="8" form="miserorum" lemma="miser" postag="a-p---mg-" relation="G-POSS" head="7"/>
+      <word id="9" form="..." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
+   </sentence>
+   <sentence id="8" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="141" span="">
+      <word id="1" form="Gorgias" lemma="Gorgias" postag="n-s---mn-" relation="N-SUBJ" head="2"/>
+      <word id="2" form="paratus" lemma="paro1" postag="v-srppmn-" relation="PRED" head="0"/>
+      <word id="3" form="erat" lemma="sum1" postag="v3siia---" relation="AuxV" head="2"/>
+      <word id="4" form="exsequi" lemma="exsequor" postag="v--pnp---" relation="INF-COMP" head="2"/>
+      <word id="5" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
+   </sentence>
+</treebank>

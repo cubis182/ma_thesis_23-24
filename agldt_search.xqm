@@ -1055,7 +1055,7 @@ declare function deh:is-quote($tok as element()) as xs:boolean
 };
 
 (:Returns an sequence of arrays where each array begins with a quote and ends just before the next quote. This means the first part before the first quote in the tree is left out.:)
-declare function deh:div-by-quotes($tree as node()*)
+declare function deh:div-by-quotes($tree as node()*) as array(*)*
 {
   let $windows :=
   for tumbling window $w in $tree//word
@@ -1064,9 +1064,41 @@ declare function deh:div-by-quotes($tree as node()*)
   return $windows[position() mod 2 = 1]
 };
 
+(:
+Gets sentences with quotes included or excluded, based on the boolean passed to $non-speech (false returns dialogue)
+:)
+declare function deh:return-sentences-petr($windows as array(*)*, $non-speech as xs:boolean)
+{
+  let $toks := $windows?* (:Get all the individual nodes in a single speech:)
+  
+  (:This iterates through the nodes and returns them as grouped by sentence, not quotes:)
+  let $sents :=
+  for tumbling window $w in $toks
+  start $s previous $s-prev when $s/../@id != $s-prev/../@id
+  return array{$w}
+  
+  (:Now, we will return the sentences without any nodes not already pulled from speech:)
+  for $sent in $sents
+  let $full-sent := $sent?1/..
+  let $ids := $sent?*/@id (:Get the id's of the words we don't need to remove:)
+  let $proc-sent := deh:remove($full-sent/*[(@id = $ids) = $non-speech]) (:Use the 'remove' function on all tokens without the targeted id's:)
+  return if (boolean($proc-sent)) then (functx:copy-attributes($proc-sent, $full-sent))
+   (:Do this one final step because 'deh:remove' returns a <sentence/> node with 0 attributes:)
+  else ()
+  
+  
+};
 
+(:
+12/26/2023
+Returns a work by its short-name string
 
-
+:)
+declare function deh:retrieve-trees($sname as xs:string*) as node()*
+{
+  for $str in $sname
+  return (db:get('ldt2.1-treebanks'), db:get('harrington'), db:get('proiel'))[fn:matches(deh:work-info(.)(1), $str)]
+};
 (:---------------------------END QUOTE PROCESSING FUNCTIONS--------------------------------:)
 
 
@@ -2700,7 +2732,7 @@ Note these short names are set up to work in a regex, which means the fn:matches
 :)
 declare function deh:short-names() as xs:string*
 {
-  ("Elegie", "Elegia", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "(Petr|Satyr)","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
+  ("Elegie", "Elegia", "Sati", "Att", "Pere", "Carm", "Amor","Res", "Cael", "(In Cat|Against C)", "off", "Petr Speech", "Petr Narr","Fab", "Gall", "Vul", "Aen", "Met", "Aug", "Ann", "agri", "Hist")
 };
 
 (:In this section, each function returns a part of the corpus we want to study. The naming scheme has a prefix with the general type (pers for persona, aud for audience and gen for genre), and the suffix is the subtype:)
