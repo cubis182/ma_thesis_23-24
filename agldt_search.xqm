@@ -3035,19 +3035,19 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
 {
   (:let $clause-pairs := deh:get-clause-pairs($nodes)eliminated 11/29 because this now only accepts an array:)
   
-  let $w-indicative-temp := ("cum", "cumque")
+  let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
   let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que", "cum", "cumque")
   (:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)	
   let $separable := ('ante', 'prius', 'postea', 'postmodum', 'post')
   
-  (:12/20/23: may bring this back, but, for now, may be best to not focus on just subjunctive cum clauses
+ 
   let $temporal-ind-final :=
   for $target in $w-indicative-temp
   let $temp-pairs := $clause-pairs[.(1) => deh:lemma($target)]
   for $item in $temp-pairs
-  return if (fn:matches($item(1)/deh:work-info(.), "Pere")) then ($item)
+  return if (fn:matches($item(1)/deh:work-info(.)(1), "Pere")) then ($item)
   else if ($item(2)/deh:mood(.) = 'i') then ($item)
-  :)
+  
   
   
   let $temporal-final :=
@@ -3061,7 +3061,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   for $target in $separable
   return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable or deh:return-children(.(1))[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
-  let $temporal-results := ($temporal-final, $separable-temporal)
+  let $temporal-results := ($temporal-final, $separable-temporal, $temporal-ind-final)
   
   return $temporal-results
 };
