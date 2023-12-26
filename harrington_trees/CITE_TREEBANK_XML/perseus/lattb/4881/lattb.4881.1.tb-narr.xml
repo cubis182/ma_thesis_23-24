@@ -106,9 +106,6 @@
       <word id="22" form="," lemma="punc1" postag="u--------" relation="AuxX" head="21"/>
       
    </sentence>
-   
-   
-   </sentence>
    <sentence id="20" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="115" span="">
       <word id="1" form="Et" lemma="et" postag="c--------" relation="COORD" head="0"/>
       <word id="2" form="Licham" lemma="Lichas" postag="n-s---ma-" relation="A-DO" head="8"/>
