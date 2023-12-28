@@ -1,4 +1,4 @@
-#From sentence-stats.xq
+#From sentence-stats.xq,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.,CUM,CUMQUE,UBI,UBI(QUE|)(NAM|),UBICUMQUE,QUANDO,DUM,DONEC,DUMMODO,MODO,ANTEQUAM,POSTEAQUAM,POSTMODUM QUAM,POSTQUAM,PRIUSQUAM,QUOTIENS,QUOTIENS(CUM|)QUE,QUATENUS,QUO,QUORSUM,UTROQUE,UBIUBI,QUOQUO,UNDECUMQUE,QUAQUA,SICUBI,SIQUO,SICUNDE,SIQUA,QUONIAM,QUOD,QUIA,ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND
 Elegie,/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,4393,prose,0|0|0,0,0
 Elegie,/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|2,2,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,23,4393,prose,1|0|0,1,0.5
@@ -8816,7 +8816,6 @@ Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|444,2,2,0,0,0,0,0,0,0,0
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|445,1,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,2,6,27,5395,poetry,4|0|2,1,1
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|446,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,5395,poetry,0|0|0,0,0
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|447,2,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,5395,poetry,0|0|0,0,0
-Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|448,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5395,poetry,0|0|0,0,NA
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|449,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,5395,poetry,0|0|0,0,0
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|450,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5395,poetry,0|0|0,0,0
 Fab,/ldt2.1-treebanks/phi0975.phi001.perseus-lat1.tb.xml|451,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,6,5395,poetry,1|0|0,0,0
