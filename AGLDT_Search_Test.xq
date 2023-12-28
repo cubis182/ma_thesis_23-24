@@ -167,14 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-let $sents := deh:print($all-ldt//sentence) ! fn:replace(., "[^a-z^A-Z]", "")
-for $sent at $n in $sents
-where fn:count(fn:index-of($sents, $sent)) > 1
-let $index := fn:index-of($sents, $sent)
-let $trees := ($all-ldt//sentence)[position() = $index]
-let $uri := $trees ! fn:base-uri(.)
-let $main-uri := fn:base-uri(($all-ldt//sentence)[$n])
-return if (($main-uri != $uri)) then ($trees, $trees ! fn:base-uri(.)) else()
+deh:read-sent-address("Elegie,/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|1", $all-trees)
 
 
 
