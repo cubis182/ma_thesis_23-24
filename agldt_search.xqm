@@ -1942,7 +1942,7 @@ declare function deh:main-verbs($nodes as node()*) as element()*
 };
 
 (:The same as deh:main-verbs, but returns a sequence of three arrays. the FIRST is proper main verbs, the SECOND parentheticals, and the THIRD reported speech:)
-declare function deh:split-main-verbs($nodes as node()*) as array(*)
+declare function deh:split-main-verbs($nodes as node()*)
 {
   let $verbs := deh:main-verbs($nodes)
   let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
