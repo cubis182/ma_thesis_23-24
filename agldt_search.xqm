@@ -2970,9 +2970,15 @@ declare function deh:get-clause-pairs($nodes as node()*) as item()*
   let $clauses := deh:finite-clause($nodes, false())
   
   (:Get the verb-subordinator pairs; first item in each array is the subordinator, the second the verb:)
+  let $pairs :=
   for $clause in $clauses
   return if (deh:is-subjunction($clause)) then ([$clause, (deh:get-auxc-verb($clause))]) (:Used the square array constructor, since this allows whole sequences to be members:)
   else (array{deh:verb-headed-clause-sub($clause)[1], $clause}) (:Added the '[1]' to make sure there are not multiple results:)
+  
+  (:Now, let us remove duplicates:)
+  for $pair in $pairs
+  where fn:count(functx:index-of-node($pair(1), $pairs?1)) = 1
+  return $pair
   
 };
 
