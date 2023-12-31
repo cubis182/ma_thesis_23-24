@@ -1946,7 +1946,7 @@ declare function deh:split-main-verbs($nodes as node()*)
 {
   let $verbs := deh:main-verbs($nodes)
   let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
-  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ")) = false() and (deh:lemma(., ("aio", "inquam"))) = false()]
+  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ")) = false() and (deh:lemma(., ("aio", "inquam"))) = false() and deh:return-parent-nocoord(.)/deh:lemma(., ("aio", "inquam")) = false()]
   let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
   
   return [$main, $parenth, $reported]
@@ -1960,7 +1960,7 @@ This is a helper function to deh:main-verbs, which handles extracting PROIEL mai
 :)
 declare %public function deh:pr-main-verbs($toks as element()*) as element(token)*
 {
-  let $preds := $toks[fn:contains(fn:string(@relation), "pred") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
+  let $preds := $toks[fn:string(@relation) = ("pred", "voc") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
   return $preds[(deh:return-parent-nocoord(.)/fn:string(@part-of-speech) = "G-") = false()]  (:10/3/2023, made it deh:return-parent-nocoord, it may break it, but I'm trying it:)
 };
 
@@ -2991,11 +2991,13 @@ declare function deh:clause-pair-rel($clause-pair as array(*)) as xs:string
 (:The following three functions separate suborindate clauses:)
 (:
 deh:adverbial-clause()
+
+See the note on deh:adjectival clause on the sequence
 :)
 declare function deh:adverbial-clause($pairs as array(*)*) as array(*)*
 {
   for $pair in $pairs
-  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("adv"))
+  where (functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("adv"))) and fn:count(deh:complement-clause($pair)) = 0
   return $pair
 };
 
@@ -3009,18 +3011,20 @@ Really includes any argument clause/clause used as a noun, so it can also includ
 declare function deh:complement-clause($pairs as array(*)*) as array(*)*
 {
   for $pair in $pairs
-  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("comp", 'obj', 'sbj', 'sub', 'subj', 'pnom', 'xobj', 'n-pred', 'a-pred', 'voc')) (:voc must stand in for a noun, narg is rare but actl:)
+  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ("comp", 'obj', 'sbj', 'sub', 'subj', 'pnom', 'xobj', 'n-pred', 'a-pred', 'narg')) (:voc must stand in for a noun, narg is rare but actl:)
   return $pair
 };
 
 (:
 12/13/2023
 deh:adjectival-clause()
+
+There is also a level of precedence, where, if a clause is idenfitied as a complement clause, it will not be identified as another, and if an adverbial clause is identified, it cannot be identified as an adjectival clause
 :)
 declare function deh:adjectival-clause($pairs as array(*)*) as array(*)*
 {
    for $pair in $pairs
-  where functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ('atr', 'apos', 'adj', 'rel', 'narg'))
+  where (functx:contains-any-of(deh:relation-head($pair)/fn:lower-case(fn:string(@relation)), ('atr', 'apos', 'adj', 'rel'))) and fn:count((deh:complement-clause($pair), deh:adverbial-clause($pair))) = 0 (:exclude ut clauses:)
   return $pair
 };
 
@@ -3036,7 +3040,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   (:let $clause-pairs := deh:get-clause-pairs($nodes)eliminated 11/29 because this now only accepts an array:)
   
   let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
-  let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que", "cum", "cumque")
+  let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
   (:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)	
   let $separable := ('ante', 'prius', 'postea', 'postmodum', 'post')
   

@@ -3810,7 +3810,7 @@
       <word id="6" form="coniunx" lemma="conjunx1" postag="n-s---fn-" relation="PNOM" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="10"/>
       <word id="7" form="mea" lemma="meus1" postag="a-s---fn-" relation="ATR" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="6"/>
       <word id="8" form="non" lemma="non1" postag="d--------" relation="AuxZ" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="9"/>
-      <word id="9" form="potes" lemma="possum1" postag="v2spia---" relation="ADV" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="4"/>
+      <word id="9" form="potes" lemma="possum1" postag="v2spia---" relation="ADV" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="5"/>
       <word id="10" form="esse" lemma="sum1" postag="v--pna---" relation="OBJ" cite="urn:cts:latinLit:phi0959.phi006:1.556" head="5"/>
       <word id="11" form="," lemma="comma1" postag="u--------" relation="AuxX" cite="" head="9"/>
       <word id="12" form="arbor" lemma="arbor1" postag="n-s---fn-" relation="PNOM" cite="urn:cts:latinLit:phi0959.phi006:1.557" head="13"/>
