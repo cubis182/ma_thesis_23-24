@@ -1944,12 +1944,14 @@ declare function deh:main-verbs($nodes as node()*) as element()*
 (:The same as deh:main-verbs, but returns a sequence of three arrays. the FIRST is proper main verbs, the SECOND parentheticals, and the THIRD reported speech:)
 declare function deh:split-main-verbs($nodes as node()*)
 {
-  let $verbs := deh:main-verbs($nodes)
+  for $node in $nodes
+  let $verbs := deh:main-verbs($node)
   let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
-  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ")) = false() and (deh:lemma(., ("aio", "inquam"))) = false() and deh:return-parent-nocoord(.)/deh:lemma(., ("aio", "inquam")) = false()]
+  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma(., ("aio", "inquam"))) = false()]
   let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
   
-  return [$main, $parenth, $reported]
+  return if (fn:matches(deh:work-info($node)(1), "Petr")) then ([($main, $reported), $parenth, ()])
+  else ([$main, $parenth, $reported])
 };
 
 (:
@@ -1960,7 +1962,7 @@ This is a helper function to deh:main-verbs, which handles extracting PROIEL mai
 :)
 declare %public function deh:pr-main-verbs($toks as element()*) as element(token)*
 {
-  let $preds := $toks[fn:string(@relation) = ("pred", "voc") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
+  let $preds := $toks[fn:string(@relation) = ("pred", "parpred", "voc") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
   return $preds[(deh:return-parent-nocoord(.)/fn:string(@part-of-speech) = "G-") = false()]  (:10/3/2023, made it deh:return-parent-nocoord, it may break it, but I'm trying it:)
 };
 
@@ -2977,7 +2979,7 @@ declare function deh:get-clause-pairs($nodes as node()*) as item()*
   
   (:Now, let us remove duplicates:)
   for $pair in $pairs
-  where fn:count(functx:index-of-node($pair(1), $pairs?1)) = 1
+  where fn:count(functx:index-of-node($pairs?1, $pair(1)[1])) = 1
   return $pair
   
 };
@@ -3055,7 +3057,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   for $target in $w-indicative-temp
   let $temp-pairs := $clause-pairs[.(1) => deh:lemma($target)]
   for $item in $temp-pairs
-  return if (fn:matches($item(1)/deh:work-info(.)(1), "Pere")) then ($item)
+  return if (fn:matches($item(1)/deh:work-info(.)(1), "Pere") and $item(1)/deh:lemma(., ("cum", "cumque"))) then ($item)
   else if ($item(2)/deh:mood(.) = 'i') then ($item)
   
   
@@ -3085,7 +3087,7 @@ declare function deh:spatio-temporal-adverb($nodes as node()*)
   (:12/3/2023: removed the "clause" ones:)
   let $toks := deh:tokens-from-unk($nodes)
   (:Explanation of the below: there are temporal, spatial and mixed, the mixed being those which have both a spatial and temporal meaning. That is not to say all the $temporal and $spatial are totally unambiguous, but if they are, it is not between space and time. The -unamb are those who can be distinguished unambiguously simply by their lemma; for any others, we will need to look to the relation tags for disambiguation:)
-  let $temporal-unamb :=('nunc', 'tunc', 'mox', 'iam', 'dum', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum', 'temperi', 'vesperi', 'noctu', 'antea', 'statim', 'nuper', 'abhinc', 'breviter', 'usqui', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
+  let $temporal-unamb :=('nunc', 'tunc', 'mox', 'iam', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum', 'temperi', 'vesperi', 'noctu', 'antea', 'statim', 'nuper', 'abhinc', 'breviter', 'usqui', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
   let $temporal-amb := ('perpetuo', 'perpetuum', 'aeternum', 'postremo', 'postremum')
   let $mixed := ('hinc', 'ibi', 'eo2','eo#2', 'inde', 'usque', 'ultra', 'porro', 'retrorsum', 'ibidem', 'prope', 'ilico')
   (:Removing for now, causing too much trouble let $mixed-clause := ('ubi', 'unde'):)

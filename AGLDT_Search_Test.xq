@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/harrington/4759/lattb.4759.1.tb.xml|3", $all-trees) => deh:get-clause-pairs() => deh:complement-clause()
+deh:print(deh:read-sent-address("/harrington/7200/lattb.7200.1.tb.xml|67", $all-trees))
 
 
 
