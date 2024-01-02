@@ -47,7 +47,7 @@ let $temporal-adv := for $item in $sp-temp-adv[.(2) = 'temporal'] return array{$
 
 (:clause:)
 let $clause-pairs := deh:get-clause-pairs($tree) [fn:count(.?*) > 1] (:Use fn:count here, not array:size, because deh:get-clause-pairs can put empty arrays in:)
-let $causal-clause := for $item in ($clause-pairs => deh:causal-clause()) return array{$item(1), ('causal', 'hypo', $work-length)}
+let $causal-clause := for $item in ($clause-pairs => deh:causal-clause()) return array{<token lemma="{$item(1)/fn:lower-case(fn:string(@form))}"></token>, ('causal', 'hypo', $work-length)}
 let $spatial-clause := for $item in (($clause-pairs => deh:spatial-clause())) return array{$item(1), ('spatial', 'hypo', $work-length)}
 let $temporal-clause :=  for $item in ($clause-pairs => deh:temporal-clause()) return array{if (array:size($item) > 2) then (<token lemma="{$item(3)}"></token>) else ($item(1)), ('temporal', 'hypo', $work-length)}
 
