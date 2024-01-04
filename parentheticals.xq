@@ -16,12 +16,7 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-("WORK,SENT.ADDR,PARENLEN"),
-let $names := deh:short-names()
-
-for $work in $names
-for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
-let $parenth := deh:split-main-verbs($sent)(2)
-let $sentaddr := deh:get-sent-address($sent)
-let $len := deh:word-count((deh:return-descendants($parenth), $parenth))
-return fn:string-join(($work, $sentaddr, $len), ",")
+("WORK,SENT.ADDR,PARENTH,SENT"),
+let $parenth := (deh:split-main-verbs($all-trees))?2
+for $item in $parenth
+return fn:string-join((deh:get-short-name(deh:work-info($item)(1)), deh:get-sent-address($item/..), fn:string-join((for $desc in deh:return-descendants($parenth) order by $desc/fn:number(@id) return $desc)/text(), " "), deh:print($item/..)), ",")

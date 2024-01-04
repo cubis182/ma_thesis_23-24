@@ -167,7 +167,9 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:print(deh:read-sent-address("/harrington/7200/lattb.7200.1.tb.xml|67", $all-trees))
+for $sent in deh:gen-poet()//sentence
+where deh:word-count($sent) < 5
+return $sent
 
 
 
