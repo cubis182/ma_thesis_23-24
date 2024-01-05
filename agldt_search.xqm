@@ -1947,7 +1947,7 @@ declare function deh:split-main-verbs($nodes as node()*)
   for $node in $nodes
   let $verbs := deh:main-verbs($node)
   let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
-  let $parenth := $verbs[deh:is-parenthetical(.)]
+  let $parenth := $verbs[deh:is-parenthetical(., false())]
   let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
   
   return if (fn:matches(deh:work-info($node)(1), "Petr")) then ([($main, $reported), $parenth, ()])
@@ -1958,11 +1958,11 @@ declare function deh:split-main-verbs($nodes as node()*)
 1/5/2024
 deh:is-parenthetical
 
-Used as a helper to deh:split-main-verbs and for retrieving parentheticals which do not contain or are not verbs. Checks relation tags and lemma.
+Used as a helper to deh:split-main-verbs and for retrieving parentheticals which do not contain or are not verbs. Checks relation tags and lemma. @param $excl-voc is used when vocative 
 :)
-declare function deh:is-parenthetical($tok as element()) as xs:boolean
+declare function deh:is-parenthetical($tok as element(), $excl-voc as xs:boolean) as xs:boolean
 {
-  functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam"))) = false()
+  ((deh:case($tok) = 'v') = (false() or $excl-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:)
 };
 
 (:
