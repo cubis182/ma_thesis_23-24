@@ -17443,7 +17443,7 @@
         </token>
         <token id="780058" form="iactus" citation-part="XXXVI.1" lemma="iactus" part-of-speech="Nb" morphology="-s---mn--i" head-id="866081" relation="sub" information-status="new" presentation-after=" "/>
         <token id="780059" form="lapidis" citation-part="XXXVI.1" lemma="lapis" part-of-speech="Nb" morphology="-s---mg--i" head-id="780058" relation="narg" information-status="info_unannotatable" presentation-after=" "/>
-        <token id="780060" form="et" citation-part="XXXVI.1" lemma="et" part-of-speech="C-" morphology="---------n" relation="parpred" presentation-after=" "/>
+        <token id="780060" form="et" citation-part="XXXVI.1" lemma="et" part-of-speech="C-" morphology="---------n" relation="parpred" presentation-after=" " parenth="false" directsp="true"/>
         <token id="1059423" empty-token-sort="P" citation-part="XXXVI.1" head-id="780061" relation="sub" antecedent-id="1059422" information-status="old"/>
         <token id="780061" form="orauit" citation-part="XXXVI.1" lemma="oro" part-of-speech="V-" morphology="3sria----i" head-id="780060" relation="parpred" presentation-after=" " parenth="false" directsp="true"/>
         <token id="780062" form="et" citation-part="XXXVI.1" lemma="et" part-of-speech="C-" morphology="---------n" head-id="780051" relation="apos" presentation-after=" "/>
