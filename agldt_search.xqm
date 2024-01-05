@@ -1960,9 +1960,9 @@ deh:is-parenthetical
 
 Used as a helper to deh:split-main-verbs and for retrieving parentheticals which do not contain or are not verbs. Checks relation tags and lemma. @param $excl-voc is used when vocative 
 :)
-declare function deh:is-parenthetical($tok as element(), $excl-voc as xs:boolean) as xs:boolean
+declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) as xs:boolean
 {
-  ((deh:case($tok) = 'v') = (false() or $excl-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:)
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:)
 };
 
 (:

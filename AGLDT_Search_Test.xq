@@ -167,7 +167,8 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/ldt2.1-treebanks/phi0474.phi013.perseus-lat1.tb.xml|19", $all-trees)
+let $sent := $proiel//sentence[@id="57983"]
+return $sent/*[deh:is-parenthetical(., false())]
 
 
 
