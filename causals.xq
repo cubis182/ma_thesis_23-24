@@ -16,8 +16,9 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-
-("WORK,SENT.ADDR,PARENTH,SENT"),
-let $parenth := (deh:split-main-verbs(($all-trees//sentence)))?2
-for $item in $parenth
-return fn:string-join((deh:get-short-name(deh:work-info($item)(1)), deh:get-sent-address($item/..), fn:string-join((for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")
+("WORK,SENT.ADDR,LEM,SENT"),
+let $causals := ("quoniam", "quod", "quia", 'enim', 'ergo', 'ideo', 'igitur', 'idcirco', 'propterea', 'quare',  'quamobrem', 'unde', 'quapropter')
+let $causals := $all-trees//sentence[boolean(./*[deh:lemma(., $causals)])]
+let $causals := (deh:causal-clause($causals => deh:get-clause-pairs())?1, deh:causal-adverb($causals))
+for $caus in $causals
+return fn:string-join((deh:get-short-name(deh:work-info($caus)(1)), deh:get-sent-address($caus/..), $caus/fn:string(@form), deh:print($caus/..)), ",")
