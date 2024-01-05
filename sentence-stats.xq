@@ -28,7 +28,7 @@ let $addr := deh:get-sent-address($sent)
 let $split-mainverbs := deh:split-main-verbs($sent)
 let $main := fn:count($split-mainverbs?*)
 let $pred := fn:count($split-mainverbs?1)
-let $parenth := fn:count($split-mainverbs?2)
+let $parenth := fn:count(functx:distinct-nodes(($split-mainverbs?2, $sent/*[deh:is-parenthetical(.)])))
 let $or := fn:count($split-mainverbs?3)
 
 

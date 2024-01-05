@@ -1947,11 +1947,22 @@ declare function deh:split-main-verbs($nodes as node()*)
   for $node in $nodes
   let $verbs := deh:main-verbs($node)
   let $main := $verbs[fn:contains(fn:lower-case(fn:string(@relation)), "pred") and fn:string(@relation) != 'parpred']
-  let $parenth := $verbs[functx:contains-any-of(fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of(fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma(., ("aio", "inquam"))) = false()]
+  let $parenth := $verbs[deh:is-parenthetical(.)]
   let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
   
   return if (fn:matches(deh:work-info($node)(1), "Petr")) then ([($main, $reported), $parenth, ()])
   else ([$main, $parenth, $reported])
+};
+
+(:
+1/5/2024
+deh:is-parenthetical
+
+Used as a helper to deh:split-main-verbs and for retrieving parentheticals which do not contain or are not verbs. Checks relation tags and lemma.
+:)
+declare function deh:is-parenthetical($tok as element()) as xs:boolean
+{
+  functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam"))) = false()
 };
 
 (:
