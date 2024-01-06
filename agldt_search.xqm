@@ -1935,10 +1935,16 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   return (functx:distinct-nodes(($preds, $directsp)), $proiel-main)
 };
 
+
 declare function deh:is-directsp($tok as element()) as xs:boolean
 {
   let $complementizers := ("aio", "inquam")
-  return functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or ((fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false())
+  
+  return if  ($tok/fn:name() = "word") then ((functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
+  else (
+    let $complementizers := ($complementizers, "dico")
+    return (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) and fn:contains($tok/fn:string(@relation), "pred") (:using 'fn:contains' because I want pred AND parpred:) and deh:is-finite($tok)
+  )
   
   (:Added this third one checking the parent because, if the whole sentence is in direct speech, and the head of the sentence is an OBJ, then is must be a "main" verb:)
   (:let $ldt-main := $ldt[(fn:contains(fn:string(@relation), "PRED") or (functx:contains-any-of(fn:string(@relation), ("OBJ", "DIRSTAT")) and ((fn:count(deh:return-children((., deh:return-parent(., 0)))[fn:contains(fn:string(@relation), "AuxG")]) > 0) or (functx:contains-any-of(deh:return-parent-nocoord(.)/fn:string(@lemma), $complementizers))))) and (fn:matches(fn:string(@postag), "v[1-3].......") or (fn:count(deh:return-children(.)[fn:contains(fn:string(@relation), "AuxV")]) > 0) or fn:string(@artificial) = "elliptic")] :)(:This gets complicated. FIRST, every verb must be finite, so that is the last condition, although participles in periphrastic constructions lead the phrase, so we need to make sure, if it is non-finite, that it has an auxiliary, or it is elliptical, in which case it will have no relation. SECOND, it must either be a PRED, which is the case 99% of the time, or it is in direct speech, which means it has the OBJ tag and, if a Harrington tree, the DIRSTAT tag; because a verb can be an OBJ in a variety of circumstances, we have to check that there is bracketing punctuation involved, hence testing for 'AuxG' (and we check both the self and parent, because there could be a coordinating conjunction involved, but this should still work even if there isn't), or, just in case, we also check for whether it is governed by "inquam" or "aio", and use deh:return-parent-nocoord to get past an coordinating punctuation. Also note it is necessary to determine whether it is a finite verb, because harrington trees have A-PRED and N-PRED (predicate accusative and predicate nominal) as possible relations, which go on nouns and are beyond scope here. THIS CODE IS COPIED BELOW IN DEH:DIRECT-SPEECH-LDT...SORRY:)
