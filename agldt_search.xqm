@@ -1962,7 +1962,21 @@ Used as a helper to deh:split-main-verbs and for retrieving parentheticals which
 :)
 declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) as xs:boolean
 {
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:)
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false()
+};
+
+declare function deh:retrieve-parentheticals($nodes as node()*) as element()*
+{
+  for $sent in $nodes//sentence (:Go sentence by sentence retrieving parentheticals so you can avoid dealing with embedded instances in every case:)
+  where boolean($sent/*[deh:is-parenthetical(., false())])
+  let $parenths := $sent/*[deh:is-parenthetical(., false())]
+  return if (fn:count($parenths) = 1) then ($parenths)
+  else (
+    for $parenth in $parenths
+    (:If a parenthetical is among the descendants of another, we want just the higher one. To do this, we make sure:)
+    where fn:count($parenth intersect deh:return-descendants($parenths except $parenth)) = 0
+    return $parenth
+  )
 };
 
 (:
