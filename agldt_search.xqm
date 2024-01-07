@@ -690,6 +690,18 @@ declare function deh:tokens-from-unk($tokens) as element()*
   else ($tokens//word, $tokens//token)
 };
 
+(:1/7/2024
+This function assumes a homogenous set: in some cases it only tests the first item in the sequence
+:)
+declare function deh:sents-from-unk($nodes as node()*) as element(sentence)*
+{
+  if ($nodes[1]/.. instance of element(sentence)) then (functx:distinct-nodes($nodes/..))
+  else if ($nodes[1] instance of element(sentence)) then ($nodes)
+  else (
+    $nodes//sentence
+  )
+};
+
 (:
 deh:align-relation
 7/23/2023
@@ -1972,12 +1984,12 @@ Used as a helper to deh:split-main-verbs and for retrieving parentheticals which
 :)
 declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) as xs:boolean
 {
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "AuxC", "PNOM", "PARENTH", "parpred", "voc")) (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED")) = false() and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and deh:is-directsp($tok) = false()
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM")) = false() (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and deh:is-directsp($tok) = false()
 };
 
 declare function deh:retrieve-parentheticals($nodes as node()*) as element()*
 {
-  for $sent in $nodes//sentence (:Go sentence by sentence retrieving parentheticals so you can avoid dealing with embedded instances in every case:)
+  for $sent in deh:sents-from-unk($nodes) (:Go sentence by sentence retrieving parentheticals so you can avoid dealing with embedded instances in every case:)
   where boolean($sent/*[deh:is-parenthetical(., false())])
   let $parenths := $sent/*[deh:is-parenthetical(., false())]
   return if (fn:count($parenths) = 1) then ($parenths)

@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-$all-ldt//word[fn:contains(fn:string(@relation), "AuxC") and fn:contains(fn:string(@relation), "ExD")]/..
+deh:search-text("ut impeditis locis", $all-trees//sentence) => deh:retrieve-parentheticals()
 
 
 
