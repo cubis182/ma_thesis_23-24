@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:search-text("ut impeditis locis", $all-trees//sentence) => deh:retrieve-parentheticals()
+deh:read-sent-address("/proiel/latin-nt.xml|11511", $proiel)
 
 
 

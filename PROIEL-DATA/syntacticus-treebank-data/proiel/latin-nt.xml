@@ -14332,7 +14332,7 @@
         </token>
         <token id="167740" form="dicebant" citation-part="MARK 15.35" lemma="dico" part-of-speech="V-" morphology="3piia----i" relation="pred" alignment-id="114126"/>
       </sentence>
-      <sentence id="11511" status="reviewed" presentation-after=" ">
+      <sentence id="11511" status="reviewed" presentation-after=" " directsp="true">
         <token id="167741" form="ecce" citation-part="MARK 15.35" lemma="ecce" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="114128"/>
         <token id="167742" form="Heliam" citation-part="MARK 15.35" lemma="Helias" part-of-speech="Ne" morphology="-s---ma--i" head-id="167743" relation="obj" presentation-after=" " alignment-id="114129"/>
         <token id="167743" form="vocat" citation-part="MARK 15.35" lemma="voco" part-of-speech="V-" morphology="3spia----i" relation="pred" alignment-id="114130"/>
@@ -14699,7 +14699,7 @@
         <token id="167997" form="illis" citation-part="MARK 16.6" lemma="ille" part-of-speech="Pd" morphology="-p---fd--i" head-id="167996" relation="obl" alignment-id="114445"/>
       </sentence>
       <sentence id="11535" status="reviewed" presentation-after=" ">
-        <token id="167998" form="nolite" citation-part="MARK 16.6" lemma="nolo" part-of-speech="V-" morphology="2ppma----i" relation="pred" presentation-after=" " alignment-id="114447"/>
+        <token id="167998" form="nolite" citation-part="MARK 16.6" lemma="nolo" part-of-speech="V-" morphology="2ppma----i" relation="parpred" presentation-after=" " alignment-id="114447" directsp="true"/>
         <token id="167999" form="expavescere" citation-part="MARK 16.6" lemma="expavesco" part-of-speech="V-" morphology="--pna----i" head-id="167998" relation="xobj" alignment-id="114448">
           <slash target-id="167998" relation="xsub"/>
         </token>

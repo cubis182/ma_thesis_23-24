@@ -1952,7 +1952,9 @@ declare function deh:is-directsp($tok as element()) as xs:boolean
 {
   let $complementizers := ("aio", "inquam")
   
-  return if  ($tok/fn:name() = "word") then ((functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
+  (:First condition: whether LDT or PROIEL, we should know if I added a manual annotation for direct speech:)
+  return if  ($tok/fn:string(@directsp) = "true" or $tok/../fn:string(@directsp) = "true") then (true())
+  else if ($tok/fn:name() = "word") then ((functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
   else (
     let $complementizers := ($complementizers, "dico")
     return (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) and fn:contains($tok/fn:string(@relation), "pred") (:using 'fn:contains' because I want pred AND parpred:) and deh:is-finite($tok)
@@ -1984,7 +1986,7 @@ Used as a helper to deh:split-main-verbs and for retrieving parentheticals which
 :)
 declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) as xs:boolean
 {
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM")) = false() (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and deh:is-directsp($tok) = false()
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM")) = false() (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()))
 };
 
 declare function deh:retrieve-parentheticals($nodes as node()*) as element()*
