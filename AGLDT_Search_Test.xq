@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/harrington/6520/lattb.6520.1.tb.xml|8", $all-ldt)
+$all-ldt//word[fn:contains(fn:string(@relation), "AuxC") and fn:contains(fn:string(@relation), "ExD")]/..
 
 
 

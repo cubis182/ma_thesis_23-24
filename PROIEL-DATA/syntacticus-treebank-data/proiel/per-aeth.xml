@@ -1714,7 +1714,7 @@
         <token id="785144" form="in" citation-part="IV.2" lemma="in" part-of-speech="R-" morphology="---------n" head-id="785142" relation="adv" presentation-after=" "/>
         <token id="785145" form="libris" citation-part="IV.2" lemma="liber" part-of-speech="Nb" morphology="-p---mb--i" head-id="785144" relation="obl" information-status="new" presentation-after=" "/>
         <token id="785146" form="regnorum" citation-part="IV.2" lemma="regnum" part-of-speech="Nb" morphology="-p---ng--i" head-id="785145" relation="atr" information-status="acc_gen" presentation-after=". "/>
-        <token id="785147" empty-token-sort="V" citation-part="IV.2" relation="parpred"/>
+        <token id="785147" empty-token-sort="V" citation-part="IV.2" relation="parpred" directsp="true" parenth="false"/>
       </sentence>
       <sentence id="57434" status="reviewed" presentation-after=" ">
         <token id="767656" form="Nam" citation-part="IV.2" lemma="nam" part-of-speech="Df" morphology="---------n" head-id="767666" relation="aux" presentation-after=" "/>
@@ -12581,8 +12581,8 @@
         <token id="776176" form="semper" citation-part="XXIV.5" lemma="semper" part-of-speech="Df" morphology="---------n" head-id="776175" relation="adv" presentation-after=": "/>
       </sentence>
       <sentence id="57803" status="reviewed" presentation-after=" ">
-        <token id="776177" form="kyrie" citation-part="XXIV.5" lemma="kyrie" part-of-speech="F-" morphology="---------n" relation="voc" information-status="info_unannotatable" presentation-after=" "/>
-        <token id="776178" form="eleyson" citation-part="XXIV.5" lemma="eleyson" part-of-speech="F-" morphology="---------n" relation="voc" information-status="info_unannotatable"/>
+        <token id="776177" form="kyrie" citation-part="XXIV.5" lemma="kyrie" part-of-speech="F-" morphology="---------n" relation="voc" information-status="info_unannotatable" presentation-after=" " parenth="false"/>
+        <token id="776178" form="eleyson" citation-part="XXIV.5" lemma="eleyson" part-of-speech="F-" morphology="---------n" relation="voc" information-status="info_unannotatable" parenth="false"/>
       </sentence>
       <sentence id="58498" status="reviewed">
         <token id="776179" form="quod" citation-part="XXIV.5" lemma="qui" part-of-speech="Pr" morphology="-s---na--i" head-id="776180" relation="obj" presentation-before=" (" presentation-after=" "/>
