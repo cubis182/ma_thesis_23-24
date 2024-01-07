@@ -17,7 +17,7 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 
-("WORK,SENT.ADDR,PARENTH,FULL.PARENTH,SENT"),
+("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,SENT"),
 let $parenth := deh:retrieve-parentheticals($all-trees)
 for $item in $parenth
-return fn:string-join((deh:get-short-name(deh:work-info($item)(1)), deh:get-sent-address($item/..), $item/fn:string(@form), fn:string-join((for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")
+return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:)fn:string-join((for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")
