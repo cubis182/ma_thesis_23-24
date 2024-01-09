@@ -7156,7 +7156,7 @@
         <token id="162833" form="Iesu" citation-part="MARK 9.4" lemma="Iesus" part-of-speech="Ne" morphology="-s---md--i" head-id="162832" relation="obl" alignment-id="108011"/>
       </sentence>
       <sentence id="10875" status="reviewed" presentation-after=" ">
-        <token id="162834" form="rabbi" citation-part="MARK 9.4" lemma="rabbi" part-of-speech="Nb" morphology="---------n" relation="voc" presentation-after=" "/>
+        <token id="162834" form="rabbi" citation-part="MARK 9.4" lemma="rabbi" part-of-speech="Nb" morphology="------v--n" relation="voc" presentation-after=" "/>
         <token id="162835" form="bonum" citation-part="MARK 9.4" lemma="bonus" part-of-speech="A-" morphology="-s---nnp-i" head-id="162836" relation="xobj" presentation-after=" ">
           <slash target-id="162839" relation="xsub"/>
         </token>
@@ -9894,7 +9894,7 @@
         <token id="164701" form="ei" citation-part="MARK 11.21" lemma="is" part-of-speech="Pp" morphology="3s---md--i" head-id="164700" relation="obl" antecedent-id="1066509" information-status="old" alignment-id="110356"/>
       </sentence>
       <sentence id="11117" status="reviewed" presentation-after=" ">
-        <token id="164702" form="rabbi" citation-part="MARK 11.21" lemma="rabbi" part-of-speech="Nb" morphology="---------n" relation="voc" antecedent-id="164701" information-status="old" presentation-after=" " alignment-id="110358"/>
+        <token id="164702" form="rabbi" citation-part="MARK 11.21" lemma="rabbi" part-of-speech="Nb" morphology="------v--n" relation="voc" antecedent-id="164701" information-status="old" presentation-after=" " alignment-id="110358"/>
         <token id="164703" form="ecce" citation-part="MARK 11.21" lemma="ecce" part-of-speech="I-" morphology="---------n" relation="voc" information-status="info_unannotatable" presentation-after=" " alignment-id="110360"/>
         <token id="164704" form="ficus" citation-part="MARK 11.21" lemma="ficus" part-of-speech="Nb" morphology="-s---fn--i" head-id="164707" relation="sub" antecedent-id="164692" information-status="acc_sit" presentation-after=" " alignment-id="110362"/>
         <token id="164705" form="cui" citation-part="MARK 11.21" lemma="qui" part-of-speech="Pr" morphology="-s---fd--i" head-id="164706" relation="obl" presentation-after=" " alignment-id="110363"/>
@@ -10938,7 +10938,7 @@
       </sentence>
       <sentence id="56891" status="reviewed" presentation-after=" ">
         <token id="756861" form="audi" citation-part="MARK 12.29" lemma="audio" part-of-speech="V-" morphology="2spma----i" relation="pred" presentation-after=" " alignment-id="756915"/>
-        <token id="756862" form="Israhel" citation-part="MARK 12.29" lemma="Israel" part-of-speech="Ne" morphology="---------n" relation="voc" presentation-after=" " alignment-id="756916"/>
+        <token id="756862" form="Israhel" citation-part="MARK 12.29" lemma="Israel" part-of-speech="Ne" morphology="------v--n" relation="voc" presentation-after=" " alignment-id="756916"/>
       </sentence>
       <sentence id="56893" status="reviewed" presentation-after=" ">
         <token id="756863" form="Dominus" citation-part="MARK 12.29" lemma="dominus" part-of-speech="Nb" morphology="-s---mn--i" head-id="756868" relation="sub" presentation-after=" " alignment-id="756917"/>
@@ -11340,10 +11340,10 @@
         <token id="165672" form="magister" citation-part="MARK 13.1" lemma="magister" part-of-speech="Nb" morphology="-s---mv--i" relation="voc" presentation-after=" " alignment-id="111539"/>
         <token id="165673" form="aspice" citation-part="MARK 13.1" lemma="aspicio" part-of-speech="V-" morphology="2spma----i" relation="pred" presentation-after=" " alignment-id="111541"/>
         <token id="165674" form="quales" citation-part="MARK 13.1" lemma="qualis" part-of-speech="Pi" morphology="-p---pn--i" head-id="165675" relation="atr" presentation-after=" " alignment-id="111542"/>
-        <token id="165675" form="lapides" citation-part="MARK 13.1" lemma="lapis" part-of-speech="Nb" morphology="-p---mn--i" head-id="165676" relation="voc" presentation-after=" " alignment-id="111543"/>
-        <token id="165676" form="et" citation-part="MARK 13.1" lemma="et" part-of-speech="C-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="111544"/>
+        <token id="165675" form="lapides" citation-part="MARK 13.1" lemma="lapis" part-of-speech="Nb" morphology="-p---mn--i" head-id="165676" relation="voc" presentation-after=" " alignment-id="111543" parenth="false"/>
+        <token id="165676" form="et" citation-part="MARK 13.1" lemma="et" part-of-speech="C-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="111544" parenth="false"/>
         <token id="165677" form="quales" citation-part="MARK 13.1" lemma="qualis" part-of-speech="Pi" morphology="-p---pn--i" head-id="165678" relation="atr" presentation-after=" " alignment-id="111545"/>
-        <token id="165678" form="structurae" citation-part="MARK 13.1" lemma="structura" part-of-speech="Nb" morphology="-p---fn--i" head-id="165676" relation="voc" alignment-id="111546"/>
+        <token id="165678" form="structurae" citation-part="MARK 13.1" lemma="structura" part-of-speech="Nb" morphology="-p---fn--i" head-id="165676" relation="voc" alignment-id="111546" parenth="false"/>
       </sentence>
       <sentence id="11243" status="reviewed" presentation-after=" ">
         <token id="165679" form="et" citation-part="MARK 13.2" lemma="et" part-of-speech="C-" morphology="---------n" head-id="165682" relation="aux" presentation-after=" " alignment-id="111548"/>
@@ -11776,7 +11776,7 @@
         <token id="165981" form="dixerit" citation-part="MARK 13.21" lemma="dico" part-of-speech="V-" morphology="3stia----i" head-id="165978" relation="pred" presentation-after=" " alignment-id="111929"/>
         <token id="165982" form="ecce" citation-part="MARK 13.21" lemma="ecce" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" "/>
         <token id="165983" form="hic" citation-part="MARK 13.21" lemma="hic" part-of-speech="Df" morphology="---------n" head-id="165984" relation="adv" presentation-after=" " alignment-id="111932"/>
-        <token id="165984" form="est" citation-part="MARK 13.21" lemma="sum" part-of-speech="V-" morphology="3spia----i" relation="parpred" presentation-after=" "/>
+        <token id="165984" form="est" citation-part="MARK 13.21" lemma="sum" part-of-speech="V-" morphology="3spia----i" relation="parpred" presentation-after=" " directsp="true" parenth="false"/>
         <token id="165985" form="Christus" citation-part="MARK 13.21" lemma="Christus" part-of-speech="Ne" morphology="-s---mn--i" head-id="165984" relation="sub" presentation-after=" " alignment-id="111934"/>
         <token id="165986" form="ecce" citation-part="MARK 13.21" lemma="ecce" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" "/>
         <token id="165987" form="illic" citation-part="MARK 13.21" lemma="illic" part-of-speech="Df" morphology="---------n" head-id="757160" relation="adv" presentation-after=" " alignment-id="111937"/>
@@ -13095,7 +13095,7 @@
         <token id="166904" form="ait" citation-part="MARK 14.45" lemma="aio" part-of-speech="V-" morphology="3spia----i" relation="pred" alignment-id="113096"/>
       </sentence>
       <sentence id="11394" status="reviewed" presentation-after=" ">
-        <token id="166905" form="rabbi" citation-part="MARK 14.45" lemma="rabbi" part-of-speech="Nb" morphology="---------n" relation="voc" alignment-id="113098"/>
+        <token id="166905" form="rabbi" citation-part="MARK 14.45" lemma="rabbi" part-of-speech="Nb" morphology="------v--n" relation="voc" alignment-id="113098"/>
       </sentence>
       <sentence id="11395" status="reviewed" presentation-after=" ">
         <token id="166906" form="et" citation-part="MARK 14.45" lemma="et" part-of-speech="C-" morphology="---------n" head-id="166907" relation="aux" presentation-after=" " alignment-id="113100"/>
@@ -14301,9 +14301,9 @@
           <slash target-id="167716" relation="xsub"/>
         </token>
       </sentence>
-      <sentence id="11507" status="reviewed" presentation-after=" ">
-        <token id="167720" form="Heloi" citation-part="MARK 15.34" lemma="Heloi" part-of-speech="F-" morphology="---------n" relation="voc" presentation-after=" "/>
-        <token id="167721" form="Heloi" citation-part="MARK 15.34" lemma="Heloi" part-of-speech="F-" morphology="---------n" relation="voc" presentation-after=" "/>
+      <sentence id="11507" status="reviewed" presentation-after=" " directsp="true">
+        <token id="167720" form="Heloi" citation-part="MARK 15.34" lemma="Heloi" part-of-speech="F-" morphology="------v--n" relation="voc" presentation-after=" "/>
+        <token id="167721" form="Heloi" citation-part="MARK 15.34" lemma="Heloi" part-of-speech="F-" morphology="------v--n" relation="voc" presentation-after=" "/>
         <token id="167722" form="lama" citation-part="MARK 15.34" lemma="lama" part-of-speech="F-" morphology="---------n" head-id="167723" relation="adv" presentation-after=" "/>
         <token id="167723" form="sabacthani" citation-part="MARK 15.34" lemma="sabacthani" part-of-speech="F-" morphology="---------n" relation="pred"/>
       </sentence>
@@ -14312,11 +14312,11 @@
         <token id="733954" form="est" citation-part="MARK 15.34" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="733955" relation="aux" presentation-after=" " alignment-id="114106"/>
         <token id="733955" form="interpretatum" citation-part="MARK 15.34" lemma="interpretor" part-of-speech="V-" morphology="-srppnn--i" relation="pred" alignment-id="114107"/>
       </sentence>
-      <sentence id="55128" status="reviewed" presentation-after=" ">
-        <token id="733956" form="Deus" citation-part="MARK 15.34" lemma="deus" part-of-speech="Nb" morphology="-s---mn--i" relation="voc" presentation-before=" " presentation-after=" " alignment-id="114110"/>
-        <token id="733957" form="meus" citation-part="MARK 15.34" lemma="meus" part-of-speech="Ps" morphology="1s---mn--i" head-id="733956" relation="atr" presentation-after=" " alignment-id="114111"/>
-        <token id="733958" form="Deus" citation-part="MARK 15.34" lemma="deus" part-of-speech="Nb" morphology="-s---mn--i" relation="voc" presentation-after=" " alignment-id="114113"/>
-        <token id="733959" form="meus" citation-part="MARK 15.34" lemma="meus" part-of-speech="Ps" morphology="1s---mn--i" head-id="733958" relation="atr" presentation-after=" " alignment-id="114114"/>
+      <sentence id="55128" status="reviewed" presentation-after=" " directsp="true">
+        <token id="733956" form="Deus" citation-part="MARK 15.34" lemma="deus" part-of-speech="Nb" morphology="-s---mv--i" relation="voc" presentation-before=" " presentation-after=" " alignment-id="114110"/>
+        <token id="733957" form="meus" citation-part="MARK 15.34" lemma="meus" part-of-speech="Ps" morphology="1s---mv--i" head-id="733956" relation="atr" presentation-after=" " alignment-id="114111"/>
+        <token id="733958" form="Deus" citation-part="MARK 15.34" lemma="deus" part-of-speech="Nb" morphology="-s---mv--i" relation="voc" presentation-after=" " alignment-id="114113"/>
+        <token id="733959" form="meus" citation-part="MARK 15.34" lemma="meus" part-of-speech="Ps" morphology="1s---mv--i" head-id="733958" relation="atr" presentation-after=" " alignment-id="114114"/>
         <token id="733960" form="ut" citation-part="MARK 15.34" lemma="ut#1" part-of-speech="Df" morphology="---------n" head-id="733961" relation="aux" presentation-after=" "/>
         <token id="733961" form="quid" citation-part="MARK 15.34" lemma="quis" part-of-speech="Pi" morphology="-s---na--i" head-id="733962" relation="adv" presentation-after=" " alignment-id="114117"/>
         <token id="733962" form="dereliquisti" citation-part="MARK 15.34" lemma="derelinquo" part-of-speech="V-" morphology="2sria----i" relation="pred" presentation-after=" " alignment-id="114118"/>
@@ -14704,23 +14704,23 @@
           <slash target-id="167998" relation="xsub"/>
         </token>
       </sentence>
-      <sentence id="11536" status="reviewed" presentation-after=" ">
+      <sentence id="11536" status="reviewed" presentation-after=" " directsp="true">
         <token id="168000" form="Iesum" citation-part="MARK 16.6" lemma="Iesus" part-of-speech="Ne" morphology="-s---ma--i" head-id="168001" relation="obj" presentation-after=" " alignment-id="114450"/>
         <token id="168001" form="quaeritis" citation-part="MARK 16.6" lemma="quaero" part-of-speech="V-" morphology="2ppia----i" relation="pred" presentation-after=" " alignment-id="114451"/>
         <token id="168002" form="Nazarenum" citation-part="MARK 16.6" lemma="Nazarenus" part-of-speech="Nb" morphology="-s---ma--i" head-id="168000" relation="apos" presentation-after=" " alignment-id="114453"/>
         <token id="168003" form="crucifixum" citation-part="MARK 16.6" lemma="crucifigo" part-of-speech="V-" morphology="-srppma--i" head-id="168000" relation="apos" alignment-id="114455"/>
       </sentence>
-      <sentence id="47487" status="reviewed" presentation-after=" ">
+      <sentence id="47487" status="reviewed" presentation-after=" " directsp="true">
         <token id="168004" form="surrexit" citation-part="MARK 16.6" lemma="surgo" part-of-speech="V-" morphology="3sria----i" relation="pred" alignment-id="114457"/>
       </sentence>
-      <sentence id="47488" status="reviewed" presentation-after=" ">
+      <sentence id="47488" status="reviewed" presentation-after=" " directsp="true">
         <token id="168005" form="non" citation-part="MARK 16.6" lemma="non" part-of-speech="Df" morphology="---------n" head-id="168006" relation="aux" presentation-after=" " alignment-id="114459"/>
         <token id="168006" form="est" citation-part="MARK 16.6" lemma="sum" part-of-speech="V-" morphology="3spia----i" relation="pred" presentation-after=" " alignment-id="114460"/>
         <token id="168007" form="hic" citation-part="MARK 16.6" lemma="hic" part-of-speech="Df" morphology="---------n" head-id="168006" relation="xobj" alignment-id="114461">
           <slash target-id="168006" relation="xsub"/>
         </token>
       </sentence>
-      <sentence id="47489" status="reviewed" presentation-after=" ">
+      <sentence id="47489" status="reviewed" presentation-after=" " directsp="true">
         <token id="168008" form="ecce" citation-part="MARK 16.6" lemma="ecce" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="114463"/>
         <token id="168009" form="locus" citation-part="MARK 16.6" lemma="locus" part-of-speech="Nb" morphology="-s---mn--i" head-id="677851" relation="sub" presentation-after=" " alignment-id="114465"/>
         <token id="168010" form="ubi" citation-part="MARK 16.6" lemma="ubi" part-of-speech="Dq" morphology="---------n" head-id="168011" relation="adv" presentation-after=" " alignment-id="114466"/>
@@ -14728,7 +14728,7 @@
         <token id="168012" form="eum" citation-part="MARK 16.6" lemma="is" part-of-speech="Pp" morphology="3s---ma--i" head-id="168011" relation="obj" alignment-id="114468"/>
         <token id="677851" empty-token-sort="V" citation-part="MARK 16.6" relation="pred"/>
       </sentence>
-      <sentence id="11538" status="reviewed" presentation-after=" ">
+      <sentence id="11538" status="reviewed" presentation-after=" " directsp="true">
         <token id="168013" form="sed" citation-part="MARK 16.7" lemma="sed" part-of-speech="C-" morphology="---------n" head-id="168014" relation="aux" presentation-after=" " alignment-id="114470"/>
         <token id="168014" form="ite" citation-part="MARK 16.7" lemma="eo#1" part-of-speech="V-" morphology="2ppma----i" head-id="168015" relation="pred" presentation-after=" " alignment-id="114471"/>
         <token id="168015" form="et" citation-part="MARK 16.7" lemma="et" part-of-speech="C-" morphology="---------n" relation="pred" presentation-after=" "/>
@@ -14743,7 +14743,7 @@
         <token id="168024" form="in" citation-part="MARK 16.7" lemma="in" part-of-speech="R-" morphology="---------n" head-id="168022" relation="obl" presentation-after=" " alignment-id="114482"/>
         <token id="168025" form="Galilaeam" citation-part="MARK 16.7" lemma="Galilaea" part-of-speech="Ne" morphology="-s---fa--i" head-id="168024" relation="obl" alignment-id="114484"/>
       </sentence>
-      <sentence id="11539" status="reviewed" presentation-after=" ">
+      <sentence id="11539" status="reviewed" presentation-after=" " directsp="true">
         <token id="168026" form="ibi" citation-part="MARK 16.7" lemma="ibi" part-of-speech="Df" morphology="---------n" head-id="168028" relation="adv" presentation-after=" " alignment-id="114486"/>
         <token id="168027" form="eum" citation-part="MARK 16.7" lemma="is" part-of-speech="Pp" morphology="3s---ma--i" head-id="168028" relation="obj" presentation-after=" " alignment-id="114487"/>
         <token id="168028" form="videbitis" citation-part="MARK 16.7" lemma="video" part-of-speech="V-" morphology="2pfia----i" relation="pred" presentation-after=" " alignment-id="114488"/>

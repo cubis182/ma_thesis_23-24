@@ -11911,7 +11911,7 @@
         <token id="1205506" form="aut" citation-part="1.97" lemma="aut" part-of-speech="C-" morphology="---------n" head-id="1205508" relation="sub" presentation-after=" "/>
         <token id="1205507" form="Minos" citation-part="1.97" lemma="Minos" part-of-speech="Ne" morphology="-s---mn--i" head-id="1205506" relation="sub" presentation-after=" "/>
         <token id="1205508" form="diceret" citation-part="1.97" lemma="dico" part-of-speech="V-" morphology="3sisa----i" head-id="1205504" relation="pred" presentation-after=": "/>
-        <token id="1205509" form="óderint" citation-part="1.97" lemma="odi" part-of-speech="V-" morphology="3prsa----i" relation="parpred" presentation-before=" " presentation-after=", "/>
+        <token id="1205509" form="óderint" citation-part="1.97" lemma="odi" part-of-speech="V-" morphology="3prsa----i" relation="parpred" presentation-before=" " presentation-after=", " directsp="true" parenth="false"/>
         <token id="1205510" form="dum" citation-part="1.97" lemma="dum" part-of-speech="G-" morphology="---------n" head-id="1205509" relation="adv" presentation-after=" "/>
         <token id="1205511" form="métuant" citation-part="1.97" lemma="metuo" part-of-speech="V-" morphology="3ppsa----i" head-id="1205510" relation="pred" presentation-after=", "/>
         <token id="1205512" form="aut" citation-part="1.97" lemma="aut" part-of-speech="C-" morphology="---------n" head-id="1205508" relation="comp" presentation-after=": "/>
@@ -11920,7 +11920,7 @@
           <slash target-id="1205517" relation="xsub"/>
         </token>
         <token id="1205515" form="ipse" citation-part="1.97" lemma="ipse" part-of-speech="Pd" morphology="-s---mn--i" head-id="1205517" relation="atr" presentation-after=" "/>
-        <token id="1205516" form="ést" citation-part="1.97" lemma="sum" part-of-speech="V-" morphology="3spia----i" relation="parpred" presentation-after=" "/>
+        <token id="1205516" form="ést" citation-part="1.97" lemma="sum" part-of-speech="V-" morphology="3spia----i" relation="parpred" presentation-after=" " directsp="true" parenth="false"/>
         <token id="1205517" form="parens" citation-part="1.97" lemma="parens" part-of-speech="Nb" morphology="-s---mn--i" head-id="1205516" relation="sub" presentation-after=", "/>
         <token id="1205518" form="indecorum" citation-part="1.97" lemma="indecorus" part-of-speech="A-" morphology="-s---nnp-i" head-id="1205519" relation="xobj" presentation-after=" ">
           <slash target-id="1205519" relation="xsub"/>

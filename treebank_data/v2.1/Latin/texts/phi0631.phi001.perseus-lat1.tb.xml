@@ -163,7 +163,7 @@
       <word id="4" form="videtur" lemma="video1" postag="v3spip---" relation="PRED" head="0"/>
       <word id="5" form="ingeni" lemma="ingenium1" postag="n-s---ng-" relation="ATR_CO" head="6"/>
       <word id="6" form="quam" lemma="quam1" postag="d--------" relation="AuxC" head="3"/>
-      <word id="7" form="virium" lemma="vis1" postag="n-p---fg-" relation="ExD" head="6"/>
+      <word id="7" form="virium" lemma="vis1" postag="n-p---fg-" relation="ATR_CO_ExD" head="6"/>
       <word id="8" form="opibus" lemma="ops1" postag="n-p---fb-" relation="ADV" head="10"/>
       <word id="9" form="gloriam" lemma="gloria1" postag="n-s---fa-" relation="OBJ" head="10"/>
       <word id="10" form="quaerere" lemma="quaero1" postag="v--pna---" relation="SBJ_CO" head="12"/>
@@ -3447,11 +3447,11 @@
     <sentence id="170" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="18">
       <word id="1" form="L" lemma="L1" postag="n-s---mb-" relation="ATR" head="3"/>
       <word id="2" form="." lemma="PERIOD1" postag="u--------" relation="AuxG" head="1"/>
-      <word id="3" form="Tullo" lemma="Tullus1" postag="n-s---mb-" relation="ExD" head="0"/>
-      <word id="4" form="et" lemma="et1" postag="c--------" relation="ExD" head="0"/>
-      <word id="5" form="M'" lemma="M1" postag="n-s---mb-" relation="ExD" head="0"/>
+      <word id="3" form="Tullo" lemma="Tullus1" postag="n-s---mb-" relation="ADV" head="4"/>
+      <word id="4" form="et" lemma="et1" postag="c--------" relation="COORD" head="8"/>
+      <word id="5" form="M'" lemma="M1" postag="n-s---mb-" relation="ATR" head="7"/>
       <word id="6" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
-      <word id="7" form="Lepido" lemma="lepidus1" postag="a-s---mb-" relation="ADV" head="22"/>
+      <word id="7" form="Lepido" lemma="lepidus1" postag="a-s---mb-" relation="ADV" head="4"/>
       <word id="8" form="consulibus" lemma="consul1" postag="n-p---mb-" relation="ATV" head="1"/>
       <word id="9" form="P" lemma="P1" postag="n-s---mn-" relation="ATR" head="5"/>
       <word id="10" form="." lemma="PERIOD1" postag="u--------" relation="AuxG" head="3"/>
@@ -4436,7 +4436,7 @@
       <word id="16" form="," lemma="comma1" postag="u--------" relation="APOS" head="7"/>
       <word id="17" form="consili" lemma="consilium1" postag="n-s---ng-" relation="ATR" head="19"/>
       <word id="18" form="sui" lemma="suus1" postag="a-s---ng-" relation="ATR" head="17"/>
-      <word id="19" form="participes" lemma="particeps1" postag="a-p---ma-" relation="ExD" head="7"/>
+      <word id="19" form="participes" lemma="particeps1" postag="a-p---ma-" relation="APOS" head="7"/>
       <word id="20" form=";" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
       <word id="21" insertion_id="0019e" form="[0]" artificial="elliptic" relation="PRED_CO" head="7"/>
     </sentence>

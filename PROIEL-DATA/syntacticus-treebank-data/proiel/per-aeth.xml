@@ -19750,7 +19750,9 @@
         <token id="781891" form="propter" citation-part="XLII.1" lemma="propter" part-of-speech="R-" morphology="---------n" head-id="781890" relation="adv" presentation-after=" "/>
         <token id="781892" form="uigilias" citation-part="XLII.1" lemma="vigilia" part-of-speech="Nb" morphology="-p---fa--i" head-id="781893" relation="sub" information-status="acc_gen" presentation-after=" "/>
         <token id="781893" form="celebrandas" citation-part="XLII.1" lemma="celebro" part-of-speech="V-" morphology="-p-g-fa--i" head-id="781891" relation="obl" information-status="info_unannotatable" presentation-after=". "/>
-        <token id="781894" form="Fiunt" citation-part="XLII.1" lemma="fio" part-of-speech="V-" morphology="3ppia----i" relation="parpred" presentation-after=" "/>
+	</sentence>
+	<sentence id="58056a" status="reviewed">
+        <token id="781894" form="Fiunt" citation-part="XLII.1" lemma="fio" part-of-speech="V-" morphology="3ppia----i" relation="pred" presentation-after=" "/>
         <token id="781895" form="autem" citation-part="XLII.1" lemma="autem" part-of-speech="Df" morphology="---------n" head-id="781894" relation="aux" presentation-after=" "/>
         <token id="781896" form="uigiliae" citation-part="XLII.1" lemma="vigilia" part-of-speech="Nb" morphology="-p---fn--i" head-id="781894" relation="sub" antecedent-id="781892" information-status="old" presentation-after=" "/>
         <token id="781897" form="in" citation-part="XLII.1" lemma="in" part-of-speech="R-" morphology="---------n" head-id="781894" relation="adv" presentation-after=" "/>
@@ -19768,6 +19770,8 @@
         <token id="781907" form="natus" citation-part="XLII.1" lemma="nascor" part-of-speech="V-" morphology="-srppmn--i" head-id="781904" relation="atr" presentation-after=" "/>
         <token id="781908" form="est" citation-part="XLII.1" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="781907" relation="aux" presentation-after=" "/>
         <token id="781909" form="Dominus" citation-part="XLII.1" lemma="dominus" part-of-speech="Nb" morphology="-s---mn--i" head-id="781907" relation="sub" information-status="old_inact" presentation-after=". "/>
+	</sentence>
+	<sentence id="58056b" status="reviewed">
         <token id="781910" form="Alia" citation-part="XLII.1" lemma="alius" part-of-speech="Px" morphology="-s---fb--i" head-id="781911" relation="atr" information-status="info_unannotatable" presentation-after=" "/>
         <token id="781911" form="die" citation-part="XLII.1" lemma="dies" part-of-speech="Nb" morphology="-s---fb--i" head-id="781871" relation="apos" information-status="acc_gen" presentation-after=" "/>
         <token id="781912" form="autem" citation-part="XLII.1" lemma="autem" part-of-speech="Df" morphology="---------n" head-id="781918" relation="aux" presentation-after=", "/>

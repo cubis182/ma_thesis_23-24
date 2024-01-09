@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/proiel/latin-nt.xml|11511", $proiel)
+deh:read-sent-address("/proiel/per-aeth.xml|57534", $proiel) => (deh:retrieve-parentheticals(), deh:print())
 
 
 
