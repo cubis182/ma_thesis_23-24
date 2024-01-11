@@ -1953,11 +1953,10 @@ declare function deh:is-directsp($tok as element()) as xs:boolean
   let $complementizers := ("aio", "inquam")
   
   (:First condition: whether LDT or PROIEL, we should know if I added a manual annotation for direct speech:)
-  return if  ($tok/fn:string(@directsp) = "true" or $tok/../fn:string(@directsp) = "true") then (true())
-  else if ($tok/fn:name() = "word") then ((functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
+  return if ($tok/fn:name() = "word") then (($tok/fn:string(@directsp) = "false" or $tok/../fn:string(@directsp) = "false") = false() and (functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
   else (
     let $complementizers := ($complementizers, "dico")
-    return (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) and fn:contains($tok/fn:string(@relation), "pred") (:using 'fn:contains' because I want pred AND parpred:) and deh:is-finite($tok)
+    return ($tok/fn:string(@directsp) = "false" or $tok/../fn:string(@directsp) = "false") = false() and (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) and fn:contains($tok/fn:string(@relation), "pred") (:using 'fn:contains' because I want pred AND parpred:) and deh:is-finite($tok)
   )
   
   (:Added this third one checking the parent because, if the whole sentence is in direct speech, and the head of the sentence is an OBJ, then is must be a "main" verb:)

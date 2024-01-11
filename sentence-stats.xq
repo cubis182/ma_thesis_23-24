@@ -18,17 +18,18 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 
 declare variable $clause-text := ("cum", "cumque", "ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que", 'quatenus', 'quo', 'quorsum', 'utroque', 'ubiubi', 'quoquo', 'undecumque', 'quaqua', 'sicubi', 'siquo', 'sicunde', 'siqua', "quoniam", "quod", "quia");
 "#From sentence-stats.xq",
-fn:string-join(('WORK,SENT-ADDR,MAIN,PRED,PARENTH,O.R.', $clause-text ! fn:upper-case(.), 'ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND'), ","),
+fn:string-join(('WORK,SENT-ADDR,TEXT,MAIN,PRED,PARENTH,O.R.', $clause-text ! fn:upper-case(.), 'ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND'), ","),
 let $names := deh:short-names()
 
 for $work in $names
 for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
 let $addr := deh:get-sent-address($sent)
+let $text := deh:print($sent)
 
 let $split-mainverbs := deh:split-main-verbs($sent)
 let $main := fn:count($split-mainverbs?*)
 let $pred := fn:count($split-mainverbs?1)
-let $parenth := fn:count(functx:distinct-nodes(($split-mainverbs?2, $sent/*[deh:is-parenthetical(.)])))
+let $parenth := fn:count(functx:distinct-nodes(($split-mainverbs?2, $sent/*[deh:is-parenthetical(., false())])))
 let $or := fn:count($split-mainverbs?3)
 
 
@@ -46,4 +47,4 @@ let $genre := if (deh:get-short-name(deh:work-info($sent)(1)) = ("Fab", "Elegi",
 let $sum := fn:string-join(($adv, $comp, $atr), "|")
 let $coord := fn:count(deh:clause-coordination($sent))
 let $asynd := if ($main > 0) then ($coord div $main) else ("NA") (:Main, that is, all types of unsubordinated verbs:)
-return fn:string-join(($work, $addr, $main, $pred, $parenth, $or, $lemma-counts, $adv, $comp, $atr, $sub, $len, $worklen, $genre, $sum, $coord, $asynd), ",")
+return fn:string-join(($work, $addr, $text, $main, $pred, $parenth, $or, $lemma-counts, $adv, $comp, $atr, $sub, $len, $worklen, $genre, $sum, $coord, $asynd), ",")
