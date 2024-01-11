@@ -285,6 +285,22 @@ declare function deh:print($sents as element(sentence)*) (:9/25/23, changed arg 
   return fn:string-join($sent/*/fn:string(@form), " ")
 };
 
+(:deh:print-phrase
+1/11/2024
+
+Prints every 
+:)
+declare function deh:print-phrase($nodes as node()*) as xs:string*
+{
+  for $tok in deh:tokens-from-unk($nodes) (:I don't see a case where I would ever want to do this, but I can pass whole sentences and such...:)
+  return fn:string-join(
+    (
+      for $desc in functx:distinct-nodes(($tok, deh:return-descendants($tok))) 
+      order by $desc/fn:number(@id) 
+      return $desc/fn:string(@form)
+    ), " ") => fn:replace("[^a-zA-Z ]", "")
+};
+
 (:
 deh:print-rel()
 9/25/2023:
@@ -1936,9 +1952,9 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   (:Second, extract out the main verbs for LDT in stages:)
   
   (:Get all verbs which are in scope:)
-  let $l-verbs := $ldt[deh:is-finite(.) or fn:string(@artificial) = "elliptic"] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
+  let $l-verbs := $ldt[deh:is-finite(.)] (:We only want finite verbs, generally; WE'LL DEAL WITH HISTORICAL INFINITIVES LATER (10/8/2023, removed "or deh:is-periphrastic-p(.)" from the parameters, because it will still get the auxiliary:)
   (:narrow it down to predicates, return this:)
-  let $preds := $ldt[deh:is-verb(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTH")) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
+  let $preds := $ldt[((deh:is-verb(.) and fn:contains(fn:string(@relation), "PRED")) or (deh:is-finite(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTH")))) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
   
   (:Now deal with direct speech:)
   let $directsp := $l-verbs[deh:is-directsp(.)]
@@ -1953,7 +1969,7 @@ declare function deh:is-directsp($tok as element()) as xs:boolean
   let $complementizers := ("aio", "inquam")
   
   (:First condition: whether LDT or PROIEL, we should know if I added a manual annotation for direct speech:)
-  return if ($tok/fn:name() = "word") then (($tok/fn:string(@directsp) = "false" or $tok/../fn:string(@directsp) = "false") = false() and (functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ") and (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0)) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) or boolean(deh:return-parent-nocoord($tok)) = false()))
+  return if ($tok/fn:name() = "word") then (($tok/fn:string(@directsp) = "false" or $tok/../fn:string(@directsp) = "false") = false() and  (functx:contains-any-of($tok/fn:string(@relation), ("DIRSTAT", "-DS-")) or (fn:contains($tok/fn:string(@relation), "OBJ")(: or (fn:count(deh:return-siblings($tok, false())[fn:contains(fn:string(@relation), "AuxG")]) > 0) or fn:count(deh:return-children($tok)[fn:contains(fn:string(@relation), "AuxG")]) > 0:) and ((functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers))))))
   else (
     let $complementizers := ($complementizers, "dico")
     return ($tok/fn:string(@directsp) = "false" or $tok/../fn:string(@directsp) = "false") = false() and (functx:contains-any-of(deh:return-parent-nocoord($tok)/fn:string(@lemma), $complementizers)) and fn:contains($tok/fn:string(@relation), "pred") (:using 'fn:contains' because I want pred AND parpred:) and deh:is-finite($tok)
@@ -1987,7 +2003,7 @@ declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) 
 {
   (:If I put a "parenth" tag on it, that should override it:)
   if ($tok/fn:string(@parenth) = "true") then (true()) else (
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((deh:case($tok) = 'v') = (false() or $is-voc)) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM")) = false() (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true()))
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and (if ($is-voc = false()) then (deh:case($tok) != 'v')else (true())) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM")) = false() (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true()))
 )
 };
 

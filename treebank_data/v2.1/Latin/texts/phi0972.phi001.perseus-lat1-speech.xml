@@ -1317,7 +1317,7 @@
 			<word id="26" form=";" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
 		</sentence>
 		<sentence id="722" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="61">
-			<word id="1" form="Oro" lemma="oro1" postag="v1spia---" relation="PRED" head="0"/>
+			<word id="1" form="Oro" lemma="oro1" postag="v1spia---" relation="ExD" head="0"/>
 			<word id="2" form="te" lemma="tu1" postag="p-s---fa-" relation="OBJ" head="1"/>
 			<word id="3" form="," lemma="comma1" postag="u--------" relation="AuxX" head="7"/>
 			<word id="4" form="sic" lemma="sic1" postag="d--------" relation="ADV" head="7"/>

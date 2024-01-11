@@ -1952,7 +1952,7 @@
       <word id="2" form="Nam" lemma="nam1" postag="c--------" relation="COORD" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="0"/>
       <word id="3" form="ego" lemma="ego1" postag="p-s---mn-" relation="SBJ" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="15"/>
       <word id="4" form="(" lemma="LPAREN1" postag="u--------" relation="AuxG" cite="" head="5"/>
-      <word id="5" form="crede" lemma="credo1" postag="v2spma---" relation="AuxY" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="19"/>
+      <word id="5" form="crede" lemma="credo1" postag="v2spma---" relation="ExD" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="19"/>
       <word id="6" form="mihi" lemma="ego1" postag="p-s---md-" relation="OBJ" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="5"/>
       <word id="7" form=")" lemma="RPAREN1" postag="u--------" relation="AuxG" cite="" head="5"/>
       <word id="8" form="si" lemma="si1" postag="c--------" relation="AuxC" cite="urn:cts:latinLit:phi0959.phi006:1.361" head="19"/>

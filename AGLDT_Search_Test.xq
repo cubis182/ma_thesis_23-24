@@ -167,8 +167,10 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/proiel/per-aeth.xml|57534", $proiel) => deh:retrieve-parentheticals()
-
+let $petr := doc("/ldt2.1-treebanks/phi0972.phi001.perseus-lat1-speech.xml")
+let $toks := $petr//word[fn:contains(fn:string(@relation), 'ExD') and deh:is-parenthetical(., true()) = false()]
+for $tok in $toks
+return ($tok, deh:get-sent-address($tok/..), $tok/..)
 
 
 
