@@ -167,10 +167,9 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-let $petr := doc("/ldt2.1-treebanks/phi0972.phi001.perseus-lat1-speech.xml")
-let $toks := $petr//word[fn:contains(fn:string(@relation), 'ExD') and deh:is-parenthetical(., true()) = false()]
-for $tok in $toks
-return ($tok, deh:get-sent-address($tok/..), $tok/..)
+let $petrNew := $all-trees[fn:contains(deh:work-info(.)(1), "Petr")]
+let $petr := doc("C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/Petronius Backup/phi0972.phi001.perseus-lat1.xml")
+return fn:count($petr//sentence)
 
 
 
