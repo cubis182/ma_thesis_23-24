@@ -54,7 +54,7 @@ let $temporal-clause :=  for $item in ($clause-pairs => deh:temporal-clause()) r
 let $main-verbs := deh:split-main-verbs($tree)
 let $main := $main-verbs(1) ! array{., 'main', 'main'}
 let $parenth := $main-verbs(2) ! array{., 'parenth', 'main'}
-let $or := $main-verbs(3) ! array{., 'directsp', 'main'}
+let $or := $main-verbs(3) ! array{., 'castoff', 'main'}
 
 for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause, $main, $parenth, $or)
 where $item?1/fn:string(@lemma) != ""
