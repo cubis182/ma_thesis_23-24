@@ -169,7 +169,7 @@ return deh:get-tok-address($item(1))
 
 let $petrNew := $all-trees[fn:contains(deh:work-info(.)(1), "Petr")]
 let $petr := doc("C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/treebank_data/Petronius Backup/phi0972.phi001.perseus-lat1.xml")
-return fn:count($petr//sentence)
+return deh:word-count($petrNew)
 
 
 
