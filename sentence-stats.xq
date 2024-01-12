@@ -24,7 +24,7 @@ let $names := deh:short-names()
 for $work in $names
 for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
 let $addr := deh:get-sent-address($sent)
-let $text := deh:print($sent)
+let $text := deh:print($sent) => fn:replace("[^a-zA-Z ]", "")
 
 let $split-mainverbs := deh:split-main-verbs($sent)
 let $main := fn:count($split-mainverbs?*)
