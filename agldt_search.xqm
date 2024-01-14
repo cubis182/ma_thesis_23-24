@@ -2586,7 +2586,7 @@ declare function deh:is-subjunctive($tok as element()?) as xs:boolean
 
 declare function deh:is-relative($tok as element()) as xs:boolean
 {
-   let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui', 'si', 'seu', 'sive', 'siue', 'qualiscumque') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included; 11/12/2023: added si, seu, sive siue because, when they are used to coordinate, they are usually not heads of the phrase; also added qualiscumque because it is rare and did not show up in PROIEL:)
+   let $lemma := ('prout', 'quod', 'quantopere', 'quorsum', 'quacumque', 'quantuluscumque', 'quotiensque', 'quocumque', 'quotienscumque', 'ubinam', 'ecquid', 'qualiter', 'ecquis', 'quamdiu', 'prout', 'uter', 'quamobrem', 'quotquot', 'quotiens', 'quot', 'quanto', 'ubicumque', 'quisnam', 'cur', 'num', 'quoad', 'quisquis', 'qua', 'qualis', 'numquid', 'unde', 'quantum', 'tamquam', 'quando', 'quemadmodum', 'an', 'quare', 'quomodo', 'quantus', 'quo', 'quicumque', 'quam', 'sicut', 'ubi', 'quis', 'ne', 'cum', 'ut', 'qui', 'si', 'seu', 'sive', 'siue', 'qualiscumque', 'quonam') (:potential lemmas of subordinators 11/1/2023: instead of doing it manually, I put this in the deh:lem function; the reason is that tokens like loqui were getting flagged; 11/5/23, added prout and quod, since very rarely quod as a relative is lemmatized as quod, and prout had not already been included; 11/12/2023: added si, seu, sive siue because, when they are used to coordinate, they are usually not heads of the phrase; also added qualiscumque because it is rare and did not show up in PROIEL:)
    
    return fn:replace(fn:string($tok/@lemma), "[^a-z^A-Z]", "") = $lemma and functx:contains-any-of(deh:part-of-speech($tok), ("a", "d", "p", "n", "Pi", "Du", "Dq", "Pr", "Df")) and (deh:is-subjunction($tok) = false()) (:11/3/2023, this may break this, but I added "a" as a POS because of qualis; 11/5/23, temporarily (maybe) added "n" because sometimes pronouns are mistagged as nouns...; same day, added "Df" to account for 'sicut' sometimes being tagged as such:)
 };
@@ -3052,6 +3052,23 @@ declare function deh:get-clause-pairs($nodes as node()*) as item()*
 };
 
 (:
+1/13/24
+deh:headless-clause()
+
+Relies on vhcs: if both nodes in the clause pair are the same, it must be a headless ut clause
+:)
+declare function deh:headless-clause($pairs as array(*)*) as array(*)*
+{
+  for $pair in $pairs
+  where array:size($pair) > 1 (:Test this so we don't get an 'index out of range' error:)
+  return if (fn:deep-equal($pair?1[1], $pair?2[1])) (:Added the selectors because sometimes something gets screwed up and there are multiple subordinators or verbs:)
+  then (
+    array{<token lemma="(ut)" form="(ut)"></token>, $pair?2[1]} (:Return the array so that the subordinator is now marked as a headless 'ut' with the parentheses:)
+  )
+  else ()
+};
+
+(:
 deh:clause-pair-rel()
 11/22/2023
 
@@ -3059,8 +3076,8 @@ Takes results from deh:get-clause-pairs
 :)
 declare function deh:clause-pair-rel($clause-pair as array(*)) as xs:string
 {
-  if ($clause-pair(1)/deh:is-subjunction-pr(.)) then ($clause-pair(1)/fn:string(@relation))
-  else ($clause-pair(2)/fn:string(@relation))
+  if ($clause-pair(1)[1]/deh:is-subjunction-pr(.)) then ($clause-pair(1)[1]/fn:string(@relation))
+  else ($clause-pair(2)[1]/fn:string(@relation))
 };
 
 (:The following three functions separate suborindate clauses:)
@@ -3103,6 +3120,13 @@ declare function deh:adjectival-clause($pairs as array(*)*) as array(*)*
   return $pair
 };
 
+declare function deh:unique-pairs($pairs as array(*)*) as array(*)*
+{
+  for $tok at $n in $pairs
+  where (functx:is-node-in-sequence($tok?1, $pairs?1) = false()) 
+  return $pairs[$n]
+};
+
 (:
 deh:temporal-clause()
 11/21/2023
@@ -3115,7 +3139,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   (:let $clause-pairs := deh:get-clause-pairs($nodes)eliminated 11/29 because this now only accepts an array:)
   
   let $w-indicative-temp := ("cum", "cumque", "ut(i|)")
-  let $temporal := ("ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
+  let $temporal := ("ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que")
   (:also check the parent-lemma column with 'quam' for "ante" or "prius" or "post" or "postea":)	
   let $separable := ('ante', 'prius', 'postea', 'postmodum', 'post')
   
