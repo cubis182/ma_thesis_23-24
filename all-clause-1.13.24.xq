@@ -43,9 +43,9 @@ let $object := deh:object-clause($clause-pairs) ! array{.?1/deh:get-tok-address(
 let $conditional := deh:conditional-clause($clause-pairs) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_cond'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "cond"}
 let $headless := deh:headless-clause($clause-pairs) ! array{.?2/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_headless'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "headless"}
 
-let $taken := (deh:temporal-clause($clause-pairs), deh:spatial-clause($clause-pairs), deh:causal-clause($clause-pairs),deh:causal-clause($clause-pairs),deh:causal-clause($clause-pairs), deh:conditional-clause($clause-pairs), deh:headless-clause($clause-pairs))
+let $taken := (deh:temporal-clause($clause-pairs), deh:spatial-clause($clause-pairs), deh:causal-clause($clause-pairs),deh:purpose-clause($clause-pairs),deh:object-clause($clause-pairs), deh:conditional-clause($clause-pairs), deh:headless-clause($clause-pairs))
 
-let $reliquiae := for $tok at $n in $clause-pairs where (functx:is-node-in-sequence($tok?1, $taken?1) = false()) and (functx:is-node-in-sequence($tok?2[1], $taken?2) = false()) return $clause-pairs[$n]
+let $reliquiae := for $tok at $n in $clause-pairs where (functx:is-node-in-sequence($tok?1, $taken?1) = false()) and (functx:is-node-in-sequence($tok?2[1], $taken?2) = false()) return $tok
 
 let $adjectival := deh:adjectival-clause($reliquiae) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_adj'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "adj"}
 let $noun := deh:complement-clause($reliquiae) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_noun'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "noun"}
