@@ -3123,7 +3123,7 @@ declare function deh:adjectival-clause($pairs as array(*)*) as array(*)*
 declare function deh:unique-pairs($pairs as array(*)*) as array(*)*
 {
   for $tok at $n in $pairs
-  where (functx:is-node-in-sequence($tok?1, $pairs?1) = false()) 
+  where (functx:is-node-in-sequence($tok?1, $pairs[position() < $n]?1) = false()) and (functx:is-node-in-sequence($tok?2[1], $pairs[position() < $n]?2) = false()) 
   return $pairs[$n]
 };
 
@@ -3162,9 +3162,9 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
   
   let $separable-temporal :=
   for $target in $separable
-  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $separable or deh:return-children(.(1))[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $separable] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
+  return $clause-pairs[.(1) => deh:lemma('quam') and (.(1) => deh:return-parent-nocoord())/fn:string(@form) = $target or deh:return-children(.(1))[fn:contains(fn:string(@relation), "AuxZ")]/fn:string(@form) = $target] ! array:append(., ($target || 'quam')) (:Added this little thing at the end so there is a way of :)
   
-  let $temporal-results := ($temporal-final, $separable-temporal, $temporal-ind-final)
+  let $temporal-results := deh:unique-pairs(($temporal-final, $separable-temporal, $temporal-ind-final))
   
   return $temporal-results
 };
