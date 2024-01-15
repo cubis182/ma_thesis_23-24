@@ -33,7 +33,7 @@ let $sent-length := deh:word-count($tree)
 
 let $clause-pairs := deh:get-clause-pairs($tree)[array:size(.) > 1] (:Use fn:count here, not array:size, because deh:get-clause-pairs can put empty arrays in:)
 
-let $temporal := deh:temporal-clause($clause-pairs) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_temp'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "temp"}
+let $temporal := deh:temporal-clause($clause-pairs) ! array{.?1/deh:get-tok-address(.), ((if (array:size(.) > 2) then (.?3) else (deh:process-lemma(.?1/fn:string(@lemma)))) || '_temp'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "temp"}
 let $spatial := deh:spatial-clause($clause-pairs) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_space'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "space"}
 let $causal := deh:causal-clause($clause-pairs) ! array{.?1/deh:get-tok-address(.), (.?1/deh:process-lemma(fn:string(@lemma)) || '_causal'), .?2[1]/deh:process-lemma(fn:string(@lemma)), "caus"}
 
