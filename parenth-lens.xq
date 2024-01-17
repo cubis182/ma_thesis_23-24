@@ -21,7 +21,7 @@ let $names := deh:short-names()
 
 for $work in $names
 for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
-let $parenth := deh:split-main-verbs($sent)(2)
+let $parenth := deh:retrieve-parentheticals($sent)
 let $sentaddr := deh:get-sent-address($sent)
 let $len := deh:word-count((deh:return-descendants($parenth), $parenth))
 return fn:string-join(($work, $sentaddr, $len), ",")

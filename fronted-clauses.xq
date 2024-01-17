@@ -17,6 +17,8 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 let $sent := deh:pick-random($all-trees//sentence, 1)
-let $toks := $sent/*[position() = 1 to 5 and deh:return-depth(., 1) < 4]
-let $pairs := deh:get-clause-pairs($toks)
-return (deh:print($sent), $pairs, $sent)
+let $pairs := deh:get-clause-pairs($sent)
+for $pair in $pairs
+let $desc := functx:distinct-nodes(deh:return-descendants($pairs?*))
+return if (boolean($desc[fn:count(./preceding-sibling::*) < 5]) and fn:count($desc/preceding-sibling::*[deh:return-depth(., 1) = 1 and deh:is-finite(.)]) = 0) then (($pair, deh:print($sent), $sent))
+else ((deh:print($sent), $sent))
