@@ -3173,7 +3173,7 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
 deh:spatio-temporal-adverb()
 11/27/2023
 :)
-declare function deh:spatio-temporal-adverb($nodes as node()*)
+declare function deh:spatio-temporal-adverb($nodes as node()*) as array(*)*
 {
   (:12/3/2023: removed the "clause" ones:)
   let $toks := deh:tokens-from-unk($nodes)
@@ -3184,7 +3184,7 @@ declare function deh:spatio-temporal-adverb($nodes as node()*)
   (:Removing for now, causing too much trouble let $mixed-clause := ('ubi', 'unde'):)
   let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'intro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
   let $spatial-clause := ('ubiubi', 'quoquo', 'undecumque', 'quaqua') (:provided on Allen & Greenough p. 123:)
-  let $spatial-amb := ('hic', 'hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta')
+  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta') (:1/20/24, removed hic:)
   
   (:Both the unambiguous ones, and the ambiguous, where we check if it may have the right tags:)
   let $temporal := (

@@ -16,12 +16,19 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-("WORK,SENT.ADDR,PARENLEN"),
-let $names := deh:short-names()
+"#from sentence-particle-detail.xq; SENTTOTAL is the total number of sentences in the work the particle/adv comes from.",
+('WORK,SENT-ADDR,TEXT,LEM,SENTLEN,SENTTOTAL,WORKLEN'),
+let $works := deh:short-names()
 
-for $work in $names
-for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
-let $parenth := deh:retrieve-parentheticals($sent) (:updated with this function rather than split-main-verbs 1/17/24:)
-let $sentaddr := deh:get-sent-address($sent)
-let $len := deh:word-count((deh:return-descendants($parenth), $parenth))
-return fn:string-join(($work, $sentaddr, $len), ",")
+for $work in $works
+let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $work-length := deh:word-count($treebank)
+let $sent-total := fn:count($treebank//sentence)
+for $tree in ($treebank//sentence)
+
+let $sent-addr := deh:get-sent-address($tree)
+let $text := deh:print($tree) => fn:replace(",", "")
+let $advs := (deh:spatio-temporal-adverb($tree)?1, deh:causal-adverb($tree))
+let $sent-length := deh:word-count($tree)
+for $adv in $advs
+return fn:string-join(($work, $sent-addr, $text, $adv/fn:string(@form), $sent-length, $sent-total, $work-length),",")
