@@ -2986,7 +2986,7 @@ declare function deh:causal-clause($nodes as array(*)*)
   else if ($rel-head => functx:contains-any-of(("apos", "-ap"))) (:It is APOS in both trees, but there can also be the -AP suffix in Harrington, which I think sometimes occurs in the main LDT:) then (
      let $parent := deh:return-parent(deh:phrase-head($clause), 0)
      (:Possibility one: the parent is ideo, propterea, hoc (hic), also added id (although I did not test it), or idcirco:)
-     return if (deh:lemma($parent, ('ideo', 'propterea', 'idcirco', 'hic', 'is')))
+     return if (deh:lemma($parent, ('ideo', 'propterea', 'idcirco', 'is'))) (:Removed 'hic' here, 1/20/24:)
        then ($clause)
      (:possibility two: the grandparent is the preposition 'ob'; I cannot imagine this would ever not work:)
      else if (($parent => deh:return-parent-nocoord())/deh:lemma(., 'ob')) then ($clause)
