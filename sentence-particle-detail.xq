@@ -28,7 +28,7 @@ for $tree in ($treebank//sentence)
 
 let $sent-addr := deh:get-sent-address($tree)
 let $text := deh:print($tree) => fn:replace(",", "")
-let $advs := (deh:spatio-temporal-adverb($tree)?1, deh:causal-adverb($tree))
+let $advs := (deh:spatio-temporal-adverb($tree, false())?1, deh:causal-adverb($tree))
 let $sent-length := deh:word-count($tree)
 for $adv in $advs
 return fn:string-join(($work, $sent-addr, $text, $adv/fn:string(@form), $sent-length, $sent-total, $work-length),",")

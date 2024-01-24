@@ -3172,8 +3172,10 @@ declare function deh:temporal-clause($clause-pairs as array(*)*)
 (:
 deh:spatio-temporal-adverb()
 11/27/2023
+
+@param $use-voc: If true, locatives will be included in spatial adverbs
 :)
-declare function deh:spatio-temporal-adverb($nodes as node()*) as array(*)*
+declare function deh:spatio-temporal-adverb($nodes as node()*, $use-loc as xs:boolean) as array(*)*
 {
   (:12/3/2023: removed the "clause" ones:)
   let $toks := deh:tokens-from-unk($nodes)
@@ -3205,7 +3207,7 @@ declare function deh:spatio-temporal-adverb($nodes as node()*) as array(*)*
     where deh:lemma($tok, $spatial-clause) 
     return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()],
     $toks[deh:is-adverbial(.) and deh:lemma-or-form(., $spatial-amb)],
-    $toks[deh:case(.) = 'l'] (:Accounts for the locative:)
+    if ($use-loc) then ($toks[deh:case(.) = 'l'] (:Accounts for the locative:))
   )
   
   (:Make sure each is properly labeled:)
