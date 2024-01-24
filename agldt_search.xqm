@@ -3181,10 +3181,11 @@ declare function deh:spatio-temporal-adverb($nodes as node()*) as array(*)*
   let $temporal-unamb :=('nunc', 'tunc', 'mox', 'iam', 'diu', 'dudum', 'pridem', 'primum', 'primo', 'deinde', 'postea', 'postremo', 'umquam', 'numquam', 'semper', 'aliquando', 'hodie', 'heri', 'cras', 'pridie', 'postridie', 'nondum', 'necdum', 'vixdum', 'temperi', 'vesperi', 'noctu', 'antea', 'statim', 'nuper', 'abhinc', 'breviter', 'usqui', 'mani', 'semel', 'saepius', 'aliquotiens', 'iterum', 'denuo', 'rursus', 'adhuc')
   let $temporal-amb := ('perpetuo', 'perpetuum', 'aeternum', 'postremo', 'postremum')
   let $mixed := ('hinc', 'ibi', 'eo2','eo#2', 'inde', 'usque', 'ultra', 'porro', 'retrorsum', 'ibidem', 'prope', 'ilico')
+  
   (:Removing for now, causing too much trouble let $mixed-clause := ('ubi', 'unde'):)
-  let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'intro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
+  let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
   let $spatial-clause := ('ubiubi', 'quoquo', 'undecumque', 'quaqua') (:provided on Allen & Greenough p. 123:)
-  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta') (:1/20/24, removed hic:)
+  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta',  'intro') (:1/20/24, removed hic:)
   
   (:Both the unambiguous ones, and the ambiguous, where we check if it may have the right tags:)
   let $temporal := (
@@ -3200,7 +3201,9 @@ declare function deh:spatio-temporal-adverb($nodes as node()*) as array(*)*
   
   let $spatial := (
     $toks[deh:lemma(., $spatial-unamb)], 
-    for $tok in $toks where deh:lemma($tok, $spatial-clause) return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()],
+    for $tok in $toks 
+    where deh:lemma($tok, $spatial-clause) 
+    return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()],
     $toks[deh:is-adverbial(.) and deh:lemma-or-form(., $spatial-amb)],
     $toks[deh:case(.) = 'l'] (:Accounts for the locative:)
   )
