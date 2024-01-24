@@ -31,4 +31,4 @@ let $text := deh:print($tree) => fn:replace(",", "")
 let $advs := (deh:spatio-temporal-adverb($tree, false())?1, deh:causal-adverb($tree))
 let $sent-length := deh:word-count($tree)
 for $adv in $advs
-return fn:string-join(($work, $sent-addr, $text, $adv/fn:string(@form), $sent-length, $sent-total, $work-length),",")
+return fn:string-join(($work, $sent-addr, $text, fn:lower-case($adv/fn:string(@form)), $sent-length, $sent-total, $work-length),",")
