@@ -2136,7 +2136,7 @@
       <word id="23" form="," lemma="punc1" postag="u--------" relation="AuxX" head="10"/>
       <word id="24" form="ne" lemma="ne1" postag="d--------" relation="ADV" head="35"/>
       <word id="25" form="-c" lemma="-que" postag="c--------" relation="ADV" head="10"/>
-      <word id="26" form="illos" lemma="illic" postag="p-p---ma-" relation="A-DO" head="35"/>
+      <word id="26" form="illos" lemma="ille" postag="p-p---ma-" relation="A-DO" head="35"/>
       <word id="27" form="quos" lemma="qui2" postag="p-p---ma-" relation="A-DO" head="28"/>
       <word id="28" form="genuit" lemma="gigno" postag="v3sria---" relation="ADJ-RC_CO" head="29"/>
       <word id="29" form="," lemma="punc1" postag="u--------" relation="COORD" head="26"/>

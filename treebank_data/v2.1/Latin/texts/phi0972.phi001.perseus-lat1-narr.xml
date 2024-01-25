@@ -2842,7 +2842,7 @@ and harmonization can be consulted on PerseusDL (https://github.com/PerseusDL/tr
 			<word id="6" form="que" lemma="que1" postag="c--------" relation="COORD" head="0"/>
 			<word id="7" form="porci" lemma="porcus1" postag="n-s---mg-" relation="ATR" head="8"/>
 			<word id="8" form="ventrem" lemma="venter1" postag="n-s---ma-" relation="OBJ" head="14"/>
-			<word id="9" form="hinec" lemma="hinc1" postag="d--------" relation="ADV_CO" head="10"/>
+			<word id="9" form="hinc" lemma="hinc1" postag="d--------" relation="ADV_CO" head="10"/>
 			<word id="10" form="atque" lemma="atque1" postag="c--------" relation="COORD" head="14"/>
 			<word id="11" form="illinc" lemma="illinc1" postag="d--------" relation="ADV_CO" head="10"/>
 			<word id="12" form="timida" lemma="timidus1" postag="a-s---fb-" relation="ATR" head="13"/>
@@ -4617,8 +4617,7 @@ and harmonization can be consulted on PerseusDL (https://github.com/PerseusDL/tr
 			<word id="19" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
 		</sentence>
 		<sentence id="846" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="67">
-			<word id="1" form="ne" lemma="ne1" postag="d--------" relation="ADV" head="12"/>
-			<word id="2" form="Tu" lemma="tunc1" postag="d--------" relation="ADV" head="5"/>
+			<word id="2" form="Tunc" lemma="tunc1" postag="d--------" relation="ADV" head="5"/>
 			<word id="3" form="sudario" lemma="sudarium1" postag="n-s---nb-" relation="ADV" head="5"/>
 			<word id="4" form="manus" lemma="manus1" postag="n-p---fa-" relation="OBJ" head="5"/>
 			<word id="5" form="tergens" lemma="tergeo1" postag="v-sppafn-" relation="ADV" head="12"/>
@@ -4913,8 +4912,7 @@ and harmonization can be consulted on PerseusDL (https://github.com/PerseusDL/tr
 			<word id="12" form="versus" lemma="versus3" postag="n-p---ma-" relation="OBJ" head="10"/>
 			<word id="13" form="," lemma="comma1" postag="u--------" relation="AuxX" head="14"/>
 			<word id="14" form="ut" lemma="ut1" postag="c--------" relation="AuxC" head="10"/>
-			<word id="15" form="ne" lemma="ne1" postag="d--------" relation="AuxZ" head="16"/>
-			<word id="16" form="tu" lemma="tunc1" postag="d--------" relation="ADV" head="21"/>
+			<word id="16" form="tunc" lemma="tunc1" postag="d--------" relation="ADV" head="21"/>
 			<word id="17" form="primum" lemma="primus1" postag="d--------" relation="ADV" head="21"/>
 			<word id="18" form="me" lemma="ego1" postag="p-s---ma-" relation="OBJ" head="21"/>
 			<word id="19" form="etiam" lemma="etiam1" postag="d--------" relation="AuxZ" head="20"/>

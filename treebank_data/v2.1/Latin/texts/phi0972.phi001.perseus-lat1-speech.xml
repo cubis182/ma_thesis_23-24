@@ -1219,8 +1219,7 @@
 		</sentence>
 		<sentence id="190" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="39">
 			<word id="1" form="Itaque" lemma="ita1" postag="d--------" relation="AuxY" head="5"/>
-			<word id="2" form="ne" lemma="ne1" postag="d--------" relation="XSEG" head="3"/>
-			<word id="3" form="tu" lemma="tunc1" postag="d--------" relation="AuxY" head="5"/>
+			<word id="3" form="tunc" lemma="tunc1" postag="d--------" relation="AuxY" head="5"/>
 			<word id="4" form="calcitrosi" lemma="calcitrosus1" postag="n-p---mn-" relation="SBJ_CO" head="8"/>
 			<word id="5" form="nascuntur" lemma="nascor1" postag="v3ppip---" relation="PRED" head="0"/>
 			<word id="6" form="et" lemma="et1" postag="c--------" relation="AuxY" head="8"/>
@@ -2647,7 +2646,7 @@
 			<word id="3" form="non" lemma="non1" postag="d--------" relation="AuxZ" head="4"/>
 			<word id="4" form="est" lemma="sum1" postag="v3spia---" relation="SBJ" head="7"/>
 			<word id="5" form="," lemma="comma1" postag="u--------" relation="AuxX" head="4"/>
-			<word id="6" form="eras" lemma="cras" postag="d--------" relation="ADV" head="7"/>
+			<word id="6" form="cras" lemma="cras" postag="d--------" relation="ADV" head="7"/>
 			<word id="7" form="erit" lemma="sum1" postag="v3sfia---" relation="PRED" head="0"/>
 			<word id="8" form=":" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
 		</sentence>
@@ -6617,7 +6616,7 @@
 			<word id="10" form=";" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
 		</sentence>
 		<sentence id="731" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="61">
-			<word id="1" form="nune" lemma="nunc1" postag="d--------" relation="ADV" head="4"/>
+			<word id="1" form="nunc" lemma="nunc1" postag="d--------" relation="ADV" head="4"/>
 			<word id="2" form="Gavillae" lemma="Gavilla1" postag="n-s---fg-" relation="ATR" head="3"/>
 			<word id="3" form="domus" lemma="domus1" postag="n-s---fn-" relation="PNOM" head="4"/>
 			<word id="4" form="est" lemma="sum1" postag="v3spia---" relation="PRED" head="0"/>
@@ -7205,8 +7204,7 @@
 		</sentence>
 		<sentence id="772" document_id="urn:cts:latinLit:phi0972.phi001.perseus-lat1" subdoc="63">
 			<word id="1" form="Habebamus" lemma="habeo1" postag="v1piia---" relation="PRED" head="0"/>
-			<word id="2" form="ne" lemma="ne1" postag="c--------" relation="XSEG" head="3"/>
-			<word id="3" form="tu" lemma="tunc1" postag="d--------" relation="ADV" head="1"/>
+			<word id="3" form="tunc" lemma="tunc1" postag="d--------" relation="ADV" head="1"/>
 			<word id="4" form="hominem" lemma="homo1" postag="n-s---ma-" relation="OBJ" head="1"/>
 			<word id="5" form="Cappadocem" lemma="Cappadocis1" postag="a-s---ma-" relation="ATR" head="4"/>
 			<word id="6" form="," lemma="comma1" postag="u--------" relation="AuxX" head="11"/>
@@ -7553,7 +7551,7 @@
 			<word id="1" form="Interdiu" lemma="interdiu1" postag="d--------" relation="ADV" head="7"/>
 			<word id="2" form="severa" lemma="severus1" postag="a-p---na-" relation="OBJ" head="7"/>
 			<word id="3" form="," lemma="comma1" postag="u--------" relation="COORD" head="0"/>
-			<word id="4" form="nune" lemma="nunc" postag="d--------" relation="ADV" head="8"/>
+			<word id="4" form="nunc" lemma="nunc" postag="d--------" relation="ADV" head="8"/>
 			<word id="5" form="hilaria" lemma="hilaria1" postag="n-p---na-" relation="OBJ" head="8"/>
 			<word id="6" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
 			<word id="7" insertion_id="0005e" form="[0]" artificial="elliptic" relation="PRED_CO" head="3"/>
@@ -9812,8 +9810,7 @@
 			<word id="9" form="," lemma="comma1" postag="u--------" relation="AuxX" head="11"/>
 			<word id="10" form="oneravi" lemma="onero1" postag="v1sria---" relation="PRED_CO" head="11"/>
 			<word id="11" form="vinumet" lemma="et1" postag="c--------" relation="COORD" head="0"/>
-			<word id="12" form="ne" lemma="ne1" postag="c--------" relation="XSEG" head="13"/>
-			<word id="13" form="tu" lemma="tunc1" postag="d--------" relation="ADV" head="14"/>
+			<word id="13" form="tunc" lemma="tunc1" postag="d--------" relation="ADV" head="14"/>
 			<word id="14" form="erat" lemma="sum1" postag="v3siia---" relation="ATR" head="11"/>
 			<word id="15" form="contra" lemma="contra1" postag="d--------" relation="PNOM" head="14"/>
 			<word id="16" form="aurummisi" lemma="mitto1" postag="v1sria---" relation="PRED_CO" head="11"/>

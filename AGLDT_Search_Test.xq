@@ -167,8 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-let $petr := $all-ldt[fn:contains(deh:work-info(.)(1), 'Petr Speech')]
-return fn:count($petr//word[deh:lemma(., 'quoniam')])
+deh:read-sent-address('/ldt2.1-treebanks/phi0972.phi001.perseus-lat1-speech.xml|190', $all-trees)
 
 
 

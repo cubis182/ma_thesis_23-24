@@ -3185,9 +3185,9 @@ declare function deh:spatio-temporal-adverb($nodes as node()*, $use-loc as xs:bo
   let $mixed := ('hinc', 'ibi', 'eo2','eo#2', 'inde', 'usque', 'ultra', 'porro', 'retrorsum', 'ibidem', 'prope', 'ilico')
   
   (:Removing for now, causing too much trouble let $mixed-clause := ('ubi', 'unde'):)
-  let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'foris', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
+  let $spatial-unamb := ('hic2', 'huc','istic', 'istuc', 'istinc', 'illic', 'illuc', 'illinc', 'illac', 'alicubi', 'aliquo', 'alicunde', 'eodem', 'indidem', 'alibi', 'aliunde', 'usquam', 'nusquam', 'citro', 'horsum', 'prorsum', 'introrsum', 'sursum', 'deorsum', 'seorsum', 'aliorsum', 'contra', 'procul', 'intus', 'longe', 'utrimque', 'foras', 'extra', 'peregre', 'intra', 'dehinc', 'exinde', 'extrinsecus')
   let $spatial-clause := ('ubiubi', 'quoquo', 'undecumque', 'quaqua') (:provided on Allen & Greenough p. 123:)
-  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta',  'intro') (:1/20/24, removed hic:)
+  let $spatial-amb := ('hac', 'ea', 'ista', 'aliqua', 'eadem', 'alio', 'alia', 'recta',  'intro', 'foris') (:1/20/24, removed hic:)
   
   (:Both the unambiguous ones, and the ambiguous, where we check if it may have the right tags:)
   let $temporal := (
@@ -3197,7 +3197,7 @@ declare function deh:spatio-temporal-adverb($nodes as node()*, $use-loc as xs:bo
   
   
   let $mixed := (
-    $toks[deh:lemma(., $mixed)]
+    $toks[deh:lemma(., $mixed) and deh:is-adverbial(.)]
     (:for $tok in $toks where deh:lemma($tok, $mixed-clause) return $tok[deh:is-subordinating-relative(.) = false() and deh:is-question-sentence(./..) = false() and functx:is-node-in-sequence(., deh:finite-clause(./.., false())) = false()] make sure the potentially subordinating ones are not actually subordinating; this means eliminating whether it is the head of a clause as an AuxC/G- or as a relative adverb, and eliminating it if it is a question. Is-subordinating-relative covers the first of those potentials, and the last boolean covers whether it is an AuxC/G-:)
   )
   

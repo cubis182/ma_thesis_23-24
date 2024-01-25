@@ -11048,7 +11048,7 @@
         </token>
       </sentence>
       <sentence id="160314" status="reviewed">
-        <token id="2030271" form="Vltra" citation-part="2.10.3" lemma="ultra" part-of-speech="R-" morphology="---------n" head-id="2030275" relation="obl" presentation-after=" "/>
+        <token id="2030271" form="Ultra" citation-part="2.10.3" lemma="ultra" part-of-speech="R-" morphology="---------n" head-id="2030275" relation="obl" presentation-after=" "/>
         <token id="2030272" form="tres" citation-part="2.10.3" lemma="tres" part-of-speech="Ma" morphology="-p---ma--i" head-id="2030274" relation="atr" presentation-after=" "/>
         <token id="2030273" form="uero" citation-part="2.10.3" lemma="vero" part-of-speech="Df" morphology="---------n" head-id="2030279" relation="aux" presentation-after=" "/>
         <token id="2030274" form="pedes" citation-part="2.10.3" lemma="pes" part-of-speech="Nb" morphology="-p---ma--i" head-id="2030271" relation="obl" presentation-after=" "/>
@@ -13910,7 +13910,7 @@
         <token id="2032577" form="corrumpitur" citation-part="3.4.1" lemma="corrumpo" part-of-speech="V-" morphology="3spip----i" head-id="2032573" relation="pred" presentation-after=". "/>
       </sentence>
       <sentence id="160488" status="reviewed">
-        <token id="2032578" form="Vsque" citation-part="3.4.1" lemma="usque" part-of-speech="Df" morphology="---------n" head-id="2032579" relation="aux" presentation-after=" "/>
+        <token id="2032578" form="Usque" citation-part="3.4.1" lemma="usque" part-of-speech="Df" morphology="---------n" head-id="2032579" relation="aux" presentation-after=" "/>
         <token id="2032579" form="ad" citation-part="3.4.1" lemma="ad" part-of-speech="R-" morphology="---------n" head-id="2032583" relation="adv" presentation-after=" "/>
         <token id="2032580" form="duodecimam" citation-part="3.4.1" lemma="duodecimus" part-of-speech="Mo" morphology="-s---fa--i" head-id="2032581" relation="atr" presentation-after=" "/>
         <token id="2032581" form="lunam" citation-part="3.4.1" lemma="luna" part-of-speech="Nb" morphology="-s---fa--i" head-id="2032579" relation="obl" presentation-after=" "/>

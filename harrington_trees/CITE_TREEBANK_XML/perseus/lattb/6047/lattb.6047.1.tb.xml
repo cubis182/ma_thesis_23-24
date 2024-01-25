@@ -1561,7 +1561,7 @@
       <word id="11" form="sed" lemma="sed" postag="c--------" relation="COORD" head="0"/>
       <word id="12" form="Romae" lemma="Roma" postag="n-s---fl-" relation="L-LOCAT" head="17"/>
       <word id="13" form="durior" lemma="durus" postag="a-s---mnc" relation="N-PRED" head="17"/>
-      <word id="14" form="illis" lemma="illic" postag="p-p---md-" relation="D-REFER" head="13"/>
+      <word id="14" form="illis" lemma="ille" postag="p-p---md-" relation="D-REFER" head="13"/>
       <word id="15" form="conatus" lemma="conatus" postag="n-s---mn-" relation="N-SUBJ" head="17"/>
       <word id="16" form=":" lemma="colon" postag="u--------" relation="AuxK" head="0"/>
       <word id="17" insertion_id="0015e" artificial="elliptic" relation="PRED_CO" form="(est)" head="11"/>
