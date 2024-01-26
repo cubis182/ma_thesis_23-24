@@ -17,7 +17,7 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 "#from sentence-particle-detail.xq; SENTTOTAL is the total number of sentences in the work the particle/adv comes from.",
-('WORK,SENT-ADDR,TEXT,LEM,SENTLEN,SENTTOTAL,WORKLEN'),
+('WORK,SENT-ADDR,TEXT,LEM,MAINVERB,SENTLEN,SENTTOTAL,WORKLEN'),
 let $works := deh:short-names()
 
 for $work in $works
@@ -26,9 +26,14 @@ let $work-length := deh:word-count($treebank)
 let $sent-total := fn:count($treebank//sentence)
 for $tree in ($treebank//sentence)
 
+
 let $sent-addr := deh:get-sent-address($tree)
 let $text := deh:print($tree) => fn:replace(",", "")
 let $advs := (deh:spatio-temporal-adverb($tree, false())?1, deh:causal-adverb($tree))
 let $sent-length := deh:word-count($tree)
 for $adv in $advs
-return fn:string-join(($work, $sent-addr, $text, fn:lower-case($adv/fn:string(@form)), $sent-length, $sent-total, $work-length),",")
+let $verbs := 
+  let $parent := deh:return-parent-nocoord($adv)
+  return if (boolean($parent)) then ($parent)
+  else (deh:main-verbs($tree)[fn:lower-case(fn:string(@relation)) = 'pred'])
+return fn:string-join(($work, $sent-addr, $text, fn:lower-case($adv/fn:string(@form)), fn:string-join($verbs/deh:process-lemma(fn:string(@lemma)), "|"), $sent-length, $sent-total, $work-length),",")
