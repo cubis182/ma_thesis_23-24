@@ -2501,7 +2501,7 @@
       <word id="7" form="profani" lemma="profanus1" postag="a-p---mv-" relation="ExD" head="5"/>
       <word id="8" form="'" lemma="punc1" postag="u--------" relation="AuxG" head="5"/>
       <word id="9" form="," lemma="comma1" postag="u--------" relation="AuxX" head="7"/>
-      <word id="10" form="conclamat" lemma="conclamo1" postag="v3spia---" relation="ExD" head="16"/>
+      <word id="10" form="conclamat" lemma="conclamo1" postag="v3spia---" relation="ExD" head="16" parenth="false"/>
       <word id="11" form="vates" lemma="vates1" postag="n-s---fn-" relation="SBJ" head="10"/>
       <word id="12" form="," lemma="comma1" postag="u--------" relation="AuxX" head="16"/>
       <word id="13" form="'" lemma="punc1" postag="u--------" relation="AuxG" head="15"/>
