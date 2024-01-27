@@ -17,8 +17,8 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 declare variable $clause-text := ("cum", "cumque", "ubi", "ubi(que|)(nam|)", "ubicumque", "quando", "dum", "donec", "dummodo", "modo", "antequam", "posteaquam", "postmodum quam", "postquam", "priusquam", "quotiens", "quotiens(cum|)que", 'quatenus', 'quo', 'quorsum', 'utroque', 'ubiubi', 'quoquo', 'undecumque', 'quaqua', 'sicubi', 'siquo', 'sicunde', 'siqua', "quoniam", "quod", "quia");
-"#From sentence-stats.xq",
-fn:string-join(('WORK,SENT-ADDR,TEXT,MAIN,PRED,PARENTH,O.R.', $clause-text ! fn:upper-case(.), 'ADV,COMP,ATR,SUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND'), ","),
+"#From sentence-stats.xq, NORMSUB is the SUB value divided by the SENTLEN value",
+fn:string-join(('WORK,SENT-ADDR,TEXT,MAIN,PRED,PARENTH,O.R.', $clause-text ! fn:upper-case(.), 'ADV,COMP,ATR,SUB,NORMSUB,SENTLEN,WORKLEN,GENRE,SUM,COORD,ASYND'), ","),
 let $names := deh:short-names()
 
 for $work in $names
@@ -42,9 +42,10 @@ let $comp := fn:count(deh:complement-clause($clauses))
 let $atr := fn:count(deh:adjectival-clause($clauses))
 let $sub := fn:count($clauses)
 let $len := deh:word-count($sent)
+let $normsub := if ($len > 0) then ($sub div $len) else (0)
 let $worklen := deh:word-count($all-trees[fn:base-uri(.) = fn:base-uri($sent)])
 let $genre := if (deh:get-short-name(deh:work-info($sent)(1)) = ("Fab", "Elegi", "Sati", "Aen", "Met", "Carm", "Amor")) then ("poetry") else ("prose")
 let $sum := fn:string-join(($adv, $comp, $atr), "|")
 let $coord := fn:count(deh:clause-coordination($sent))
 let $asynd := if ($main > 0) then ($coord div $main) else ("NA") (:Main, that is, all types of unsubordinated verbs:)
-return fn:string-join(($work, $addr, $text, $main, $pred, $parenth, $or, $lemma-counts, $adv, $comp, $atr, $sub, $len, $worklen, $genre, $sum, $coord, $asynd), ",")
+return fn:string-join(($work, $addr, $text, $main, $pred, $parenth, $or, $lemma-counts, $adv, $comp, $atr, $sub, $normsub, $len, $worklen, $genre, $sum, $coord, $asynd), ",")
