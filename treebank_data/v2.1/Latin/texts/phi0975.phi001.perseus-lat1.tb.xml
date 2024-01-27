@@ -7233,7 +7233,7 @@
     <sentence id="541" document_id="urn:cts:latinLit:phi0975.phi001.perseus-lat1" subdoc="3:17">
       <word id="1" form="At" lemma="at" postag="c--------" relation="COORD" ref="3:17" head="0"/>
       <word id="2" form="mehercules" lemma="Hercules" postag="e--------" relation="ExD" ref="3:17" head="12"/>
-      <word id="3" form="narrabit" lemma="narro" postag="v3sfia---" relation="ExD" ref="3:17" head="12"/>
+      <word id="3" form="narrabit" lemma="narro" postag="v3sfia---" relation="PRED_CO" ref="3:17" head="12"/> <!-- hARDLY makes sense for this to be ExD, after all, the PRED_CO in the other part of the sentence seems to demand another-->
       <word id="4" form="quod" lemma="qui1" postag="p-s---na-" relation="OBJ" ref="3:17" head="6"/>
       <word id="5" form="quis" lemma="quis2" postag="p-s---mn-" relation="SBJ" ref="3:17" head="3"/>
       <word id="6" form="voluerit" lemma="volo1" postag="v3stia---" relation="OBJ" ref="3:17" head="3"/>

@@ -17,7 +17,10 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 
-("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,SENT"),
+("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,ENIM,NAM,SENT"),
 let $parenth := deh:retrieve-parentheticals($all-trees)
 for $item in $parenth
-return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:)fn:string-join((for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")
+let $full-parenth := (:Full parenthetical:)(for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc)
+let $enim := fn:count($full-parenth[deh:lemma(., 'enim')])
+let $nam := fn:count($full-parenth[deh:lemma(., 'nam')])
+return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)deh:word-count($full-parenth), $enim, $nam (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")

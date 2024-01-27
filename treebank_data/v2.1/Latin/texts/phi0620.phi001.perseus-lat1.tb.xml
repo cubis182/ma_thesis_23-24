@@ -6062,8 +6062,8 @@
       <word id="23" form="mihi" lemma="ego1" postag="p-s---md-" relation="OBJ" head="58"/>
       <word id="24" form="praecipue" lemma="praecipuus1" postag="d--------" relation="AuxZ" head="58"/>
       <word id="25" form="," lemma="comma1" postag="u--------" relation="AuxX" head="26"/>
-      <word id="26" form="pulvis" lemma="pulvis1" postag="n-s---fn-" relation="ExD" head="58"/>
-      <word id="27" form="Etrusca" lemma="Etrsucus1" postag="a-s---fn-" relation="ATR" head="26"/>
+      <word id="26" form="pulvis" lemma="pulvis1" postag="n-s---fv-" relation="ExD" head="58"/>
+      <word id="27" form="Etrusca" lemma="Etrsucus1" postag="a-s---fv-" relation="ATR" head="26"/>
       <word id="28" form="," lemma="comma1" postag="u--------" relation="AuxX" head="26"/>
       <word id="29" form="dolor" lemma="dolor1" postag="n-s---mn-" relation="PNOM_AP" head="58"/>
       <word id="30" form="," lemma="comma1" postag="u--------" relation="AuxX" head="38"/>

@@ -163,7 +163,7 @@
       <word id="4" form="videtur" lemma="video1" postag="v3spip---" relation="PRED" head="0"/>
       <word id="5" form="ingeni" lemma="ingenium1" postag="n-s---ng-" relation="ATR_CO" head="6"/>
       <word id="6" form="quam" lemma="quam1" postag="d--------" relation="AuxC" head="3"/>
-      <word id="7" form="virium" lemma="vis1" postag="n-p---fg-" relation="ATR_CO_ExD" head="6"/>
+      <word id="7" form="virium" lemma="vis1" postag="n-p---fg-" relation="ATR_CO_ExD" head="6" parenth="false"/>
       <word id="8" form="opibus" lemma="ops1" postag="n-p---fb-" relation="ADV" head="10"/>
       <word id="9" form="gloriam" lemma="gloria1" postag="n-s---fa-" relation="OBJ" head="10"/>
       <word id="10" form="quaerere" lemma="quaero1" postag="v--pna---" relation="SBJ_CO" head="12"/>
