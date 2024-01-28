@@ -16,15 +16,8 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-"#parenth-lens.xq",
-("WORK,SENT.ADDR,PARENLEN,NORMLEN,SENTLEN"),
-let $names := deh:short-names()
 
-for $work in $names
-for $sent in $all-trees[fn:matches(deh:work-info(.)(1), $work)]//sentence
-let $parenth := deh:retrieve-parentheticals($sent) (:updated with this function rather than split-main-verbs 1/17/24:)
-let $sentaddr := deh:get-sent-address($sent)
-let $len := deh:word-count((deh:return-descendants($parenth), $parenth))
-let $sentlen := deh:word-count($sent)
-let $normlen := if ($sentlen > 0) then ($len div $sentlen) else (0)
-return fn:string-join(($work, $sentaddr, $len, $normlen, $sentlen), ",")
+let $works := deh:short-names()
+
+for $work in $works
+let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]

@@ -16,7 +16,7 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-"#from sentence-particle-detail.xq; SENTTOTAL is the total number of sentences in the work the particle/adv comes from.",
+"#from sentence-particle-detail.xq; in sentence-particle-detail-x.xx.xx.csv; SENTTOTAL is the total number of sentences in the work the particle/adv comes from.",
 ('WORK,SENT-ADDR,TEXT,LEM,MAINVERB,SENTLEN,SENTTOTAL,WORKLEN'),
 let $works := deh:short-names()
 

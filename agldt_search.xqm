@@ -2003,7 +2003,7 @@ declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) 
 {
   (:If I put a "parenth" tag on it, that should override it:)
   if ($tok/fn:string(@parenth) = "true") then (true()) else (
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and (if ($is-voc = false()) then (deh:case($tok) != 'v') else (true())) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and (functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM", "_ExD", "ExD_AP")) = false()) (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true()))
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((if ($is-voc = false()) then (deh:case($tok) != 'v') else (true())) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and (functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM", "_ExD", "ExD_AP")) = false()) (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true())))
 )
 };
 
@@ -2782,6 +2782,29 @@ Gives the word count for a work, which excludes empty tokens and punctuation
 declare function deh:word-count($node as node()*) as xs:integer
 {
   deh:tokens-from-unk($node)[deh:is-punc(.) = false() and deh:is-empty(.) = false()] => fn:count()  
+};
+
+(:
+1/27/24:
+deh:position()
+
+Gets the number of tokens in a sentence before the given token, excluding punctuation or empty nodes
+:)
+declare function deh:position($toks as element()*) as xs:integer*
+{
+   for $node in $toks
+   return deh:word-count($node/preceding-sibling::*)
+};
+
+(:
+1/27/2024:
+deh:normed-position()
+Returns the number of words before another word in a sentence divided by the total words in the sentence. Excludes punctuation and empty nodes
+:)
+declare function deh:normed-position($toks as element()*) as xs:double*
+{
+  for $tok in $toks
+  return deh:position($tok) div deh:word-count($tok/..)
 };
 (:-------------------------------------END of utility functions-----------------------------------------------:)
 

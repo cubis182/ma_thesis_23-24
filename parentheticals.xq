@@ -16,11 +16,17 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-
-("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,ENIM,NAM,SENT"),
+"#parentheticals.xq; POSITION is the number of preceding nodes divided by the total sentence length",
+("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,NORMLEN,POSITION,ENIM,NAM,SENT,SENTLEN"),
 let $parenth := deh:retrieve-parentheticals($all-trees)
 for $item in $parenth
+let $sentlen := deh:word-count($item/..)
+
 let $full-parenth := (:Full parenthetical:)(for $desc in functx:distinct-nodes(($item, deh:return-descendants($item))) order by $desc/fn:number(@id) return $desc)
+let $start := $full-parenth[1] (:This ought to be the first word in the parenthetical:)
+let $parenlen := deh:word-count($full-parenth)
+let $normlen := if ($sentlen > 0) then ($parenlen div $sentlen) else (0)
 let $enim := fn:count($full-parenth[deh:lemma(., 'enim')])
 let $nam := fn:count($full-parenth[deh:lemma(., 'nam')])
-return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)deh:word-count($full-parenth), $enim, $nam (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", "")), ",")
+let $position := deh:normed-position($start)
+return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)$parenlen, (:Normed length:) $normlen, (:Number of preceding words:)$position, $enim, $nam, (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", ""), (:Sentence length:)$sentlen), ",")

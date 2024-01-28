@@ -40,7 +40,7 @@ let $lemma-counts :=  for $item in $clause-text return fn:count($clauses[.(1)/de
 let $adv := fn:count(deh:adverbial-clause($clauses))
 let $comp := fn:count(deh:complement-clause($clauses))
 let $atr := fn:count(deh:adjectival-clause($clauses))
-let $sub := fn:count($clauses)
+let $sub := fn:count($clauses) (:Don't forget this needs to be counted the same way as in pos-summary.xq:)
 let $len := deh:word-count($sent)
 let $normsub := if ($len > 0) then ($sub div $len) else (0)
 let $worklen := deh:word-count($all-trees[fn:base-uri(.) = fn:base-uri($sent)])

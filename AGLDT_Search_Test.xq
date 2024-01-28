@@ -167,8 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address('/ldt2.1-treebanks/phi0972.phi001.perseus-lat1-speech.xml|190', $all-trees)
-
+fn:distinct-values($all-ldt//word[deh:part-of-speech(.) = 'a']/deh:process-lemma(fn:string(@lemma)))
 
 
 

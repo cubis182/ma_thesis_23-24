@@ -1252,7 +1252,7 @@
         </token>
         <token id="158663" form="dicere" citation-part="MARK 2.9" lemma="dico" part-of-speech="V-" morphology="--pna----i" head-id="158668" relation="apos" presentation-after=" " alignment-id="102684"/>
         <token id="158664" form="paralytico" citation-part="MARK 2.9" lemma="paralyticus" part-of-speech="Nb" morphology="-s---md--i" head-id="158663" relation="obl" presentation-after=" " alignment-id="102686"/>
-        <token id="158665" form="dimittuntur" citation-part="MARK 2.9" lemma="dimitto" part-of-speech="V-" morphology="3ppip----i" relation="parpred" presentation-after=" " alignment-id="102688"/>
+        <token id="158665" form="dimittuntur" citation-part="MARK 2.9" lemma="dimitto" part-of-speech="V-" morphology="3ppip----i" relation="parpred" presentation-after=" " alignment-id="102688" directsp="true" parenth="false"/>
         <token id="158666" form="tibi" citation-part="MARK 2.9" lemma="tu" part-of-speech="Pp" morphology="2s---md--i" head-id="158665" relation="obl" presentation-after=" " alignment-id="102689"/>
         <token id="158667" form="peccata" citation-part="MARK 2.9" lemma="peccatum" part-of-speech="Nb" morphology="-p---nn--i" head-id="158665" relation="sub" presentation-after=" " alignment-id="102691"/>
         <token id="158668" form="an" citation-part="MARK 2.9" lemma="an" part-of-speech="C-" morphology="---------n" head-id="158660" relation="apos" presentation-after=" " alignment-id="102693"/>
@@ -14000,7 +14000,7 @@
         <token id="167510" form="eum" citation-part="MARK 15.18" lemma="is" part-of-speech="Pp" morphology="3s---ma--i" head-id="167509" relation="obj" alignment-id="113852"/>
       </sentence>
       <sentence id="11480" status="reviewed" presentation-after=" ">
-        <token id="167511" form="have" citation-part="MARK 15.18" lemma="ave" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="113854"/>
+        <token id="167511" form="have" citation-part="MARK 15.18" lemma="ave" part-of-speech="I-" morphology="---------n" relation="voc" presentation-after=" " alignment-id="113854" parenth="false"/> <!-- Being a command is not enough to be parenthetical, not as the main verb-->
         <token id="167512" form="rex" citation-part="MARK 15.18" lemma="rex" part-of-speech="Nb" morphology="-s---mv--i" relation="voc" presentation-after=" " alignment-id="113856"/>
         <token id="167513" form="Iudaeorum" citation-part="MARK 15.18" lemma="Iudaei" part-of-speech="Nb" morphology="-p---mg--i" head-id="167512" relation="atr" alignment-id="113858"/>
       </sentence>
@@ -14699,7 +14699,7 @@
         <token id="167997" form="illis" citation-part="MARK 16.6" lemma="ille" part-of-speech="Pd" morphology="-p---fd--i" head-id="167996" relation="obl" alignment-id="114445"/>
       </sentence>
       <sentence id="11535" status="reviewed" presentation-after=" " directsp="true">
-        <token id="167998" form="nolite" citation-part="MARK 16.6" lemma="nolo" part-of-speech="V-" morphology="2ppma----i" relation="parpred" presentation-after=" " alignment-id="114447" directsp="true"/>
+        <token id="167998" form="nolite" citation-part="MARK 16.6" lemma="nolo" part-of-speech="V-" morphology="2ppma----i" relation="parpred" presentation-after=" " alignment-id="114447" directsp="true" parenth="false"/>
         <token id="167999" form="expavescere" citation-part="MARK 16.6" lemma="expavesco" part-of-speech="V-" morphology="--pna----i" head-id="167998" relation="xobj" alignment-id="114448">
           <slash target-id="167998" relation="xsub"/>
         </token>
