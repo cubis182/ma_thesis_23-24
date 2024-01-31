@@ -3387,4 +3387,30 @@ declare function deh:clause-coordination($sents as element(sentence)*) as elemen
   return $toks[fn:count(deh:return-children-nocoord(.)[deh:is-finite(.) or deh:is-periphrastic-p(.) or deh:is-subjunction(.)]) > 1 or (fn:contains(fn:lower-case(fn:string(@relation)), "aux") and deh:return-parent(., 0)/deh:lemma(., 'ne') = false()) or boolean(deh:return-parent(., 0)) = false()]
 };
 
+(:
+deh:ablative-absolute()
+1/31/2024
 
+Returns the number of ablative absolutes
+
+:)
+declare function deh:ablative-absolute($nodes as node()*) as xs:integer
+{
+  let $toks := deh:tokens-from-unk($nodes)
+  return fn:count($toks[deh:is-ablabs(.)])
+  (:Harrington: ABL-ABSOL, :)
+};
+
+declare function deh:is-ablabs($tok as element()) as xs:boolean
+{
+  (:Harrington: must have the tag "ABL-ABSOL" but not have a parent with that tag too:)
+  
+  
+  (:LDT, there is an ablative participle with 'adv' tag or some other ablative with 'adv' tag and 'atv' dependent on it:)
+  if ($tok/name() = 'word') then (
+    ($tok/fn:string(@relation) = 'ABL-ABSOL' and deh:return-parent-nocoord($tok)/fn:string(@relation) != 'ABL-ABSOL') (:We don't want to count the subject and participle as two ablative absolutes:) or (($tok/fn:contains(fn:string(@relation), 'ADV') and deh:case($tok) = 'b') and (deh:mood(.) = 'p' or deh:return-children-nocoord($tok)/fn:contains(fn:string(@relation), 'ATV')))
+)
+  (:PROIEL: easy, any ablative with the 'sub' tag is in an ablative absolute:)
+  else (deh:case(.) = 'b' and fn:string(@relation) = 'sub')
+  
+};

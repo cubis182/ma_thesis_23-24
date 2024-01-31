@@ -42,7 +42,7 @@ let $work-length := deh:word-count($tree)
 
 let $causal-adv := for $item in (deh:causal-adverb($tree)) return array{$item, ('causal', 'para', $work-length)}
 
-let $sp-temp-adv := deh:spatio-temporal-adverb($tree)
+let $sp-temp-adv := deh:spatio-temporal-adverb($tree, false())
 let $mixed-adv := for $item in $sp-temp-adv[.(2) = 'mixed-spatial-temporal'] return array{$item(1), ('mixed', 'para', $work-length)}
 let $spatial-adv := for $item in $sp-temp-adv[.(2) = 'spatial'] return array{$item(1), ('spatial', 'para', $work-length)}
 let $temporal-adv := for $item in $sp-temp-adv[.(2) = 'temporal'] return array{$item(1), ('temporal', 'para', $work-length)}
