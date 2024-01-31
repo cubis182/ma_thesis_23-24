@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-fn:distinct-values($all-ldt//word[deh:part-of-speech(.) = 'a']/deh:process-lemma(fn:string(@lemma)))
+deh:pick-random($proiel//token[deh:case(.) = 'b' and fn:string(@relation) = 'sub']/.., 15)
 
 
 
