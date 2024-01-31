@@ -3408,9 +3408,9 @@ declare function deh:is-ablabs($tok as element()) as xs:boolean
   
   (:LDT, there is an ablative participle with 'adv' tag or some other ablative with 'adv' tag and 'atv' dependent on it:)
   if ($tok/name() = 'word') then (
-    ($tok/fn:string(@relation) = 'ABL-ABSOL' and deh:return-parent-nocoord($tok)/fn:string(@relation) != 'ABL-ABSOL') (:We don't want to count the subject and participle as two ablative absolutes:) or (($tok/fn:contains(fn:string(@relation), 'ADV') and deh:case($tok) = 'b') and (deh:mood(.) = 'p' or deh:return-children-nocoord($tok)/fn:contains(fn:string(@relation), 'ATV')))
+    ($tok/fn:string(@relation) = 'ABL-ABSOL' and deh:return-parent-nocoord($tok)/fn:string(@relation) != 'ABL-ABSOL') (:We don't want to count the subject and participle as two ablative absolutes:) or ($tok/fn:contains(fn:string(@relation), 'ADV') and deh:case($tok) = 'b' and (deh:mood($tok) = 'p' or fn:count(deh:return-children-nocoord($tok)[fn:contains(fn:string(@relation), 'ATV')]) > 0))
 )
   (:PROIEL: easy, any ablative with the 'sub' tag is in an ablative absolute:)
-  else (deh:case(.) = 'b' and fn:string(@relation) = 'sub')
+  else (deh:case($tok) = 'b' and $tok/fn:string(@relation) = 'sub')
   
 };
