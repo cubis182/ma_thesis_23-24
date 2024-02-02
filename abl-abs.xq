@@ -16,20 +16,19 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
-"#From abl-abs.xq, goes to ablative-absolute.csv; note that the ABL.ABS column has all the words in the ablative absolute, although the head of the phrase will come first, so it might not be in order",
+"#From abl-abs.xq, goes to ablative-absolute.csv; Each line is a different ablative absolute. note that the ABL.ABS column has all the words in the ablative absolute, although the head of the phrase will come first, so it might not be in order",
 'WORK,SENT-ADDR,TEXT,ABL.ABS,VERB,SENTLEN,WORKLEN',
 let $names := deh:short-names()
 
 for $work in $names
 
-for $work in $all-trees[fn:matches(deh:work-info(.)(1), $work)]
-let $work-length := deh:word-count($work)
+for $doc in $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $work-length := deh:word-count($doc)
 
-for $sent in $work//sentence
+for $sent in $doc//sentence
 let $sent-length := deh:word-count($sent)
 let $addr := deh:get-sent-address($sent)
 let $text := deh:print($sent) => fn:replace("[^a-zA-Z ]", "")
-for $tok in $sent/*
-where $tok/deh:is-ablabs(.)
-return fn:string-join(($work, $addr, $text, deh:print(($tok, deh:return-descendants($tok))) => fn:replace("[^a-zA-Z ]", ""), $tok/deh:process-lemma(fn:string(@lemma)), $sent-length, $work-length), ",")
+for $tok in $sent/*[deh:is-ablabs(.)]
+return fn:string-join(($work, $addr, $text, fn:string-join(($tok/fn:string(@form), deh:return-descendants($tok)/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), $tok/deh:process-lemma(fn:string(@lemma)), $sent-length, $work-length), ",")
 
