@@ -42,6 +42,6 @@ let $prepositions := $tree/*[deh:part-of-speech(.) = ('r', 'R')]
 let $prepositions := deh:word-count(($prepositions, deh:return-descendants($prepositions)))
 
 let $pronouns := $tree/*[deh:part-of-speech(.) = ('p', 'Pd', 'Px', 'Pp', 'Pk', 'Pc') and deh:is-relative(.) = false()] (:Includes, on the proiel side, demonstratives, indefinites, personal pronouns, personal reflexive pronouns, and reciprocal pronouns:)
-let $pronouns := deh:word-count(($pronouns, deh:return-descendants($pronouns)))
+let $pronouns := deh:word-count($pronouns)
 
 return fn:string-join(($work, $sentaddr, $text, $pred, $sub, $participles, $nouns, $prepositions, $pronouns, $sentlen, $worklen), ",")
