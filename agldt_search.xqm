@@ -3410,10 +3410,13 @@ deh:ablative-absolute()
 Returns the number of ablative absolutes
 
 :)
-declare function deh:ablative-absolute($nodes as node()*) as xs:integer
+declare function deh:ablative-absolute($nodes as node()*) 
 {
   let $toks := deh:tokens-from-unk($nodes)
-  return fn:count($toks[deh:is-ablabs(.)])
+  let $abl := $toks[deh:is-ablabs(.)]
+  for $a in $abl
+  return if ($a/name() = 'word') then ($a)
+  else ($a/deh:return-parent(., 0))
   (:Harrington: ABL-ABSOL, :)
 };
 

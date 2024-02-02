@@ -29,6 +29,7 @@ for $sent in $doc//sentence
 let $sent-length := deh:word-count($sent)
 let $addr := deh:get-sent-address($sent)
 let $text := deh:print($sent) => fn:replace("[^a-zA-Z ]", "")
-for $tok in $sent/*[deh:is-ablabs(.)]
+let $abl-abs := deh:ablative-absolute($sent)
+for $tok in $abl-abs
 return fn:string-join(($work, $addr, $text, fn:string-join(($tok/fn:string(@form), deh:return-descendants($tok)/fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), $tok/deh:process-lemma(fn:string(@lemma)), $sent-length, $work-length), ",")
 
