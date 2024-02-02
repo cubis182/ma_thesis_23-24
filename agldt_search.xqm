@@ -2634,6 +2634,22 @@ declare function deh:case($tok as element()) as xs:string
 };
 
 (:
+2/2/2024
+deh:tense()
+
+Gets the tense from the postag/morphology attribute
+:)
+declare function deh:tense($tok as element()) as xs:string
+{
+  if ($tok/name() = 'word') then (
+    fn:substring(fn:string($tok/@postag), 4, 1)
+  )
+  else if ($tok/name() = 'token') then (
+    fn:substring(fn:string($tok/@morphology), 3, 1)
+  )
+};
+
+(:
 10/31/2023 (spooky)
 deh:is-subordinate()
 :)
