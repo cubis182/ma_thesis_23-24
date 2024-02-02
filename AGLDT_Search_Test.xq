@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:pick-random($proiel//token[deh:case(.) = 'b' and fn:string(@relation) = 'sub']/.., 15)
+fn:count($proiel[4]//token[deh:lemma(., 'enim')])
 
 
 

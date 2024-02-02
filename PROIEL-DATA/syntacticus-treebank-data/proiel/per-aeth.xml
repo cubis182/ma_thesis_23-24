@@ -4272,14 +4272,14 @@
           <slash target-id="769671" relation="xsub"/>
         </token>
         <token id="860011" empty-token-sort="P" citation-part="VIII.3" head-id="769671" relation="sub" antecedent-id="769660" information-status="old"/>
-        <token id="769671" form="est" citation-part="VIII.3" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="769672" relation="parpred" presentation-after=" "/>
-        <token id="769672" form="et" citation-part="VIII.3" lemma="et" part-of-speech="C-" morphology="---------n" relation="parpred" presentation-after=" "/>
+        <token id="769671" form="est" citation-part="VIII.3" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="769672" relation="parpred" presentation-after=" "  parenth="false"/>
+        <token id="769672" form="et" citation-part="VIII.3" lemma="et" part-of-speech="C-" morphology="---------n" relation="parpred" presentation-after=" " parenth="false"/>
         <token id="769673" form="ideo" citation-part="VIII.3" lemma="ideo" part-of-speech="Df" morphology="---------n" head-id="769675" relation="adv" presentation-after=" "/>
         <token id="769674" form="permodica" citation-part="VIII.3" lemma="permodicus" part-of-speech="A-" morphology="-s---fnp-i" head-id="769675" relation="xobj" presentation-after=" ">
           <slash target-id="769675" relation="xsub"/>
         </token>
         <token id="860012" empty-token-sort="P" citation-part="VIII.3" head-id="769675" relation="sub" antecedent-id="860011" information-status="old"/>
-        <token id="769675" form="est" citation-part="VIII.3" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="769672" relation="parpred" presentation-after=", "/>
+        <token id="769675" form="est" citation-part="VIII.3" lemma="sum" part-of-speech="V-" morphology="3spia----i" head-id="769672" relation="parpred" presentation-after=", "  parenth="false"/>
         <token id="769676" form="licet" citation-part="VIII.3" lemma="licet" part-of-speech="G-" morphology="---------n" head-id="769675" relation="adv" presentation-after=" "/>
         <token id="769677" form="tamen" citation-part="VIII.3" lemma="tamen" part-of-speech="Df" morphology="---------n" head-id="769680" relation="aux" presentation-after=" "/>
         <token id="769678" form="adhuc" citation-part="VIII.3" lemma="adhuc" part-of-speech="Df" morphology="---------n" head-id="769680" relation="adv" presentation-after=" "/>
