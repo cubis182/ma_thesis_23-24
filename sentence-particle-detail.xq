@@ -36,6 +36,6 @@ let $verbs :=
   let $parent := deh:return-parent-nocoord($adv)
   return if (boolean($parent)) then ($parent)
   else (deh:main-verbs($tree)[fn:lower-case(fn:string(@relation)) = 'pred'])
-let $tense := $verbs[1]/deh:tense(.)
+let $tense := if (deh:is-verb($verbs[1])) then ($verbs[1]/deh:tense(.)) else ('')
 let $form := $verbs[1]/fn:string(@form)
 return fn:string-join(($work, $sent-addr, $text, fn:lower-case($adv/fn:string(@form)), fn:string-join($verbs/deh:process-lemma(fn:string(@lemma)), "|"), $tense, $form, $sent-length, $sent-total, $work-length),",")

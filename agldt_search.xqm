@@ -2241,7 +2241,7 @@ deh:is-verb()
 10/3/2023
 
 :)
-declare %public function deh:is-verb($tok as element()) as xs:boolean
+declare %public function deh:is-verb($tok) as xs:boolean
 {
   (:let $by-rel := ($tok/fn:string(@relation) = ("pred", "parpred") and fn:string-length($tok/fn:string(@empty-token-sort)) > 0):)(:Created this 'check by relation' thing because empty tokens have no morph in PROIEL:)
   (($tok/fn:string(@part-of-speech) = 'V-') or (fn:matches($tok/fn:string(@postag), "v........")))

@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-fn:count($proiel[4]//token[deh:lemma(., 'enim')])
+deh:read-sent-address("/harrington/6273/lattb.6273.1.tb.xml|7", $all-trees)
 
 
 

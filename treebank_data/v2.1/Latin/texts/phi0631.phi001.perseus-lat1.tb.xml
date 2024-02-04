@@ -12018,7 +12018,7 @@
     </sentence>
     <sentence id="560" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="52">
       <word id="1" form="domi" lemma="domus1" postag="n-s---fl-" relation="ATR" head="2"/>
-      <word id="2" form="industria" lemma="industrius1" postag="a-s---fn-" relation="ExD_CO" head="7"/>
+      <word id="2" form="industria" lemma="industrius1" postag="a-s---fn-" relation="ExD_CO" head="7" parenth="false"/>
       <word id="3" form="," lemma="comma1" postag="u--------" relation="AuxX" head="7"/>
       <word id="4" form="foris" lemma="foris2" postag="d--------" relation="ATR" head="6"/>
       <word id="5" form="iustum" lemma="justus1" postag="a-s---nn-" relation="ATR" head="6"/>
