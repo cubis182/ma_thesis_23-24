@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/harrington/6273/lattb.6273.1.tb.xml|7", $all-trees)
+fn:distinct-values($ldt2.1-treebanks[8]//sentence/fn:string(@subdoc))
 
 
 

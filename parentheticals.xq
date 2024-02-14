@@ -18,7 +18,7 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 
 "#parentheticals.xq; POSITION is the number of preceding nodes divided by the total sentence length",
 ("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,NORMLEN,POSITION,ENIM,NAM,SENT,SENTLEN"),
-let $parenth := deh:retrieve-parentheticals($all-trees)
+let $parenth := deh:retrieve-parentheticals(deh:read-sent-address("/proiel/cic-att.xml|77596", $all-trees))
 for $item in $parenth
 let $sentlen := deh:word-count($item/..)
 
@@ -29,4 +29,4 @@ let $normlen := if ($sentlen > 0) then ($parenlen div $sentlen) else (0)
 let $enim := fn:count($full-parenth[deh:lemma(., 'enim')])
 let $nam := fn:count($full-parenth[deh:lemma(., 'nam')])
 let $position := deh:normed-position($start)
-return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)$parenlen, (:Normed length:) $normlen, (:Number of preceding words:)$position, $enim, $nam, (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", ""), (:Sentence length:)$sentlen), ",")
+return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form) => fn:replace("[^a-zA-Z ]", ""), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)$parenlen, (:Normed length:) $normlen, (:Number of preceding words:)$position, $enim, $nam, (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Z ]", ""), (:Sentence length:)$sentlen), ",")
