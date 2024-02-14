@@ -18,7 +18,7 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 
 "#parentheticals.xq; POSITION is the number of preceding nodes divided by the total sentence length",
 ("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,NORMLEN,POSITION,ENIM,NAM,SENT,SENTLEN"),
-let $parenth := deh:retrieve-parentheticals(deh:read-sent-address("/proiel/cic-att.xml|77596", $all-trees))
+let $parenth := deh:retrieve-parentheticals($all-trees)
 for $item in $parenth
 let $sentlen := deh:word-count($item/..)
 
