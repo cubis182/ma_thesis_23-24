@@ -167,7 +167,8 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/proiel/cic-att.xml|77596", $all-trees)
+let $sent := deh:read-sent-address('/proiel/caes-gal.xml|52689', $all-trees)
+return ($sent/token[@id="797153"]/deh:return-descendants(.), $sent/token[@id="797153"]/deh:return-descendants-nonp(.))
 
 
 

@@ -33,13 +33,13 @@ let $text := deh:print($tree) => fn:replace(",", "")
 let $pred := fn:count(deh:split-main-verbs($tree)?1)
 let $sub := fn:count(deh:get-clause-pairs($tree)) (:Don't forget this needs to be counted the same way as in sentence-stats.xq:)
 let $participles := $tree/*[deh:mood(.) = 'p' and deh:is-periphrastic-p(.) = false()]
-let $participles := deh:word-count(($participles, deh:return-descendants($participles)))
+let $participles := deh:word-count(($participles, deh:return-descendants-nonp($participles)))
 
-let $nouns := $tree/*[deh:part-of-speech(.) = ('n', 'Nb', 'Ne')]
+let $nouns := $tree/*[deh:is-noun(.)]
 let $nouns := deh:word-count(($nouns, deh:return-descendants($nouns)))
 
 let $prepositions := $tree/*[deh:part-of-speech(.) = ('r', 'R')]
-let $prepositions := deh:word-count(($prepositions, deh:return-descendants($prepositions)))
+let $prepositions := deh:word-count($prepositions)
 
 let $pronouns := $tree/*[deh:part-of-speech(.) = ('p', 'Pd', 'Px', 'Pp', 'Pk', 'Pc') and deh:is-relative(.) = false()] (:Includes, on the proiel side, demonstratives, indefinites, personal pronouns, personal reflexive pronouns, and reciprocal pronouns:)
 let $pronouns := deh:word-count($pronouns)

@@ -1399,14 +1399,33 @@ deh:descendants-aux
 :)
 declare %public function deh:return-descendants($node as element()*)
 {  
-  deh:descendants-aux($node, 1)[fn:deep-equal(., $node) = false()]
+  deh:descendants-aux($node, 1, true())[fn:deep-equal(., $node) = false()]
 };
 
-declare %private function deh:descendants-aux($node as element()*,$count as xs:integer)
+(: 
+
+@param $include-np: This is used because I want to be able to exclude material dependent on nouns in participial phrases in 
+:)
+declare %private function deh:descendants-aux($node as element()*,$count as xs:integer, $include-np as xs:boolean)
 {
-  if ($count < 50) then (deh:descendants-aux(functx:distinct-nodes(($node, deh:return-children($node))), ($count + 1)))
+  if ($count < 50) then (deh:descendants-aux(functx:distinct-nodes(($node, deh:return-children($node[(deh:is-noun(.)) = ($include-np, false()) (:the code just before this excludes children of nouns if required by $include-np; if $include-np is true, then part of speech doesn't matter since true or false is allowed; if $include-np is false(), then we can only return children if part of speech equalling 'n', 'Nb', or 'Ne' is false:)]))), ($count + 1), $include-np))
   else ($node)
 };
+
+(:
+2/19/2024
+:)
+declare %public function deh:return-descendants-nonp($node as element()*)
+{  
+  deh:descendants-aux($node, 1, false())[fn:deep-equal(., $node) = false()]
+};
+
+(:
+deh:return-descendants-nonp
+2/19/2024
+
+This returns descendants, but when it hits a noun phrase, does not go any further
+:)
 
 (:
 deh:return-depth()
@@ -2003,7 +2022,7 @@ declare function deh:is-parenthetical($tok as element(), $is-voc as xs:boolean) 
 {
   (:If I put a "parenth" tag on it, that should override it:)
   if ($tok/fn:string(@parenth) = "true") then (true()) else (
-  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((if ($is-voc = false()) then (deh:case($tok) != 'v') else (true())) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc")) and (functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM", "_ExD", "ExD_AP")) = false()) (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true())))
+  ($tok/fn:string(@parenth)="false") = false() (:this is so that, if I have added an @parenth, :) and ((if ($is-voc = false()) then (deh:case($tok) != 'v') else (true())) (:added the previous so I have a way of toggling the inclusion of vocatives on and off:) and functx:contains-any-of($tok/fn:string(@relation), ("ExD", "PARENTH", "parpred", "voc", "_PA")) (:_PA is a tag not in the guidelines, I think, but it is used in Petronius:) and (functx:contains-any-of($tok/fn:string(@relation), ("ADV", "OBJ", "SBJ", "PRED", "AuxC", "PNOM", "_ExD", "ExD_AP")) = false()) (:PNOM added because sentence 561 in Petr Narr in main ldt; I did it for AuxC beecause, although it is rare, it is used more when a clause it tokenized separately than being used parenthetically:) and (deh:lemma($tok, ("aio", "inquam", "o"))) = false() (:added 'o' as a disallowed lemma because it will always appear next to another parenthetical anyway, and be included in its scope; in short, it will be retrieved either way, but will be duplicated if it is identified separately:) and deh:is-punc($tok) = false() and (if (deh:is-verb($tok)) then (deh:is-directsp($tok) = false()) else (true())))
 )
 };
 
@@ -2612,6 +2631,17 @@ declare function deh:part-of-speech($tok as element()) as xs:string
   if ($tok[boolean(@postag)]) then ($tok/fn:substring(fn:string(@postag), 1, 1))
   else if ($tok[boolean(@part-of-speech)]) then ($tok/fn:string(@part-of-speech))
   else ("")
+};
+
+(:
+2/19/2024
+deh:is-noun()
+
+Made this so there is consistency between the pos-summary.xq definition of a noun and that in the deh:return-descendants-nonp function
+:)
+declare function deh:is-noun($tok as element()) as xs:boolean
+{
+  $tok/deh:part-of-speech(.) = ('n', 'Nb', 'Ne')
 };
 
 (:
