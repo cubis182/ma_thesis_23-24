@@ -2041,6 +2041,17 @@ declare function deh:retrieve-parentheticals($nodes as node()*) as element()*
 };
 
 (:
+deh:is-exclamation()
+2/20/2024
+
+Ought to be used in conjunction with the parenthetical retrieval: it accepts arguments from those results (!) specifically. It is the HEAD, the single retrieved word, of the phrase which is tested. It is relatively easy because non-exclamatory parentheticals are either verbs, have an empty head in proiel/punctuation head in ldt, or have some other oddity. The only overlap is with greek expressions, which are accounted for below
+:)
+declare function deh:is-exclamation($tok as element()) as xs:boolean
+{
+  $tok/deh:part-of-speech(.) = ('r', 'R-', 'n', 'Nb', 'I-') and ($tok/deh:lemma(., 'greek expression') = false())
+};
+
+(:
 deh:pr-main-verbs()
 9/21/2023
 
