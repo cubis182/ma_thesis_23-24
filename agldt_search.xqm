@@ -3480,5 +3480,5 @@ declare function deh:closest-pred($tok as element())
 {
   let $sentMain := deh:split-main-verbs($tok/..)(1)
   let $dist := min(($sentMain/fn:number(@id) ! (. - $tok/fn:number(@id))) ! abs(.))
-  return $sentMain[fn:number(@id) = ($tok/fn:number(@id) - $dist)]
+  return $sentMain[abs(./fn:number(@id) - $tok/fn:number(@id)) = $dist]
 };
