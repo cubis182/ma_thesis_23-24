@@ -11279,7 +11279,7 @@
       <word id="9" form="?" lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="521" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="51">
-      <word id="1" form="minume" lemma="parvus1" postag="d--------" relation="ExD" head="0"/>
+      <word id="1" form="minume" lemma="parvus1" postag="d--------" relation="ExD" head="0" parenth="false"/>
       <word id="2" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="522" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="51">
@@ -12022,9 +12022,9 @@
       <word id="3" form="," lemma="comma1" postag="u--------" relation="AuxX" head="7"/>
       <word id="4" form="foris" lemma="foris2" postag="d--------" relation="ATR" head="6"/>
       <word id="5" form="iustum" lemma="justus1" postag="a-s---nn-" relation="ATR" head="6"/>
-      <word id="6" form="imperium" lemma="imperium1" postag="n-s---nn-" relation="ExD_CO" head="7"/>
+      <word id="6" form="imperium" lemma="imperium1" postag="n-s---nn-" relation="ExD_CO" head="7" parenth="false"/>
       <word id="7" form="," lemma="comma1" postag="u--------" relation="COORD" head="0"/>
-      <word id="8" form="animus" lemma="animus1" postag="n-s---mn-" relation="ExD_CO" head="7"/>
+      <word id="8" form="animus" lemma="animus1" postag="n-s---mn-" relation="ExD_CO" head="7" parenth="false"/>
       <word id="9" form="in" lemma="in1" postag="r--------" relation="AuxP" head="11"/>
       <word id="10" form="consulundo" lemma="consulo1" postag="v-sppanb-" relation="ATR" head="9"/>
       <word id="11" form="liber" lemma="liber1" postag="a-s---mn-" relation="ATR_CO" head="12"/>
@@ -12211,8 +12211,8 @@
     </sentence>
     <sentence id="572" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="52">
       <word id="1" form="immo" lemma="immo1" postag="d--------" relation="ExD" head="0"/>
-      <word id="2" form="vero" lemma="verum2" postag="n-s---nb-" relation="ExD" head="0"/>
-      <word id="3" form="maxume" lemma="magnus1" postag="d--------" relation="ExD" head="0"/>
+      <word id="2" form="vero" lemma="verum2" postag="n-s---nb-" relation="ExD" head="0" parenth="false"/>
+      <word id="3" form="maxume" lemma="magnus1" postag="d--------" relation="ExD" head="0" parenth="false"/>
       <word id="4" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="573" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="52">
@@ -14611,7 +14611,7 @@
       <word id="12" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
     </sentence>
     <sentence id="697" document_id="urn:cts:latinLit:phi0631.phi001.perseus-lat1" subdoc="61">
-      <word id="1" form="multi" lemma="multus1" postag="a-p---mn-" relation="ExD" head="18"/>
+      <word id="1" form="multi" lemma="multus1" postag="a-p---mn-" relation="ExD" head="18" parenth="false"/>
       <word id="2" form="autem" lemma="autem1" postag="c--------" relation="AuxY" head="18"/>
       <word id="3" form="," lemma="comma1" postag="u--------" relation="AuxX" head="11"/>
       <word id="4" form="qui" lemma="qui1" postag="p-p---mn-" relation="SBJ" head="11"/>
