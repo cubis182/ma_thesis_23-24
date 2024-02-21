@@ -15,3 +15,22 @@ declare variable $harrington := db:get("harrington");(:10/4/2023, see above fn:c
 declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL-DATA/syntacticus-treebank-data/proiel"));:)
 
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
+'clause-place.xq;clause-place-x.xx.xx.csv; START gives whether the clause appears before or after the main verb, and selects the main verb which it is dependent on, not any main verb',
+'WORK,SENT-ADDR,TEXT,CLAUSE,START,WORKLEN',
+let $works := deh:short-names()
+
+for $work in $works
+let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
+let $total-length := deh:word-count($treebank)
+let $clauses := deh:get-clause-pairs($treebank)
+
+
+for $clause in $clauses
+let $sentMain := deh:split-main-verbs($clause?1/..)(1)[functx:is-node-in-sequence($clause?1[1], deh:return-descendants(.))] (:If there are multiple main clauses, I want it to be focused around the correct one:)
+let $start := 
+if (boolean($sentMain)) then (
+if (functx:is-node-in-sequence($clause?1[1], $sentMain[1]/preceding-sibling::*)) then ("before")
+else if (functx:is-node-in-sequence($clause?1[1], $sentMain[1]/following-sibling::*)) then ("after"))
+else ("na")
+let $lemma := $clause?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", "")
+return fn:string-join(($work, deh:get-sent-address($clause?1/..), deh:print($clause?1/..) => fn:replace("[^a-zA-Z ]", ""), $lemma, $start, $total-length), ',')
