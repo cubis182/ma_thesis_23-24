@@ -26,7 +26,10 @@ let $clauses := deh:get-clause-pairs($treebank)
 
 
 for $clause in $clauses
-let $sentMain := deh:split-main-verbs($clause?1/..)(1)[functx:is-node-in-sequence($clause?1[1], deh:return-descendants(.))] (:If there are multiple main clauses, I want it to be focused around the correct one:)
+let $sentMain := deh:split-main-verbs($clause?1/..)(1) (:If there are multiple main clauses, I want it to be focused around the correct one:)
+let $sentMain :=
+if (fn:count($sentMain[functx:is-node-in-sequence($clause?1[1], deh:return-descendants(.))]) > 0) then ($sentMain[functx:is-node-in-sequence($clause?1[1], deh:return-descendants(.))])
+else if (fn:count($sentMain) > 0) then (deh:closest-pred($clause?1))
 let $start := 
 if (boolean($sentMain)) then (
 if (functx:is-node-in-sequence($clause?1[1], $sentMain[1]/preceding-sibling::*)) then ("before")

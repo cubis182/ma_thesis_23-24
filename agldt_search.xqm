@@ -3474,3 +3474,11 @@ declare function deh:is-ablabs($tok as element()) as xs:boolean
   else (deh:case($tok) = 'b' and $tok/fn:string(@relation) = 'sub')
   
 };
+
+(:Finds the closest main-verb to the target, $tok:)
+declare function deh:closest-pred($tok as element())
+{
+  let $sentMain := deh:split-main-verbs($tok/..)(1)
+  let $dist := min(($sentMain/fn:number(@id) ! (. - $tok/fn:number(@id))) ! abs(.))
+  return $sentMain[fn:number(@id) = ($tok/fn:number(@id) - $dist)]
+};
