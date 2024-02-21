@@ -27,7 +27,7 @@ declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harri
 declare variable $ola := db:get('ola');(:fn:collection("./../latinnlp/texts/ola");:)
 
 declare variable $full-proiel := db:get("Full-PROIEL"); (:This is PROIEL with the full Vulgate back, not absolutely every PROIEL treebank:)
-
+'#data-tests.xq; alpha-table.csv',
 ('CASE,WORK,SENT-ADDR,TEXT,TOK-ADDR,LEM,START,TYPEA,TYPEB,SENTLEN,WORKLEN'),
 let $works := deh:short-names()
 
@@ -61,8 +61,10 @@ let $or := $main-verbs(3) ! array{., 'castoff', 'main'}
 for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause, $main, $parenth, $or)
 where $item?1/fn:string(@lemma) != ""
 (:Borrowed the following (sorry, bad form) from parentheticals.xq; it checks whether the main verb is before or after:)
+let $sentMain := deh:split-main-verbs($item?1)(1)
 let $start := 
-if (functx:is-node-in-sequence($item?1, (deh:split-main-verbs($item?1/..)(1))[1]/preceding-sibling::*)) then ("before")
-else if (functx:is-node-in-sequence($item?1, (deh:split-main-verbs($item?1/..)(1))[1]/following-sibling::*)) then ("after")
+if (boolean($sentMain)) then (
+if (functx:is-node-in-sequence($item?1, $sentMain[1]/preceding-sibling::*)) then ("before")
+else if (functx:is-node-in-sequence($item?1, $sentMain[1]/following-sibling::*)) then ("after"))
 else ("na")
 return fn:string-join(($n, $work, deh:get-sent-address($tree), $text, deh:get-tok-address($item?1), $item?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", ""), $start, $item?2, $item?3, $work-length, $total-length), ",")
