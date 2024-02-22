@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address('/ldt2.1-treebanks/phi0620.phi001.perseus-lat1.tb.xml|10', $all-trees)/word[5]/deh:closest-pred(.)
+deh:read-sent-address('/proiel/caes-gal.xml|53063', $all-trees)
 
 
 

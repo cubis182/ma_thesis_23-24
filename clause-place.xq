@@ -34,6 +34,6 @@ let $start :=
 if (boolean($sentMain)) then (
 if (functx:is-node-in-sequence($clause?1[1], $sentMain[1]/preceding-sibling::*)) then ("before")
 else if (functx:is-node-in-sequence($clause?1[1], $sentMain[1]/following-sibling::*)) then ("after"))
-else ("na")
+else ("NA")
 let $lemma := $clause?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", "")
 return fn:string-join(($work, deh:get-sent-address($clause?1/..), deh:print($clause?1/..) => fn:replace("[^a-zA-Z ]", ""), $lemma, $start, $total-length), ',')
