@@ -26,6 +26,7 @@ let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 let $worklen := deh:word-count($treebank)
 
 for $tree in $treebank//sentence
+where deh:get-sent-address($tree) != ("/proiel/caes-gal.xml|53107", '/harrington/7535/lattb.7535.1.tb.xml|20', '/proiel/caes-gal.xml|54138') (:Exclude ones over 100 sentences:)
 let $sentlen := deh:word-count($tree)
 let $sentaddr := deh:get-sent-address($tree)
 let $text := deh:print($tree) => fn:replace(",", "")

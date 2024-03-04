@@ -2518,11 +2518,13 @@ declare function deh:vhcs-main($tok as element())
    
   let $final-subs := deh:vhcs-recursion(($tok, $sib))
   
+   let $log := admin:write-log(("vhcs-recursion end, Tok num: " || fn:string(fn:count($final-subs)) || ", Tok lems: " || fn:string-join($final-subs/fn:string(@lemma), ", ")))
+  
   (:let $final-subs := ($final-subs, deh:vhcs-coord-helper($tok)):) (:finally, add any potential siblings:)
   return if (fn:count($final-subs) = 0) then (
-     if (deh:is-comp-clause($tok)) then ($tok) else ()
+     if (deh:is-comp-clause($tok)) then ($tok) else (admin:write-log(("end of vhcs-main, there were no subs except headless ones, Tok num: " || fn:string(fn:count($final-subs)) || ", Tok lems: " || fn:string-join($final-subs/fn:string(@lemma), ", "))))
   )
-  else ($final-subs)
+  else ($final-subs, admin:write-log("Success! Got to end without any comp clauses"))
 )
 };
 
@@ -2534,7 +2536,8 @@ Deals with all the recursive functions
 :)
 declare %public function deh:vhcs-recursion($tok as element()*)
 {
-  let $nodes := deh:return-descendants($tok) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators;:)
+  let $log := admin:write-log(("vhcs-recursion start (token + siblings), Tok num: " || fn:string(fn:count($tok)) || ", Tok lems: " || fn:string-join($tok/fn:string(@lemma), ", ")))
+  let $nodes := ($tok, deh:return-descendants($tok)) (:We loop until we identify terms with the right lemma, and return the portion of the tree between the verb and those pronouns/subordinators; 3/3/2024, we now include the siblings in this:)
   
   
   let $subs := ($nodes[deh:is-relative-no-ne(.)]) (:Since there can be more than one at the same level, we retrieve all of them:)
@@ -2542,7 +2545,8 @@ declare %public function deh:vhcs-recursion($tok as element()*)
   (:For each, we identify the "thread" or all nodes between the subordinator and its head verb; if there is another finite verb between, we know it is not the right one, so we discard it as separate. We return all others:)
     for $sub in $subs
     let $thread := deh:vhcs-helper-b($sub, $tok[1] => deh:return-depth(1)) (:Loops deh:return-parent from the $sub until it reaches the $tok, and returns that sequence; I pass the siblings in as well. Since return-depth only works on one node, I pick the first in the sequence arbitrarily: all are siblings and will therefore be the same depth.:)
-  
+    
+    let $log :=  admin:write-log(("Thread var in vhcs-recursion: , Tok lems: " || fn:string-join($thread/fn:string(@lemma), ", ")))
   (:This is the last point of failure: if a finite verb comes in the tree between our target verb and the head, then it must not be the head of the clause. This is the reason we return the results of the previous loop as 'final-subs'; we need to know that there are ZERO possible subordinators before testing for the clause missing an 'ut'; if we did this at each point in the loop, we wouldn't be able to know this. :)
   return if (fn:count($thread[deh:is-finite(.)]) > 1) then (
   )
@@ -3463,12 +3467,9 @@ declare function deh:ablative-absolute($nodes as node()*)
 
 declare function deh:is-ablabs($tok as element()) as xs:boolean
 {
-  (:Harrington: must have the tag "ABL-ABSOL" but not have a parent with that tag too:)
-  
-  
   (:LDT, there is an ablative participle with 'adv' tag or some other ablative with 'adv' tag and 'atv' dependent on it:)
   if ($tok/name() = 'word') then (
-    ($tok/fn:string(@relation) = 'ABL-ABSOL' and deh:return-parent-nocoord($tok)/fn:string(@relation) != 'ABL-ABSOL') (:We don't want to count the subject and participle as two ablative absolutes:) or ($tok/fn:contains(fn:string(@relation), 'ADV') and deh:case($tok) = 'b' and (deh:mood($tok) = 'p' or fn:count(deh:return-children-nocoord($tok)[fn:contains(fn:string(@relation), 'ATV')]) > 0))
+    (:Harrington:)($tok/fn:string(@relation) = 'ABL-ABSOL' and deh:return-parent-nocoord($tok)/fn:string(@relation) != 'ABL-ABSOL') (:We don't want to count the subject and participle as two ablative absolutes:) or ($tok/fn:contains(fn:string(@relation), 'ADV') and deh:case($tok) = 'b' and (deh:mood($tok) = 'p' or fn:count(deh:return-children-nocoord($tok)[fn:contains(fn:string(@relation), 'ATV')]) > 0))
 )
   (:PROIEL: easy, any ablative with the 'sub' tag is in an ablative absolute:)
   else (deh:case($tok) = 'b' and $tok/fn:string(@relation) = 'sub')
