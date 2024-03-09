@@ -167,15 +167,9 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
+deh:read-sent-address("/proiel/per-aeth.xml|63945", $all-trees) 
 
-let $sent-addr := "/harrington/1023/lattb.1023.1.tb.xml|1"
-(:
-let $sents :=
-for $sent in $harrington//sentence
-where boolean($sent/word[fn:contains(fn:string(@relation), "NOM-INDQUES") and deh:is-finite(.)])
-return if (fn:count($sent/word[fn:contains(fn:string(@relation), "NOM-INDQUES") and deh:is-finite(.)] => deh:get-clause-pairs()) = 0) then ($sent):)
 
-return deh:finite-clause-verb-head(deh:read-sent-address($sent-addr, $all-trees))[2] ! deh:verb-headed-clause-sub(.)
 
 
 

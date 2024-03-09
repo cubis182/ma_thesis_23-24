@@ -2044,11 +2044,11 @@ declare function deh:retrieve-parentheticals($nodes as node()*) as element()*
 deh:is-exclamation()
 2/20/2024
 
-Ought to be used in conjunction with the parenthetical retrieval: it accepts arguments from those results (!) specifically. It is the HEAD, the single retrieved word, of the phrase which is tested. It is relatively easy because non-exclamatory parentheticals are either verbs, have an empty head in proiel/punctuation head in ldt, or have some other oddity. The only overlap is with greek expressions, which are accounted for below
+MUST be used in conjunction with the parenthetical retrieval: it accepts arguments from those results (!) specifically. It is the HEAD, the single retrieved word, of the phrase which is tested. It is relatively easy because non-exclamatory parentheticals are either verbs, have an empty head in proiel/punctuation head in ldt, or have some other oddity. The only overlap is with greek expressions, which are accounted for below
 :)
 declare function deh:is-exclamation($tok as element()) as xs:boolean
 {
-  $tok/deh:part-of-speech(.) = ('r', 'R-', 'n', 'Nb', 'I-') and ($tok/deh:lemma(., 'greek expression') = false())
+  ($tok/deh:part-of-speech(.) = ('e', 'I-') or ($tok/deh:part-of-speech(.) = ('v', 'V-')) = false()) and ($tok/deh:lemma(., 'greek expression') = false()) (:3/6/2024: added, instead of testing for a noun or preposition, testing whether the part of speech is a verb or not:) or boolean(deh:return-children($tok)[deh:lemma(., 'o')])
 };
 
 (:
@@ -2666,6 +2666,25 @@ declare function deh:mood($tok as element()) as xs:string
 {
   if ($tok/name() = 'word') then (fn:substring(fn:string($tok/@postag), 5, 1))
   else (fn:substring(fn:string($tok/@morphology), 4, 1))
+};
+
+(:
+3/5/2024
+:)
+declare function deh:number($tok as element()) as xs:string
+{
+  if ($tok/name() = 'word') then (fn:substring(fn:string($tok/@postag), 3, 1))
+  else (fn:substring(fn:string($tok/@morphology), 2, 1))
+};
+
+(:
+3/5/2024:
+
+:)
+declare function deh:person($tok as element()) as xs:string
+{
+  if ($tok/name() = 'word') then (fn:substring(fn:string($tok/@postag), 2, 1))
+  else (fn:substring(fn:string($tok/@morphology), 1, 1))
 };
 
 (:

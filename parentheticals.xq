@@ -17,7 +17,7 @@ declare variable $proiel := db:get("proiel");(:10/4/2023(fn:collection("./PROIEL
 declare variable $all-trees := ($all-ldt, $proiel); (:This is all the LDT, Harrington, and PROIEL trees, with the Caesar and Vulgate in LDT taken out:)
 
 "#parentheticals.xq; parenthetical-summary-x.xx.xx.csv; POSITION is the number of preceding nodes divided by the total sentence length; EXCL is a boolean where true means that the parenthetical is an exclamation",
-("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,START,NORMLEN,POSITION,EXCL,ENIM,NAM,PARTICLE,SENT,SENTLEN"),
+("WORK,SENT.ADDR,PARENT,PARENTH,FULL.PARENTH,LENGTH,START,NORMLEN,POSITION,COMMENT,EXCL,ENIM,NAM,UT,PARTICLE,SENT,SENTLEN,WORKLEN"),
 let $parenth := deh:retrieve-parentheticals($all-trees)
 for $item in $parenth
 let $sentlen := deh:word-count($item/..)
@@ -31,9 +31,14 @@ else if (functx:is-node-in-sequence($item, (deh:split-main-verbs($item/..)(1))[1
 else ("na")
 let $normlen := if ($sentlen > 0) then ($parenlen div $sentlen) else (0)
 let $excl := if (deh:is-exclamation($item)) then ('TRUE') else ('FALSE') (:so we can exclude or keep exclamations:)
+let $is-comment := if (deh:is-finite($item) and (deh:lemma($item, 'nescio') = false()) and $parenlen < 3 and (deh:mood($item) = 'm' or (deh:person($item) = '1' and deh:number($item) = 's'))) then ('TRUE') else ('FALSE') (:This gets complex: it must be finite and in a short (<3) parenthetical, and must either be a command, or be first person singular. I exclude nescio not categorically but because there is a specific instance (nescio quando) I am trying to eliminate, and it happens to be the only one:)
 let $enim := fn:count($full-parenth[deh:lemma(., 'enim')])
 let $nam := fn:count($full-parenth[deh:lemma(., 'nam')])
 let $autem := fn:count($full-parenth[deh:lemma(., 'autem')])
-let $particle := if (boolean($enim)) then ("enim") else if (boolean($nam)) then ("nam") else if (boolean($autem)) then ("autem") else ('NA')
+let $tamen := fn:count($full-parenth[deh:lemma(., 'tamen')])
+let $etiam := fn:count($full-parenth[deh:lemma(., 'etiam')])
+let $particle := if (boolean($enim)) then ("enim") else if (boolean($nam)) then ("nam") else if (boolean($autem)) then ("autem") else if (boolean($tamen)) then ("tamen") else if (boolean($etiam)) then ('etiam') else ('NA')
+let $ut := fn:count(deh:return-children($item)[deh:lemma(., 'ut')])
 let $position := (:We need to test if there is a predicate: if not, I do not want position to even matter, so if startPlace is na, this will be 'NA' so R knows what to do with it:)if ($startPlace != "na") then (deh:normed-position($start)) else ("NA")
-return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form) => fn:replace("[^a-zA-Z ]", ""), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)$parenlen, (:Start:)$startPlace, (:Normed length:) $normlen, (:Number of preceding words:)$position, (:Exclamation:) $excl, $enim, $nam, $particle, (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Zα-ω ]", ""), (:Sentence length:)$sentlen), ",")
+let $worklen := deh:word-count($item/../../sentence/*)
+return fn:string-join((:Work:)(deh:get-short-name(deh:work-info($item)(1)), (:Sent.Addr:) deh:get-sent-address($item/..), (:Parent:) if (boolean(deh:return-parent-nocoord($item))) then (deh:return-parent-nocoord($item)) else (""), (:Parenthetical:) $item/fn:string(@form) => fn:replace("[^a-zA-Z ]", ""), (:Full parenthetical:) fn:string-join($full-parenth/fn:lower-case(fn:string(@form)), " ") => fn:replace("[^a-zA-Z ]", ""), (:Length:)$parenlen, (:Start:)$startPlace, (:Normed length:) $normlen, (:Number of preceding words:)$position, $is-comment, (:Exclamation:) $excl, $enim, $nam, $ut, $particle, (:Sentence:) deh:print($item/..) => fn:replace("[^a-zA-Zα-ω ]", ""), (:Sentence length:)$sentlen, $worklen), ",")

@@ -63,8 +63,10 @@ where $item?1/fn:string(@lemma) != ""
 (:Borrowed the following (sorry, bad form) from parentheticals.xq; it checks whether the main verb is before or after:)
 let $sentMain := deh:split-main-verbs($item?1)(1)[functx:is-node-in-sequence($item?1, deh:return-descendants(.))] (:If there are multiple main clauses, I want it to be focused around the correct one:)
 let $start := 
-if (boolean($sentMain)) then (
+if (fn:count($sentMain) > 0) then (
 if (functx:is-node-in-sequence($item?1, $sentMain[1]/preceding-sibling::*)) then ("before")
-else if (functx:is-node-in-sequence($item?1, $sentMain[1]/following-sibling::*)) then ("after"))
+else if (functx:is-node-in-sequence($item?1, $sentMain[1]/following-sibling::*)) then ("after")
+else ("na")
+)
 else ("na")
 return fn:string-join(($n, $work, deh:get-sent-address($tree), $text, deh:get-tok-address($item?1), $item?1/fn:replace(deh:process-lemma(fn:string(@lemma)), ",", ""), $start, $item?2, $item?3, $work-length, $total-length), ",")

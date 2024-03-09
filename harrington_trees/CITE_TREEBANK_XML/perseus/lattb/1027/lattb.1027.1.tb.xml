@@ -589,7 +589,7 @@
       <word id="29" form="quam" lemma="quam" postag="d--------" relation="AuxC" head="27"/>
       <word id="30" form="inverecundo" lemma="inverecundus" postag="a-s---mb-" relation="ATR" head="33"/>
       <word id="31" form="." lemma="punc1" postag="u--------" relation="AuxK" head="0"/>
-      <word id="32" insertion_id="0019e" artificial="elliptic" relation="PRED" form="(factum)" head="19"/>
+      <word id="32" insertion_id="0019e" artificial="elliptic" relation="PRED" form="(factum)" head="0"/>
       <word id="33" insertion_id="0029e" artificial="elliptic" relation="ADV-COMPAR" form="(factum est ab adulescente)" head="29"/>
    </sentence>
    <sentence id="25" document_id="http://perseids.org/annotsrc/urn:cts:latinLit:phi0474.phi024.perseus-lat1" subdoc="69" span="">
