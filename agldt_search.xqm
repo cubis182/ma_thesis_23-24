@@ -2009,7 +2009,7 @@ declare function deh:split-main-verbs($nodes as node()*)
   let $reported := $verbs[functx:is-node-in-sequence(., ($main, $parenth)) = false()]
   
   return if (fn:matches(deh:work-info($node)(1), "Petr")) then ([($main, $reported), $parenth, ()])
-  else ([$main, $parenth, $reported])
+  else [$main, $parenth, $reported]
 };
 
 (:

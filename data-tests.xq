@@ -31,7 +31,7 @@ declare variable $full-proiel := db:get("Full-PROIEL"); (:This is PROIEL with th
 ('CASE,WORK,SENT-ADDR,TEXT,TOK-ADDR,LEM,START,TYPEA,TYPEB,SENTLEN,WORKLEN'),
 let $works := deh:short-names()
 
-for $work in $works
+for $work in $works[1]
 let $treebank := $all-trees[fn:matches(deh:work-info(.)(1), $work)]
 let $total-length := deh:word-count($treebank)
 for $tree in ($treebank//sentence)
@@ -61,7 +61,7 @@ let $or := $main-verbs(3) ! array{., 'castoff', 'main'}
 for $item at $n in ($causal-adv, $mixed-adv, $spatial-adv, $temporal-adv, $causal-clause, $spatial-clause, $temporal-clause, $main, $parenth, $or)
 where $item?1/fn:string(@lemma) != ""
 (:Borrowed the following (sorry, bad form) from parentheticals.xq; it checks whether the main verb is before or after:)
-let $sentMain := deh:split-main-verbs($item?1)(1)[functx:is-node-in-sequence($item?1, deh:return-descendants(.))] (:If there are multiple main clauses, I want it to be focused around the correct one:)
+let $sentMain := (deh:split-main-verbs($item?1/..))(1)(:If there are multiple main clauses, I want it to be focused around the correct one:)
 let $start := 
 if (fn:count($sentMain) > 0) then (
 if (functx:is-node-in-sequence($item?1, $sentMain[1]/preceding-sibling::*)) then ("before")
