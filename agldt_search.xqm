@@ -1976,7 +1976,7 @@ declare function deh:main-verbs($nodes as node()*) as element()*
   let $preds := $ldt[((deh:is-verb(.) and fn:contains(fn:string(@relation), "PRED")) or (deh:is-finite(.) and functx:contains-any-of(fn:string(@relation), ("PRED", "ExD", "PARENTH")))) and functx:contains-any-of(fn:string(@relation), ("ADV", "N-PRED", "A-PRED")) = false()](:Return all the PRED's, this should be directly returned at the end; 10/26/23, added "ExD" because it is used of parentheticals, although I had to exclude ExD phrases which contain "ADV". 10/31, spookily added N-PRED and A-PRED because, in HArrington, these are used of predicate nominals and predicate accusatives, not verbs:)
   
   (:Now deal with direct speech:)
-  let $directsp := ($l-verbs[deh:is-directsp(.)], $l-verbs[fn:contains(deh:work-info(.)(1), 'Petr Speech') and fn:contains(fn:string(@relation), "OBJ") and deh:is-finite(.)]) (:added this 2/21/2024, to account for petronius:)
+  let $directsp := ($l-verbs[deh:is-directsp(.)], $l-verbs[fn:contains(deh:work-info(.)(1), 'Petr Speech') and fn:contains(fn:string(@relation), "OBJ") and deh:is-finite(.) and boolean(deh:return-parent-nocoord(.)) = false()]) (:added this 2/21/2024, to account for petronius:)
   let $proiel-main := deh:pr-main-verbs($proiel)
   
   return (functx:distinct-nodes(($preds, $directsp)), $proiel-main)
