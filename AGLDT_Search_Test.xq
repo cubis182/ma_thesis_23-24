@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/ldt2.1-treebanks/phi0972.phi001.perseus-lat1-speech.xml|3", $all-trees) => deh:finite-clause-verb-head() => deh:verb-headed-clause-sub()
+$proiel//sentence[@id="53970"] => deh:get-clause-pairs()
 
 
 
