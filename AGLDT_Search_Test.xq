@@ -167,7 +167,7 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-$proiel//sentence[@id="53970"] => deh:get-clause-pairs()
+deh:read-sent-address("/proiel/pal-agr.xml|160255", $all-trees)
 
 
 
