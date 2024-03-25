@@ -1298,7 +1298,7 @@ declare function deh:return-parent-nocoord($nodes as element()*)
 {
   let $parents := deh:return-parent($nodes, 0)
   for $parent in $parents
-  return if (deh:is-coordinating($parent) or fn:contains($parent/fn:string(@relation), 'AuxZ')) then (deh:return-parent-nocoord($parent))
+  return if (deh:is-coordinating($parent) or deh:is-empty($parent) or fn:contains($parent/fn:string(@relation), 'AuxZ')) then (deh:return-parent-nocoord($parent)) (:3/24/2024: added it so that empty nodes are skipped as well, since in PROIEL and for apposition in Harrington they are sometimes not the root:)
   else ($parent)
 };
 
@@ -2057,7 +2057,7 @@ deh:pr-main-verbs()
 
 This is a helper function to deh:main-verbs, which handles extracting PROIEL main verbs. The process is different, since @relation="pred" is allowed in more contexts than the LDT. THERE IS A QUESTION I NEED TO ANSWER EVENTUALLY: do I include parpreds in this? Since they can be "main" verbs, I should probably say yes, especially since they mark out parentheticals, which are a symptom of parataxis.
 :)
-declare %public function deh:pr-main-verbs($toks as element()*) as element(token)*
+declare %private function deh:pr-main-verbs($toks as element()*) as element(token)*
 {
   let $preds := $toks[fn:string(@relation) = ("pred", "parpred", "voc") and fn:string(@part-of-speech) = 'V-'] (:Switched to 'fn:contains' for finding 'pred' because we want both 'pred' (main verbs) and 'parpred' (parenthetical verbs, and also verbs governing speech). This, however, means that we need to get speech-verbs in LDT as well.:)
   return $preds[(deh:return-parent-nocoord(.)/fn:string(@part-of-speech) = "G-") = false()]  (:10/3/2023, made it deh:return-parent-nocoord, it may break it, but I'm trying it:)
@@ -2777,7 +2777,7 @@ deh:is-empty
 
 Used to test for an empty node; does this by seeing if there is an empty-token-sort attribute (for PROIEL) or an insertion_id (for the LDT)
 :)
-declare function deh:is-empty($tok as element()) as xs:boolean
+declare function deh:is-empty($tok) as xs:boolean
 {
   boolean($tok/@empty-token-sort) or boolean($tok/@insertion_id)
 };
