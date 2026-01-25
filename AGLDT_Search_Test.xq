@@ -8,7 +8,7 @@ import module namespace stats = "ma-thesis-23-24" at "stats.xqm";
 
 
 
-import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "https://www.datypic.com/xq/functx-1.0.1-doc.xq";
 (:In case it is being weird, get functx from:
 C:/Program Files (x86)/BaseX/src/functx_lib.xqm
 Website is:
@@ -167,7 +167,11 @@ for $item in $singles
 return deh:get-tok-address($item(1))
 :)
 
-deh:read-sent-address("/ldt2.1-treebanks/phi0959.phi006.perseus-lat1.tb.xml|22", $all-trees)
+
+for $doc in $all-trees
+let $work-info := deh:work-info($doc)
+return fn:concat($work-info(1), '|', string(fn:count($doc//sentence/*)))
+
 
 
 

@@ -2,7 +2,7 @@ xquery version "4.0";
 
 import module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A" at "./agldt_search.xqm";
 
-import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "https://www.datypic.com/xq/functx-1.0.1-doc.xq";
 
 declare variable $ldt2.1-treebanks := db:get("ldt2.1-treebanks");
 

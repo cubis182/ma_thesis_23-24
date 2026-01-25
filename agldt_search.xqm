@@ -6,7 +6,7 @@ module namespace deh = "https://www.youtube.com/channel/UCjpnvbQy_togZemPnQ_Gg9A
 
 import module namespace stats = "ma-thesis-23-24" at "stats.xqm";
 
-import module namespace functx = "http://www.functx.com" at "functx_lib.xqm";
+import module namespace functx = "http://www.functx.com" at "https://www.datypic.com/xq/functx-1.0.1-doc.xq";
 (:Backup for functx when the internet is crap: C:/Program Files (x86)/BaseX/src/functx_lib.xqm 
   http://www.xqueryfunctions.com/xq/functx-1.0.1-doc.xq
 :)
@@ -2980,8 +2980,13 @@ declare function deh:is-adverbial($tok as element()) as xs:boolean
   (:ADV
 $adv := ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN") 10/15, STOPPED AT A-RESPECT! 11/1, WHICH I THINK IT ADVERBIAL, it is rare, but was never ATR; YES, note the sentence: hic primum nigrantis terga iuvencos constituit, the terga is an ADV; also note that things like Ablative or Orientation are likely with prepositions, although I haven't checked; 11/7/23, NOT SURE HOW PRICE WORKS! Same with AB-DEGDIF, don't really care about it; also note that an aux from PROIEL or AuxZ/AuxY:)
  
-    (deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq') or functx:contains-any-of($tok/fn:string(@relation), ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN", 'adv', 'ADV', 'aux', 'AuxY', 'AuxZ'))) and deh:is-verb($tok) = false() and deh:is-subjunction($tok) = false() and deh:is-coordinating($tok) = false()
+    (deh:is-pos-adverb($tok) or functx:contains-any-of($tok/fn:string(@relation), ("D-INTER", "D-POSS", "D-AGENT", "D-Purp", "A-ORIENT", "A-EXTENT", "A-RESPECT", "A-ADVERB", "D-PURP", "AB-ORIENT", "AB-SEPAR", "AB-CAUSE", "AB-ABSOL", "AB-COMPAR", "AB-LOCAT", "AB-ACCOMP", "AB-MEANS", "AB-MANN", 'adv', 'ADV', 'aux', 'AuxY', 'AuxZ'))) and deh:is-verb($tok) = false() and deh:is-subjunction($tok) = false() and deh:is-coordinating($tok) = false()
 
+};
+
+declare function deh:is-pos-adverb($tok) as xs:boolean
+{
+  deh:part-of-speech($tok) = ('d', 'Df', 'Du', 'Dq')
 };
 
 (:
