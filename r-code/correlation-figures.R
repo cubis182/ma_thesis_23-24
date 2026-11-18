@@ -6,7 +6,7 @@
 rm(list = ls())
 
 #set working directory to r-code in the GitHub repo
-setwd("C:/Users/T470s/Documents/GitHub/ma_thesis_23-24/r-code")
+setwd("./r-code")
 
 #(pos-summary; name of the data spreadsheet and the xquery file)
 #nu-table was a naming convention used during the analysis stage
